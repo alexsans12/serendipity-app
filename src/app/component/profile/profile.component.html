@@ -1,0 +1,860 @@
+<ng-container *ngIf="profileState$ | async as state">
+	<ng-container>
+		<!-- <div>{{ state | json }} </div> -->
+		<section class="profile">
+			<div class="container">
+				<nav aria-label="breadcrumb" style="margin-top: 8px">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item">
+							<a [routerLink]="['/']">Inicio</a>
+						</li>
+						<li *ngIf="state?.appData?.data?.usuario?.rol !==
+						'ROL_USUARIO'" class="breadcrumb-item active">Usuarios</li>
+						<li class="breadcrumb-item active" aria-current="page">
+							{{ state?.appData?.data?.usuario?.nombre }}
+							{{ state?.appData?.data?.usuario?.apellido }}
+						</li>
+					</ol>
+				</nav>
+				<div
+					class="bg-white shadow rounded-lg d-block d-sm-flex"
+					style="border-radius: 8px"
+				>
+					<div class="profile-tab-nav border-right">
+						<div class="p-4">
+							<div class="img-circle text-center mb-3">
+								<span style="position: relative">
+									<img
+										[src]="
+											state?.appData?.data?.usuario
+												?.urlFoto
+										"
+										[alt]="
+											state?.appData?.data?.usuario
+												?.nombre
+										"
+										class="shadow"
+									/>
+									<i
+										class="bi bi-camera-fill right-position"
+									></i>
+								</span>
+							</div>
+							<h4 class="text-center">
+								{{ state?.appData?.data?.usuario?.nombre }}
+								{{ state?.appData?.data?.usuario?.apellido }}
+							</h4>
+							<p class="text-center m-0">
+								Desde
+								{{
+									state?.appData?.data?.usuario?.fechaCreacion
+										| date : "MMMM d, y"
+								}}
+							</p>
+						</div>
+						<div
+							class="nav flex-column nav-pills"
+							id="v-pills-tab"
+							role="tablist"
+							aria-orientation="vertical"
+						>
+							<a
+								class="nav-link active"
+								id="profile"
+								data-bs-toggle="pill"
+								data-bs-target="#profile-tab"
+								aria-selected="true"
+								aria-controls="profile"
+								role="tab"
+							>
+								<i class="fa-solid fa-circle-user me-2"></i>
+								Perfil
+							</a>
+							<a
+								class="nav-link"
+								id="password"
+								data-bs-toggle="pill"
+								data-bs-target="#password-tab"
+								aria-selected="true"
+								aria-controls="password"
+								role="tab"
+							>
+								<i class="fa-solid fa-key me-2"></i>
+								Contraseña
+							</a>
+							<a
+								class="nav-link"
+								id="address"
+								data-bs-toggle="pill"
+								data-bs-target="#address-tab"
+								aria-selected="true"
+								aria-controls="address"
+								role="tab"
+							>
+								<i class="fa-regular fa-address-book me-2"></i>
+								Direcciones
+							</a>
+							<a *ngIf="state?.appData?.data?.usuario?.rol !==
+							'ROL_USUARIO'"
+								class="nav-link"
+								id="security"
+								data-bs-toggle="pill"
+								data-bs-target="#security-tab"
+								aria-selected="true"
+								aria-controls="security"
+								role="tab"
+							>
+								<i class="fa-solid fa-shield-halved me-2"></i>
+								Autorización
+							</a>
+							<a
+								class="nav-link"
+								id="application"
+								data-bs-toggle="pill"
+								data-bs-target="#application-tab"
+								aria-selected="true"
+								aria-controls="application"
+								role="tab"
+							>
+								<i class="fa-solid fa-gear me-2"></i>
+								Cuenta
+							</a>
+							<a
+								class="nav-link"
+								id="notification"
+								data-bs-toggle="pill"
+								data-bs-target="#notification-tab"
+								aria-selected="true"
+								aria-controls="notification"
+								role="tab"
+							>
+								<i class="fa-solid fa-lock me-2"></i>
+								Autenticación
+							</a>
+						</div>
+					</div>
+					<div
+						class="tab-content p-4 p-md-5"
+						id="v-pills-tabContent"
+						style="border-left: 1px solid #d4d0d0"
+					>
+						<div
+							class="tab-pane fade show active"
+							id="profile-tab"
+							role="tabpanel"
+							aria-labelledby="profile"
+							style="min-height: 510px"
+						>
+							<h3 class="mb-4">Configuración de perfil</h3>
+							<form
+								#profileForm="ngForm"
+								(ngSubmit)="updateProfile(profileForm)"
+							>
+								<input
+									type="hidden"
+									name="idUsuario"
+									[ngModel]="
+										state?.appData?.data?.usuario?.idUsuario
+									"
+								/>
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Nombre</label>
+											<input
+												type="text"
+												name="nombre"
+												[ngModel]="
+													state?.appData?.data
+														?.usuario?.nombre
+												"
+												[disabled]="(isLoading$ | async)"
+												class="form-control"
+											/>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Apellido</label>
+											<input
+												type="text"
+												name="apellido"
+												[ngModel]="
+													state?.appData?.data
+														?.usuario?.apellido
+												"
+												[disabled]="(isLoading$ | async)"
+												class="form-control"
+											/>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label for="email">Email</label>
+											<input
+												type="text"
+												name="email"
+												[ngModel]="
+													state?.appData?.data
+														?.usuario?.email
+												"
+												[readOnly]="state?.appData?.data?.usuario?.rol === 'ROL_USUARIO'"
+												[disabled]="(isLoading$ | async)"
+												class="form-control"
+											/>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Teléfono</label>
+											<div class="input-group">
+												<span class="input-group-text"
+													>+502</span
+												>
+												<input
+													type="text"
+													name="telefono"
+													[ngModel]="
+														state?.appData?.data
+															?.usuario?.telefono
+													"
+													[disabled]="(isLoading$ | async)"
+													class="form-control"
+												/>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div>
+									<button
+										[disabled]="(isLoading$ | async)"
+										type="submit"
+										class="btn btn-primary"
+									>
+										<span
+											*ngIf="isLoading$ | async"
+											class="spinner-border spinner-border-sm"
+											role="status"
+											aria-hidden="true"
+											style="margin-right: 5px"
+										></span>
+										<span *ngIf="isLoading$ | async"
+											>Cargando...</span
+										>
+										<span *ngIf="!(isLoading$ | async)"
+											>Actualizar</span
+										>
+									</button>
+								</div>
+							</form>
+						</div>
+						<div
+							class="tab-pane fade"
+							id="password-tab"
+							role="tabpanel"
+							aria-labelledby="password"
+							style="min-height: 510px"
+						>
+							<h3 class="mb-4">Configuración de Contraseña</h3>
+							<form>
+								<input type="hidden" name="userId" />
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Contraseña actual</label>
+											<input
+												type="password"
+												name="currentPassword"
+												class="form-control"
+												required
+											/>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Nueva contraseña</label>
+											<input
+												type="password"
+												name="newPassword"
+												class="form-control"
+												minlength="5"
+												required
+											/>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label
+												>Confirmar nueva
+												contraseña</label
+											>
+											<input
+												type="password"
+												name="confirmPassword"
+												class="form-control"
+												minlength="5"
+												required
+											/>
+										</div>
+									</div>
+								</div>
+								<div>
+									<button
+										[disabled]="
+											state?.appData?.data?.usuario
+												?.rol === 'ROL_USUARIO' ||
+											(isLoading$ | async)
+										"
+										type="submit"
+										class="btn btn-primary"
+									>
+										<span
+											*ngIf="isLoading$ | async"
+											class="spinner-border spinner-border-sm"
+											role="status"
+											aria-hidden="true"
+											style="margin-right: 5px"
+										></span>
+										<span *ngIf="isLoading$ | async"
+											>Cargando...</span
+										>
+										<span *ngIf="!(isLoading$ | async)"
+											>Actualizar</span
+										>
+									</button>
+								</div>
+							</form>
+						</div>
+						<div
+							class="tab-pane fade"
+							id="address-tab"
+							role="tabpanel"
+							aria-labelledby="address"
+							style="min-height: 510px"
+						>
+							<h3 class="mb-4">Configuración de direcciones</h3>
+							<ul class="list-group list-group-flush">
+								<li class="list-group-item">
+									<div class="card border-0">
+										<div class="card-body p-0">
+											<h5 class="card-title">
+												Eddy Alexander Cabrera Sanchez
+											</h5>
+											<p class="card-text mb-0">
+												Villa Nueva Calle 123
+											</p>
+											<p class="card-text mb-0">
+												Villa Nueva, Guatemala
+											</p>
+											<p class="card-text mb-0">
+												Sobre la calle principal.
+											</p>
+											<p class="card-text mb-0">
+												+502 9874-1234
+											</p>
+											<div class="d-inline-block">
+												<a
+													href="#"
+													class="btn text-primary text-decoration-underline me-2"
+													>Editar</a
+												>
+												<a
+													href="#"
+													class="btn text-danger text-decoration-underline"
+													>Eliminar</a
+												>
+											</div>
+										</div>
+									</div>
+								</li>
+								<li class="list-group-item">
+									<div class="card border-0">
+										<div class="card-body p-0">
+											<h5 class="card-title">
+												Eddy Alexander Cabrera Sanchez
+											</h5>
+											<p class="card-text mb-0">
+												Ciudad de Guatemala 123
+											</p>
+											<p class="card-text mb-0">
+												Guatemala, Guatemala
+											</p>
+											<p class="card-text mb-0">
+												Cerca de la parada del
+												transmetro.
+											</p>
+											<p class="card-text mb-0">
+												+502 9874-1234
+											</p>
+											<div class="d-inline-block">
+												<a
+													href="#"
+													class="btn text-primary text-decoration-underline me-2"
+													>Editar</a
+												>
+												<a
+													href="#"
+													class="btn text-danger text-decoration-underline"
+													>Eliminar</a
+												>
+											</div>
+										</div>
+									</div>
+								</li>
+								<li class="list-group-item">
+									<button
+										type="button"
+										class="btn btn-primary"
+										data-bs-toggle="modal"
+										data-bs-target="#addressModal"
+									>
+										<i class="fa-solid fa-plus"></i>
+										Agregar otra dirección
+									</button>
+								</li>
+							</ul>
+						</div>
+						<div *ngIf="state?.appData?.data?.usuario?.rol !==
+						'ROL_USUARIO'"
+							class="tab-pane fade"
+							id="security-tab"
+							role="tabpanel"
+							aria-labelledby="security"
+							style="min-height: 510px"
+						>
+							<h3 class="mb-4">Configuración de Autorización</h3>
+							<form>
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label style="margin-bottom: 5px"
+												>Nombre de rol</label
+											>
+											<select
+												name="roleName"
+												class="form-control select-cl"
+												required
+											>
+												<option class="select-cl">
+													ROLE_ADMIN
+												</option>
+											</select>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label style="margin-bottom: 5px"
+												>Permisos de rol</label
+											>
+											<input
+												type="text"
+												class="form-control"
+												style="margin-bottom: 5px"
+											/>
+										</div>
+									</div>
+								</div>
+								<div>
+									<button
+										[disabled]="
+											state?.appData?.data?.usuario
+												?.rol === 'ROL_USUARIO' ||
+											(isLoading$ | async)
+										"
+										type="submit"
+										class="btn btn-primary"
+									>
+										<span
+											*ngIf="isLoading$ | async"
+											class="spinner-border spinner-border-sm"
+											role="status"
+											aria-hidden="true"
+											style="margin-right: 5px"
+										></span>
+										<span *ngIf="isLoading$ | async"
+											>Cargando...</span
+										>
+										<span *ngIf="!(isLoading$ | async)"
+											>Actualizar</span
+										>
+									</button>
+								</div>
+							</form>
+						</div>
+						<div
+							class="tab-pane fade"
+							id="application-tab"
+							role="tabpanel"
+							aria-labelledby="application"
+							style="min-height: 510px"
+						>
+							<h3 class="mb-4">
+								Configuraciones de la Aplicación
+							</h3>
+							<form>
+								<input type="hidden" name="userId" />
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<div class="form-check">
+												<input
+													type="checkbox"
+													name="enabled"
+													class="form-check-input"
+												/>
+												<label
+													class="form-check-label"
+													for="enabled"
+													>Cuenta Activa</label
+												>
+											</div>
+											<div class="form-check">
+												<input
+													type="checkbox"
+													name="notLocked"
+													class="form-check-input"
+												/>
+												<label
+													class="form-check-label"
+													for="notLocked"
+													>Cuenta desbloqueada</label
+												>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div>
+									<button
+										[disabled]="
+											state?.appData?.data?.usuario
+												?.rol === 'ROL_USUARIO' ||
+											(isLoading$ | async)
+										"
+										type="submit"
+										class="btn btn-primary"
+									>
+										<span
+											*ngIf="isLoading$ | async"
+											class="spinner-border spinner-border-sm"
+											role="status"
+											aria-hidden="true"
+											style="margin-right: 5px"
+										></span>
+										<span *ngIf="isLoading$ | async"
+											>Cargando...</span
+										>
+										<span *ngIf="!(isLoading$ | async)"
+											>Actualizar</span
+										>
+									</button>
+								</div>
+							</form>
+						</div>
+						<div
+							class="tab-pane fade"
+							id="notification-tab"
+							role="tabpanel"
+							aria-labelledby="notification"
+							style="min-height: 510px"
+						>
+							<h3 class="mb-4">Configuración de autenticación</h3>
+							<p>
+								Estas configuraciones ayudan a mantener su
+								cuenta más segura.
+							</p>
+							<div class="list-group mb-5 shadow">
+								<div class="list-group-item">
+									<div class="row align-items-center">
+										<div class="col">
+											<strong class="mb-2"
+												>Autenticación
+												Multifactor</strong
+											>
+											<span class="badge bg-success mx-3"
+												>Activado</span
+											>
+											<span class="badge bg-warning mx-3"
+												>Desactivado</span
+											>
+											<p class="text-muted mb-0">
+												Configure la Autenticación
+												Multifactor (MFA) para ayudar a
+												mantener su cuenta más segura
+											</p>
+										</div>
+										<div class="col-auto">
+											<button
+												class="btn btn-primary btn-sm"
+											>
+												Desactivar
+												<span
+													class="spinner-border spinner-border-sm"
+													role="status"
+													aria-hidden="true"
+													style="margin-right: 5px"
+												></span>
+											</button>
+										</div>
+									</div>
+								</div>
+								<div class="list-group-item">
+									<div class="row align-items-center">
+										<div class="col">
+											<strong class="mb-2"
+												>Registros de Actividad</strong
+											>
+											<p class="text-muted mb-0">
+												Muestra las últimas actividades
+												en tu cuenta
+											</p>
+										</div>
+										<div class="col-auto">
+											<div
+												class="custom-control custom-switch"
+											>
+												<input
+													type="checkbox"
+													class="custom-control-input"
+													id="activityLog"
+												/>
+												<span
+													class="custom-control-label"
+												></span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xl-12 mt-4">
+						<div class="card" style="border-radius: 8px">
+							<div class="card-body">
+								<h5 class="card-title">Account Activities</h5>
+								<h6 class="card-subtitle mb-2 text-muted">
+									Latest activities on your account.
+								</h6>
+								<div class="table-responsive">
+									<table class="table table-hover">
+										<thead>
+											<tr>
+												<th scope="col">Device</th>
+												<th scope="col">IP Address</th>
+												<th scope="col">Date</th>
+												<th scope="col">Type</th>
+												<th scope="col">Description</th>
+												<th scope="col">Action</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>Chrome</td>
+												<td>192.168.1.209</td>
+												<td>01-15-2023 5:25:20</td>
+												<td>
+													<span
+														class="badge pill bg-success"
+													>
+														LOGIN_ATTEMPT_SUCCESS
+													</span>
+												</td>
+												<td>
+													You logged in successfully
+												</td>
+												<td>
+													<button
+														type="button"
+														class="btn btn-sm"
+														style="
+															background-color: #fd5d0d;
+															font-weight: 450;
+														"
+													>
+														Report
+													</button>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Modal Address -->
+		<div
+			class="modal fade"
+			id="addressModal"
+			tabindex="-1"
+			aria-labelledby="addressModalLabel"
+			aria-hidden="true"
+		>
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="addressModal">
+							Agregar una dirección
+						</h1>
+						<button
+							type="button"
+							class="btn-close"
+							data-bs-dismiss="modal"
+							aria-label="Close"
+						></button>
+					</div>
+					<div class="modal-body">
+						<form
+							#addAddress="ngForm"
+							(ngSubmit)="updateProfile(profileForm)"
+						>
+							<input
+								type="hidden"
+								name="id"
+								[ngModel]="
+									state?.appData?.data?.usuario?.idUsuario
+								"
+							/>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>Nombre</label>
+										<input
+											type="text"
+											name="firstName"
+											[disabled]="(isLoading$ | async)"
+											class="form-control"
+										/>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>Apellido</label>
+										<input
+											type="text"
+											name="lastName"
+											[disabled]="(isLoading$ | async)"
+											class="form-control"
+										/>
+									</div>
+								</div>
+								<div class="col-md-12">
+									<div class="form-group">
+										<label>Teléfono</label>
+										<div class="input-group">
+											<span class="input-group-text"
+												>+502</span
+											>
+											<input
+												type="text"
+												name="phone"
+												[disabled]="(isLoading$ | async)"
+												class="form-control"
+											/>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>Departamento</label>
+										<select
+											class="form-select"
+											aria-label="Selecciona un departamento"
+										>
+											<option selected disabled>
+												Selecciona un departamento
+											</option>
+											<option value="1">
+												Alta Verapaz
+											</option>
+											<option value="2">
+												Baja Verapaz
+											</option>
+											<option value="3">
+												Chimaltenango
+											</option>
+											<option value="4">Guatemala</option>
+										</select>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>Municipio</label>
+										<select
+											class="form-select"
+											aria-label="Selecciona un municipio"
+											disabled
+										>
+											<option selected disabled>
+												Selecciona un municipio
+											</option>
+											<option value="1">
+												Alta Verapaz
+											</option>
+											<option value="2">
+												Baja Verapaz
+											</option>
+											<option value="3">
+												Chimaltenango
+											</option>
+											<option value="4">Guatemala</option>
+										</select>
+									</div>
+								</div>
+								<div class="col-md-12">
+									<div class="form-group">
+										<label>Indicaciones</label>
+										<input
+											type="text"
+											name="indicaciones"
+											class="form-control"
+										/>
+									</div>
+								</div>
+							</div>
+							<div class="mt-2">
+								<button
+									[disabled]="(isLoading$ | async)"
+									type="submit"
+									class="btn btn-primary"
+								>
+									<span
+										*ngIf="isLoading$ | async"
+										class="spinner-border spinner-border-sm"
+										role="status"
+										aria-hidden="true"
+										style="margin-right: 5px"
+									></span>
+									<span *ngIf="isLoading$ | async"
+										>Cargando...</span
+									>
+									<span *ngIf="!(isLoading$ | async)"
+										>Agregar</span
+									>
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ng-container>
+</ng-container>
+
+<!-- profile image change form -->
+<form enctype="multipart/form-data" style="display: none">
+	<input
+		type="file"
+		name="image"
+		id="image"
+		placeholder="file"
+		ngModel
+		accept="image/*"
+	/>
+</form>

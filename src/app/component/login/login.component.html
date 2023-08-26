@@ -1,0 +1,107 @@
+<section *ngIf="(loginState$ | async) as state" [ngSwitch]="state.dataState">
+	<div *ngIf="!state.loginSuccess && !state.isUsingMfa" class="container">
+		<div class="row justify-content-center my-5">
+			<div class="col-md-6" style="margin-top: 50px">
+				<div class="card">
+					<div class="card-body">
+						<div class="text-center">
+							<h2><i style="margin-right: 5px" class="bi bi-safe"></i>Serendipity</h2>
+							<!-- <p class="lead">Questions? Do not hesitate to contact us.</p> -->
+							<h5 class="card-title mt-4 mb-5">Iniciar Sesión</h5>
+							<!-- <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6> -->
+						</div>
+						<div *ngIf="state.dataState === DataState.ERROR" class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show" role="alert">
+							{{ state.error }}
+							<button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+						</div>
+						<form #loginForm="ngForm" (ngSubmit)="login(loginForm)">
+							<div class="form-outline mb-4">
+								<label class="form-label" for="email">Correo Electrónico</label>
+								<input [disabled]="state.dataState === DataState.LOADING" ngModel type="email" name="email" class="form-control" required/>
+							</div>
+							<div class="form-outline mb-4">
+								<label for="password" class="form-label">Contraseña</label>
+								<input [disabled]="state.dataState === DataState.LOADING" ngModel type="password"
+									name="password"
+									class="form-control"
+									required/>
+							</div>
+							<div class="d-flex justify-content-center mb-4">
+								<button [disabled]="state.dataState === DataState.LOADING || loginForm.invalid || loginForm.pristine" type="submit" class="btn btn-primary">
+									<span *ngIf="state.dataState === DataState.LOADING" class="spinner-border spinner-border-sm"
+										role="status"
+										aria-hidden="true"
+										style="margin-right: 5px"></span>
+									<span *ngIf="state.dataState === DataState.LOADING">Cargando...</span>
+									<span *ngIf="!(state.dataState === DataState.LOADING)">Iniciar Sesión</span>
+								</button>
+							</div>
+						</form>
+						<div class="row mb-4">
+							<div class="col d-flex justify-content-center">
+								<a [ngStyle]="{'pointer-events': state.dataState === DataState.LOADING ? 'none' : ''}" routerLink="/register">Crea una cuenta aquí</a>
+							</div>
+							<div class="col">
+								<a [ngStyle]="{'pointer-events': state.dataState === DataState.LOADING ? 'none' : ''}" routerLink="/reset-password">Olvidé mi contraseña</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Success screen -->
+	<div *ngIf="state.isUsingMfa" class="container">
+		<!-- <div class="container"> -->
+		<div class="row justify-content-center my-5">
+			<div class="col-md-6" style="margin-top: 50px">
+				<div class="card">
+					<div class="card-body">
+						<div class="text-center">
+							<h2><i style="margin-right: 5px" class="bi bi-safe"></i>Serendipity</h2>
+							<h3 class="h5 card-title mt-4 mb-4">Código de verificación enviado ...{{ state.phone }}</h3>
+							<i class="bi bi-check-circle-fill" style="font-size: 30px; color: green"></i>
+							<p class="mt-2" style="font-size: 20px">Comprueba tus mensajes SMS e introduce el código.</p>
+						</div>
+						<div *ngIf="state.dataState === DataState.ERROR" class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show" role="alert">{{ state.error }}
+							<button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"
+								aria-label-="Close"></button>
+						</div>
+						<form #verifyCodeForm="ngForm" (ngSubmit)="verifyCode(verifyCodeForm)">
+							<div class="form-outline mb-4">
+								<label class="form-label" for="code">Código de verificación</label>
+								<input [disabled]="state.dataState === DataState.LOADING" ngModel type="text"
+									name="code"
+									class="form-control"
+									required />
+							</div>
+							<div class="d-flex justify-content-center mb-4">
+								<button [disabled]="state.dataState === DataState.LOADING || verifyCodeForm.invalid || verifyCodeForm.pristine" type="submit" class="btn btn-primary">
+									<span *ngIf="state.dataState === DataState.LOADING" class="spinner-border spinner-border-sm"
+										role="status"
+										aria-hidden="true"
+										style="margin-right: 5px"></span>
+									<span *ngIf="state.dataState === DataState.LOADING">Cargando...</span>
+									<span *ngIf="!(state.dataState === DataState.LOADING)">Verificar código</span>
+								</button>
+							</div>
+						</form>
+						<div class="row mb-4">
+							<div class="col d-flex justify-content-center">
+								<a (click)="loginPage()" style="color: #0d6efd;
+										text-decoration: underline;
+										cursor: pointer;">Iniciar Sesión</a>
+							</div>
+							<div class="col">
+								<a [routerLink]="['/register']" style="color: #0d6efd;
+										text-decoration: underline;
+										cursor: pointer;">Crear una cuenta</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

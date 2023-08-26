@@ -1,0 +1,88 @@
+.rounded {
+	-webkit-border-radius: 3px !important;
+	-moz-border-radius: 3px !important;
+	border-radius: 3px !important;
+}
+
+.mini-stat {
+	padding: 15px;
+	margin-bottom: 20px;
+
+	&-icon {
+		width: 60px;
+		height: 60px;
+		display: inline-block;
+		line-height: 60px;
+		text-align: center;
+		font-size: 30px;
+		background: none repeat scroll 0% 0% #eee;
+		border-radius: 100%;
+		float: left;
+		margin-right: 10px;
+		color: #fff;
+	}
+
+	&-info {
+		font-size: 12px;
+		padding-top: 2px;
+
+		span {
+			display: block;
+			font-size: 30px;
+			font-weight: 600;
+			margin-bottom: 5px;
+			margin-top: 7px;
+		}
+	}
+}
+
+span,
+p {
+	color: white;
+}
+
+// Colors
+$facebook-color: #3b5998;
+$twitter-color: #00a0d1;
+$googleplus-color: #db4a39;
+$bitbucket-color: #4f096a;
+
+.bg-facebook {
+	background-color: darken($facebook-color, 10%) !important;
+	border: 1px solid $facebook-color;
+	color: white;
+}
+
+.fg-facebook {
+	color: $facebook-color !important;
+}
+
+.bg-twitter {
+	background-color: darken($twitter-color, 10%) !important;
+	border: 1px solid $twitter-color;
+	color: white;
+}
+
+.fg-twitter {
+	color: $twitter-color !important;
+}
+
+.bg-googleplus {
+	background-color: darken($googleplus-color, 10%) !important;
+	border: 1px solid $googleplus-color;
+	color: white;
+}
+
+.fg-googleplus {
+	color: $googleplus-color !important;
+}
+
+.bg-bitbucket {
+	background-color: darken($bitbucket-color, 10%) !important;
+	border: 1px solid $bitbucket-color;
+	color: white;
+}
+
+.fg-bitbucket {
+	color: $bitbucket-color !important;
+}
