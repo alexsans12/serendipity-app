@@ -47,29 +47,67 @@ export class ProfileComponent implements OnInit {
 
 	updateProfile(profileForm: NgForm): void {
 		this.isLoadingSubject.next(true);
-		console.log(profileForm.value)
-		this.profileState$ = this.usuarioService.updateProfile$(profileForm.value).pipe(
-			map((response) => {
-				console.log(response);
-				this.dataSubject.next({ ...response, data: response.data });
-				this.isLoadingSubject.next(false);
-				return {
+		this.profileState$ = this.usuarioService
+			.updateProfile$(profileForm.value)
+			.pipe(
+				map((response) => {
+					this.dataSubject.next({ ...response, data: response.data });
+					this.isLoadingSubject.next(false);
+					return {
+						dataState: DataState.LOADED,
+						appData: this.dataSubject.value,
+					};
+				}),
+				startWith({
 					dataState: DataState.LOADED,
 					appData: this.dataSubject.value,
-				};
-			}),
-			startWith({
-				dataState: DataState.LOADED,
-				appData: this.dataSubject.value,
-			}),
-			catchError((error: string) => {
-				this.isLoadingSubject.next(false);
-				return of({
-					dataState: DataState.LOADED,
-					appData: this.dataSubject.value,
-					error,
-				});
-			})
-		);
+				}),
+				catchError((error: string) => {
+					this.isLoadingSubject.next(false);
+					return of({
+						dataState: DataState.LOADED,
+						appData: this.dataSubject.value,
+						error,
+					});
+				})
+			);
+	}
+
+	updatePassword(passwordForm: NgForm): void {
+		console.log(passwordForm.value);
+		this.isLoadingSubject.next(true);
+		if (
+			passwordForm.value.newPassword ===
+			passwordForm.value.confirmNewPassword
+		) {
+			this.profileState$ = this.usuarioService
+				.updatePassword$(passwordForm.value)
+				.pipe(
+					map((response) => {
+						passwordForm.reset();
+						this.isLoadingSubject.next(false);
+						return {
+							dataState: DataState.LOADED,
+							appData: this.dataSubject.value,
+						};
+					}),
+					startWith({
+						dataState: DataState.LOADED,
+						appData: this.dataSubject.value,
+					}),
+					catchError((error: string) => {
+						passwordForm.reset();
+						this.isLoadingSubject.next(false);
+						return of({
+							dataState: DataState.LOADED,
+							appData: this.dataSubject.value,
+							error,
+						});
+					})
+				);
+		} else {
+			passwordForm.reset();
+			this.isLoadingSubject.next(false);
+		}
 	}
 }

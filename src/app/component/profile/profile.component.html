@@ -8,8 +8,15 @@
 						<li class="breadcrumb-item">
 							<a [routerLink]="['/']">Inicio</a>
 						</li>
-						<li *ngIf="state?.appData?.data?.usuario?.rol !==
-						'ROL_USUARIO'" class="breadcrumb-item active">Usuarios</li>
+						<li
+							*ngIf="
+								state?.appData?.data?.usuario?.rol !==
+								'ROL_USUARIO'
+							"
+							class="breadcrumb-item active"
+						>
+							Usuarios
+						</li>
 						<li class="breadcrumb-item active" aria-current="page">
 							{{ state?.appData?.data?.usuario?.nombre }}
 							{{ state?.appData?.data?.usuario?.apellido }}
@@ -94,8 +101,11 @@
 								<i class="fa-regular fa-address-book me-2"></i>
 								Direcciones
 							</a>
-							<a *ngIf="state?.appData?.data?.usuario?.rol !==
-							'ROL_USUARIO'"
+							<a
+								*ngIf="
+									state?.appData?.data?.usuario?.rol !==
+									'ROL_USUARIO'
+								"
 								class="nav-link"
 								id="security"
 								data-bs-toggle="pill"
@@ -168,7 +178,7 @@
 													state?.appData?.data
 														?.usuario?.nombre
 												"
-												[disabled]="(isLoading$ | async)"
+												[disabled]="isLoading$ | async"
 												class="form-control"
 											/>
 										</div>
@@ -183,7 +193,7 @@
 													state?.appData?.data
 														?.usuario?.apellido
 												"
-												[disabled]="(isLoading$ | async)"
+												[disabled]="isLoading$ | async"
 												class="form-control"
 											/>
 										</div>
@@ -198,8 +208,12 @@
 													state?.appData?.data
 														?.usuario?.email
 												"
-												[readOnly]="state?.appData?.data?.usuario?.rol === 'ROL_USUARIO'"
-												[disabled]="(isLoading$ | async)"
+												[readOnly]="
+													state?.appData?.data
+														?.usuario?.rol ===
+													'ROL_USUARIO'
+												"
+												[disabled]="isLoading$ | async"
 												class="form-control"
 											/>
 										</div>
@@ -218,7 +232,9 @@
 														state?.appData?.data
 															?.usuario?.telefono
 													"
-													[disabled]="(isLoading$ | async)"
+													[disabled]="
+														isLoading$ | async
+													"
 													class="form-control"
 												/>
 											</div>
@@ -227,7 +243,7 @@
 								</div>
 								<div>
 									<button
-										[disabled]="(isLoading$ | async)"
+										[disabled]="isLoading$ | async"
 										type="submit"
 										class="btn btn-primary"
 									>
@@ -256,8 +272,10 @@
 							style="min-height: 510px"
 						>
 							<h3 class="mb-4">Configuración de Contraseña</h3>
-							<form>
-								<input type="hidden" name="userId" />
+							<form
+								#passwordForm="ngForm"
+								(ngSubmit)="updatePassword(passwordForm)"
+							>
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
@@ -266,6 +284,7 @@
 												type="password"
 												name="currentPassword"
 												class="form-control"
+												ngModel
 												required
 											/>
 										</div>
@@ -279,6 +298,7 @@
 												type="password"
 												name="newPassword"
 												class="form-control"
+												ngModel
 												minlength="5"
 												required
 											/>
@@ -292,8 +312,9 @@
 											>
 											<input
 												type="password"
-												name="confirmPassword"
+												name="confirmNewPassword"
 												class="form-control"
+												ngModel
 												minlength="5"
 												required
 											/>
@@ -303,8 +324,7 @@
 								<div>
 									<button
 										[disabled]="
-											state?.appData?.data?.usuario
-												?.rol === 'ROL_USUARIO' ||
+											passwordForm.invalid ||
 											(isLoading$ | async)
 										"
 										type="submit"
@@ -416,8 +436,18 @@
 								</li>
 							</ul>
 						</div>
-						<div *ngIf="state?.appData?.data?.usuario?.rol !==
-						'ROL_USUARIO'"
+						<!-- <div
+							*ngIf="
+								state?.appData?.data?.usuario?.rol !==
+								'ROL_USUARIO'
+							"
+							class="tab-pane fade"
+							id="security-tab"
+							role="tabpanel"
+							aria-labelledby="security"
+							style="min-height: 510px"
+						> -->
+						<div
 							class="tab-pane fade"
 							id="security-tab"
 							role="tabpanel"
@@ -728,7 +758,7 @@
 										<input
 											type="text"
 											name="firstName"
-											[disabled]="(isLoading$ | async)"
+											[disabled]="isLoading$ | async"
 											class="form-control"
 										/>
 									</div>
@@ -739,7 +769,7 @@
 										<input
 											type="text"
 											name="lastName"
-											[disabled]="(isLoading$ | async)"
+											[disabled]="isLoading$ | async"
 											class="form-control"
 										/>
 									</div>
@@ -754,7 +784,7 @@
 											<input
 												type="text"
 												name="phone"
-												[disabled]="(isLoading$ | async)"
+												[disabled]="isLoading$ | async"
 												class="form-control"
 											/>
 										</div>
@@ -820,7 +850,7 @@
 							</div>
 							<div class="mt-2">
 								<button
-									[disabled]="(isLoading$ | async)"
+									[disabled]="isLoading$ | async"
 									type="submit"
 									class="btn btn-primary"
 								>
