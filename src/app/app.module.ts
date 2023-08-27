@@ -7,7 +7,7 @@ import { LoginComponent } from './component/login/login.component';
 import { RegisterComponent } from './component/register/register.component';
 import { VerifyComponent } from './component/verify/verify.component';
 import { ResetPasswordComponent } from './component/reset-password/reset-password.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { FormsModule } from '@angular/forms';
 import { ProfileComponent } from './component/profile/profile.component';
@@ -20,6 +20,7 @@ import { CustomersComponent } from './component/customers/customers.component';
 import { HeroComponent } from './component/hero/hero.component';
 import { DashboardComponent } from './component/dashboard/dashboard.component';
 import { StatsComponent } from './component/stats/stats.component';
+import { TokenInterceptor } from './interceptor/token.interceptor';
 
 @NgModule({
 	declarations: [
@@ -37,21 +38,21 @@ import { StatsComponent } from './component/stats/stats.component';
 		CustomersComponent,
 		HeroComponent,
 		DashboardComponent,
-  StatsComponent,
+		StatsComponent,
 	],
 	imports: [
 		BrowserModule,
 		AppRoutingModule,
 		HttpClientModule,
 		FormsModule,
-		/*ServiceWorkerModule.register('ngsw-worker.js', {
+		ServiceWorkerModule.register('ngsw-worker.js', {
 			enabled: !isDevMode(),
 			// Register the ServiceWorker as soon as the application is stable
 			// or after 30 seconds (whichever comes first).
 			registrationStrategy: 'registerWhenStable:30000',
-		}),*/
+		}),
 	],
-	providers: [],
+	providers: [ { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true } ],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}
