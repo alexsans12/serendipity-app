@@ -117,7 +117,10 @@
 								Autorización
 							</a>
 							<a
-								*ngIf="state?.appData?.data?.usuario?.rol !== 'ROL_USUARIO'"
+								*ngIf="
+									state?.appData?.data?.usuario?.rol !==
+									'ROL_USUARIO'
+								"
 								class="nav-link"
 								id="application"
 								data-bs-toggle="pill"
@@ -562,7 +565,10 @@
 							</form>
 						</div>
 						<div
-							*ngIf="state?.appData?.data?.usuario?.rol !== 'ROL_USUARIO'"
+							*ngIf="
+								state?.appData?.data?.usuario?.rol !==
+								'ROL_USUARIO'
+							"
 							class="tab-pane fade"
 							id="application-tab"
 							role="tabpanel"
@@ -572,7 +578,10 @@
 							<h3 class="mb-4">
 								Configuraciones de la Aplicación
 							</h3>
-							<form #settingsForm="ngForm" (ngSubmit)="updateAccountSettings(settingsForm)">
+							<form
+								#settingsForm="ngForm"
+								(ngSubmit)="updateAccountSettings(settingsForm)"
+							>
 								<input type="hidden" name="userId" />
 								<div class="row">
 									<div class="col-md-6">
@@ -583,10 +592,20 @@
 													name="enabled"
 													id="enabled"
 													class="form-check-input"
-													[disabled]="state?.appData?.data?.usuario?.rol ===
-													'ROL_USUARIO' || (isLoading$ | async)"
-													[checked]="state?.appData?.data?.usuario?.estado"
-													[ngModel]="state?.appData?.data?.usuario?.estado"
+													[disabled]="
+														state?.appData?.data
+															?.usuario?.rol ===
+															'ROL_USUARIO' ||
+														(isLoading$ | async)
+													"
+													[checked]="
+														state?.appData?.data
+															?.usuario?.estado
+													"
+													[ngModel]="
+														state?.appData?.data
+															?.usuario?.estado
+													"
 												/>
 												<label
 													class="form-check-label"
@@ -644,10 +663,20 @@
 												>Autenticación
 												Multifactor</strong
 											>
-											<span *ngIf="state?.appData?.data?.usuario?.utilizaMfa" class="badge bg-success mx-3"
+											<span
+												*ngIf="
+													state?.appData?.data
+														?.usuario?.utilizaMfa
+												"
+												class="badge bg-success mx-3"
 												>Activado</span
 											>
-											<span *ngIf="!state?.appData?.data?.usuario?.utilizaMfa" class="badge bg-warning mx-3"
+											<span
+												*ngIf="
+													!state?.appData?.data
+														?.usuario?.utilizaMfa
+												"
+												class="badge bg-warning mx-3"
 												>Desactivado</span
 											>
 											<p class="text-muted mb-0">
@@ -658,10 +687,14 @@
 										</div>
 										<div class="col-auto">
 											<button
+												(click)="toggleMfa()"
+												[disabled]="isLoading$ | async"
 												class="btn btn-primary btn-sm"
 											>
-												Desactivar
+												{{state?.appData?.data
+													?.usuario?.utilizaMfa ? 'Desactivar' : 'Activar'}}
 												<span
+													*ngIf="isLoading$ | async"
 													class="spinner-border spinner-border-sm"
 													role="status"
 													aria-hidden="true"
