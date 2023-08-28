@@ -41,9 +41,7 @@
 										"
 										class="shadow"
 									/>
-									<i
-										class="bi bi-camera-fill right-position"
-									></i>
+									<i (click)="fileInput.click()" class="fa-solid fa-camera right-position"></i>
 								</span>
 							</div>
 							<h4 class="text-center">
@@ -955,6 +953,8 @@
 <!-- profile image change form -->
 <form enctype="multipart/form-data" style="display: none">
 	<input
+		#fileInput
+		(change)="updatePicture($event)"
 		type="file"
 		name="image"
 		id="image"

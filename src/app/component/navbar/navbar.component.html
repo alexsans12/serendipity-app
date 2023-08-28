@@ -1,5 +1,14 @@
 <!-- Navbar -->
-<nav [ngClass]="{'home-navbar': currentRoute === '/', 'scrolled': isScrolled, 'shadow-sm': isScrolled, 'expanded-navbar': isExpanded }" class="navbar navbar-expand-lg bg-body-tertiary position-absolute start-0 end-0 border-bottom">
+<nav
+	[ngClass]="{
+		'home-navbar': currentRoute === '/',
+		scrolled: isScrolled,
+		'shadow-sm': isScrolled,
+		'expanded-navbar': isExpanded
+	}"
+	*ngIf="profileState$ | async as state"
+	class="navbar navbar-expand-lg bg-body-tertiary position-absolute start-0 end-0 border-bottom"
+>
 	<!-- Container wrapper -->
 	<div class="container container-fluid">
 		<!-- Left elements: Brand -->
@@ -53,10 +62,12 @@
 					aria-expanded="false"
 				>
 					<img
-						src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"
+						[src]="state?.appData?.data?.usuario?.urlFoto"
+						[alt]="state?.appData?.data?.usuario?.nombre"
 						class="rounded-circle"
 						height="25"
-						alt="Black and White Portrait of a Man"
+						alt="Black and White
+					Portrait of a Man"
 						loading="lazy"
 					/>
 				</a>
@@ -64,8 +75,16 @@
 					class="dropdown-menu dropdown-menu-end"
 					aria-labelledby="navbarDropdownMenuAvatar"
 				>
-					<li><a class="dropdown-item" [routerLink]="['/dashboard']">Dashboard</a></li>
-					<li><a class="dropdown-item" [routerLink]="['/profile']">Mi perfil</a></li>
+					<li>
+						<a class="dropdown-item" [routerLink]="['/dashboard']"
+							>Dashboard</a
+						>
+					</li>
+					<li>
+						<a class="dropdown-item" [routerLink]="['/profile']"
+							>Mi perfil</a
+						>
+					</li>
 					<li><a class="dropdown-item" href="#">Mis compras</a></li>
 					<li><a class="dropdown-item" href="#">Cerrar sesión</a></li>
 				</ul>
