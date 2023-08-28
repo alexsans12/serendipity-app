@@ -80,19 +80,26 @@ export class UsuarioService {
 			);
 
 	updatePassword$ = (form: {
-		currentPassword: string,
-		newPassword: string,
-		confirmNewPassword: string
+		currentPassword: string;
+		newPassword: string;
+		confirmNewPassword: string;
 	}) =>
 		<Observable<CustomHttpResponse<Profile>>>(
 			this.http
 				.patch<CustomHttpResponse<Profile>>(
-					`${this.server}/usuario/update/password`, form
+					`${this.server}/usuario/update/password`,
+					form
 				)
-				.pipe(
-					tap(console.log),
-					catchError(this.handleError)
+				.pipe(tap(console.log), catchError(this.handleError))
+		);
+
+	updateRol$ = (rol: string) => <Observable<CustomHttpResponse<Profile>>> (
+			this.http
+				.patch<CustomHttpResponse<Profile>>(
+					`${this.server}/usuario/update/rol/${rol}`,
+					{}
 				)
+				.pipe(tap(console.log), catchError(this.handleError))
 		);
 
 	private handleError(error: HttpErrorResponse): Observable<never> {

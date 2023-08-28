@@ -1,6 +1,5 @@
 <ng-container *ngIf="profileState$ | async as state">
 	<ng-container>
-		<!-- <div>{{ state | json }} </div> -->
 		<section class="profile">
 			<div class="container">
 				<nav aria-label="breadcrumb" style="margin-top: 8px">
@@ -436,7 +435,7 @@
 								</li>
 							</ul>
 						</div>
-						<!-- <div
+						<div
 							*ngIf="
 								state?.appData?.data?.usuario?.rol !==
 								'ROL_USUARIO'
@@ -446,16 +445,12 @@
 							role="tabpanel"
 							aria-labelledby="security"
 							style="min-height: 510px"
-						> -->
-						<div
-							class="tab-pane fade"
-							id="security-tab"
-							role="tabpanel"
-							aria-labelledby="security"
-							style="min-height: 510px"
 						>
 							<h3 class="mb-4">Configuración de Autorización</h3>
-							<form>
+							<form
+								#rolForm="ngForm"
+								(ngSubmit)="updateRol(rolForm)"
+							>
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
@@ -463,12 +458,52 @@
 												>Nombre de rol</label
 											>
 											<select
-												name="roleName"
+												name="rol"
 												class="form-control select-cl"
 												required
+												[disabled]="
+													!(
+														state?.appData?.data
+															?.usuario?.rol ===
+															'ROL_ADMIN' ||
+														state?.appData?.data
+															?.usuario?.rol ===
+															'ROL_SYSADMIN'
+													) || (isLoading$ | async)
+												"
+												[ngModel]="
+													state?.appData?.data
+														?.usuario?.rol
+												"
 											>
-												<option class="select-cl">
-													ROLE_ADMIN
+												<option
+													*ngFor="
+														let rol of state
+															?.appData?.data
+															?.roles
+													"
+													[selected]="
+														state?.appData?.data
+															?.usuario?.rol ===
+														rol.nombre
+													"
+													[ngValue]="rol.nombre"
+													class="select-cl"
+													[disabled]="
+														!(
+															state?.appData?.data
+																?.usuario
+																?.rol ===
+																'ROL_ADMIN' ||
+															state?.appData?.data
+																?.usuario
+																?.rol ===
+																'ROL_SYSADMIN'
+														) ||
+														(isLoading$ | async)
+													"
+												>
+													{{ rol.nombre }}
 												</option>
 											</select>
 										</div>
@@ -478,20 +513,32 @@
 											<label style="margin-bottom: 5px"
 												>Permisos de rol</label
 											>
-											<input
-												type="text"
-												class="form-control"
-												style="margin-bottom: 5px"
-											/>
+											<div class="permissions">
+												<input
+													*ngFor="
+														let permission of state?.appData?.data?.usuario?.permisos.split(
+															','
+														)
+													"
+													type="text"
+													class="form-control"
+													style="margin-bottom: 5px"
+													[value]="permission"
+													[disabled]="true"
+												/>
+											</div>
 										</div>
 									</div>
 								</div>
 								<div>
 									<button
 										[disabled]="
-											state?.appData?.data?.usuario
-												?.rol === 'ROL_USUARIO' ||
-											(isLoading$ | async)
+											!(
+												state?.appData?.data?.usuario
+													?.rol === 'ROL_ADMIN' ||
+												state?.appData?.data?.usuario
+													?.rol === 'ROL_SYSADMIN'
+											) || (isLoading$ | async)
 										"
 										type="submit"
 										class="btn btn-primary"
