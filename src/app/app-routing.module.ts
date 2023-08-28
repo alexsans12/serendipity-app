@@ -8,6 +8,7 @@ import { ProfileComponent } from './component/profile/profile.component';
 import { HomeComponent } from './component/home/home.component';
 import { CustomersComponent } from './component/customers/customers.component';
 import { DashboardComponent } from './component/dashboard/dashboard.component';
+import { AuthenticationGuard } from './guard/authentication.guard';
 
 const routes: Routes = [
 	{ path: 'home', component: HomeComponent },
@@ -16,9 +17,9 @@ const routes: Routes = [
 	{ path: 'reset-password', component: ResetPasswordComponent },
 	{ path: 'user/verify/account/:key', component: VerifyComponent },
 	{ path: 'user/verify/password/:key', component: VerifyComponent },
-    { path: 'dashboard', component: DashboardComponent },
-	{ path: 'customers', component: CustomersComponent },
-	{ path: 'profile', component: ProfileComponent },
+    { path: 'dashboard', component: DashboardComponent, canActivate: [AuthenticationGuard] },
+	{ path: 'customers', component: CustomersComponent, canActivate: [AuthenticationGuard] },
+	{ path: 'profile', component: ProfileComponent, canActivate: [AuthenticationGuard] },
 	{ path: '', component: HomeComponent },
 	{ path: '', redirectTo: '/', pathMatch: 'full'},
 	{ path: '**', component: HomeComponent },

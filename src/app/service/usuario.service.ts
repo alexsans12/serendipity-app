@@ -6,6 +6,7 @@ import {
 import { Injectable } from '@angular/core';
 import { CustomHttpResponse, Profile } from '../interface/appstates';
 import { Observable, catchError, tap, throwError } from 'rxjs';
+import { JwtHelperService } from '@auth0/angular-jwt';
 import { Usuario } from '../interface/usuario';
 import { key } from '../enum/key.enum';
 
@@ -13,7 +14,8 @@ import { key } from '../enum/key.enum';
 	providedIn: 'root',
 })
 export class UsuarioService {
-	private readonly server: string = 'http://localhost:9091/api/v1';
+	private readonly server: string = 'http://192.168.0.13:9091/api/v1';
+	private jwtHelper = new JwtHelperService();
 
 	constructor(private http: HttpClient) {}
 
@@ -132,6 +134,12 @@ export class UsuarioService {
 				)
 				.pipe(tap(console.log), catchError(this.handleError))
 		);
+
+	isAuthenticated = (): boolean =>
+		this.jwtHelper.decodeToken<string>(localStorage.getItem(key.TOKEN)) &&
+		!this.jwtHelper.isTokenExpired(localStorage.getItem(key.TOKEN))
+			? true
+			: false;
 
 	private handleError(error: HttpErrorResponse): Observable<never> {
 		let errorMessage: string;

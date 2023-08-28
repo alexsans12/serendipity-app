@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UsuarioService } from '../../service/usuario.service';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
@@ -12,16 +12,20 @@ import { key } from 'src/app/enum/key.enum';
 	templateUrl: './login.component.html',
 	styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 	loginState$: Observable<LoginState> = of({ dataState: DataState.LOADED });
 	private phoneSubject: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 	private emailSubject: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 	readonly DataState = DataState;
 
-	constructor(private router: Router, private UsuarioService: UsuarioService) {}
+	constructor(private router: Router, private usuarioService: UsuarioService) {}
+
+	ngOnInit(): void {
+		this.usuarioService.isAuthenticated() ? this.router.navigate(['/']) : this.loginPage();
+	}
 
 	login(loginForm: NgForm): void {
-		this.loginState$ = this.UsuarioService.login$(loginForm.value.email, loginForm.value.password)
+		this.loginState$ = this.usuarioService.login$(loginForm.value.email, loginForm.value.password)
 		.pipe(map(response => {
 			if (response.data.usuario.utilizaMfa) {
 				this.phoneSubject.next(response.data.usuario.telefono);
@@ -45,7 +49,7 @@ export class LoginComponent {
 		if (verifyCodeForm.invalid || !this.emailSubject.value || !this.phoneSubject.value) {
 			return;
 		}
-		this.loginState$ = this.UsuarioService.verifyCode$(this.emailSubject.value, verifyCodeForm.value.code)
+		this.loginState$ = this.usuarioService.verifyCode$(this.emailSubject.value, verifyCodeForm.value.code)
 		.pipe(
 			map(response => {
 				localStorage.setItem(key.TOKEN, response.data.access_token);
