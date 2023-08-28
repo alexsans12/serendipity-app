@@ -93,11 +93,22 @@ export class UsuarioService {
 				.pipe(tap(console.log), catchError(this.handleError))
 		);
 
-	updateRol$ = (rol: string) => <Observable<CustomHttpResponse<Profile>>> (
+	updateRol$ = (rol: string) =>
+		<Observable<CustomHttpResponse<Profile>>>(
 			this.http
 				.patch<CustomHttpResponse<Profile>>(
 					`${this.server}/usuario/update/rol/${rol}`,
 					{}
+				)
+				.pipe(tap(console.log), catchError(this.handleError))
+		);
+
+	updateAccountSettings$ = (settings: { enabled: Boolean }) =>
+		<Observable<CustomHttpResponse<Profile>>>(
+			this.http
+				.patch<CustomHttpResponse<Profile>>(
+					`${this.server}/usuario/update/settings`,
+					settings
 				)
 				.pipe(tap(console.log), catchError(this.handleError))
 		);
