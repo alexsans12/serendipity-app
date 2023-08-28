@@ -80,19 +80,57 @@ export class UsuarioService {
 			);
 
 	updatePassword$ = (form: {
-		currentPassword: string,
-		newPassword: string,
-		confirmNewPassword: string
+		currentPassword: string;
+		newPassword: string;
+		confirmNewPassword: string;
 	}) =>
 		<Observable<CustomHttpResponse<Profile>>>(
 			this.http
 				.patch<CustomHttpResponse<Profile>>(
-					`${this.server}/usuario/update/password`, form
+					`${this.server}/usuario/update/password`,
+					form
 				)
-				.pipe(
-					tap(console.log),
-					catchError(this.handleError)
+				.pipe(tap(console.log), catchError(this.handleError))
+		);
+
+	updateRol$ = (rol: string) =>
+		<Observable<CustomHttpResponse<Profile>>>(
+			this.http
+				.patch<CustomHttpResponse<Profile>>(
+					`${this.server}/usuario/update/rol/${rol}`,
+					{}
 				)
+				.pipe(tap(console.log), catchError(this.handleError))
+		);
+
+	updateAccountSettings$ = (settings: { enabled: Boolean }) =>
+		<Observable<CustomHttpResponse<Profile>>>(
+			this.http
+				.patch<CustomHttpResponse<Profile>>(
+					`${this.server}/usuario/update/settings`,
+					settings
+				)
+				.pipe(tap(console.log), catchError(this.handleError))
+		);
+
+	toggleMfa$ = () =>
+		<Observable<CustomHttpResponse<Profile>>>(
+			this.http
+				.patch<CustomHttpResponse<Profile>>(
+					`${this.server}/usuario/toggle/mfa`,
+					{}
+				)
+				.pipe(tap(console.log), catchError(this.handleError))
+		);
+
+	updateImage$ = (formData: FormData) =>
+		<Observable<CustomHttpResponse<Profile>>>(
+			this.http
+				.patch<CustomHttpResponse<Profile>>(
+					`${this.server}/usuario/update/image`,
+					formData
+				)
+				.pipe(tap(console.log), catchError(this.handleError))
 		);
 
 	private handleError(error: HttpErrorResponse): Observable<never> {

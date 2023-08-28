@@ -1,5 +1,24 @@
 .profile {
 	margin-top: 6rem;
+
+	.permissions {
+		overflow-y: auto;
+		max-height: 16rem;
+
+		scrollbar-width: thin;
+		scrollbar-color: var(--bs-secondary-bg) var(--bs-body-color);
+		scrollbar-gutter: stable;
+
+		&::-webkit-scrollbar {
+			width: 0.5rem;
+		}
+
+		&::-webkit-scrollbar-thumb {
+			background-color: var(--bs-secondary-bg);
+			border-radius: 0.5rem;
+			outline: 1px solid slategray;
+		}
+	}
 }
 
 a {
@@ -9,14 +28,6 @@ a {
 		&.active {
 			color: #fff;
 			cursor: pointer;
-
-			&[id="profile"],
-			&[id="password"],
-			&[id="security"],
-			&[id="application"],
-			&[id="notification"] {
-				// Same styles for all these IDs
-			}
 		}
 	}
 }

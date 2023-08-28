@@ -1,6 +1,10 @@
 import {Component, HostListener, OnInit} from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { filter } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, filter, map, of, startWith } from 'rxjs';
+import { CustomHttpResponse, Profile } from 'src/app/interface/appstates';
+import { UsuarioService } from 'src/app/service/usuario.service';
+import { State } from 'src/app/interface/state';
+import { DataState } from 'src/app/enum/datastate.enum';
 
 @Component({
 	selector: 'app-navbar',
@@ -8,13 +12,17 @@ import { filter } from 'rxjs';
 	styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit {
+	profileState$: Observable<State<CustomHttpResponse<Profile>>>;
+	private dataSubject: BehaviorSubject<CustomHttpResponse<Profile>> = new BehaviorSubject<CustomHttpResponse<Profile>>(null);
+
 	currentRoute: string = "";
 	isExpanded = false;
 	isScrolled = false;
 
 	constructor(
 		private router: Router,
-		private activatedRoute: ActivatedRoute
+		private activatedRoute: ActivatedRoute,
+		private usuarioService: UsuarioService
 	) {
 		// Filtra los eventos para recibir solo instancias de NavigationEnd
 		this.router.events
@@ -31,7 +39,22 @@ export class NavbarComponent implements OnInit {
 			});
 	}
 
-	ngOnInit(): void {}
+	ngOnInit(): void {
+		this.profileState$ = this.usuarioService.profile$().pipe(
+			map((response) => {
+				this.dataSubject.next(response);
+				return { dataState: DataState.LOADED, appData: response };
+			}),
+			startWith({ dataState: DataState.LOADING }),
+			catchError((error: string) => {
+				return of({
+					dataState: DataState.ERROR,
+					appData: this.dataSubject.value,
+					error,
+				});
+			})
+		);
+	}
 
 	@HostListener('window:scroll', [])
 	onWindowScroll() {
