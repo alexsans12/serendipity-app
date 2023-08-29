@@ -135,6 +135,11 @@ export class UsuarioService {
 				.pipe(tap(console.log), catchError(this.handleError))
 		);
 
+	logOut() {
+		localStorage.removeItem(key.TOKEN);
+		localStorage.removeItem(key.REFRESH_TOKEN);
+	}
+
 	isAuthenticated = (): boolean =>
 		this.jwtHelper.decodeToken<string>(localStorage.getItem(key.TOKEN)) &&
 		!this.jwtHelper.isTokenExpired(localStorage.getItem(key.TOKEN))

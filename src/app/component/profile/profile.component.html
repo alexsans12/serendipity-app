@@ -1,5 +1,6 @@
 <ng-container *ngIf="profileState$ | async as state">
 	<ng-container>
+		<app-navbar [usuario]="state?.appData?.data?.usuario"></app-navbar>
 		<section class="profile">
 			<div class="container">
 				<nav aria-label="breadcrumb" style="margin-top: 8px">

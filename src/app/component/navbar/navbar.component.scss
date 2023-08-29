@@ -11,6 +11,7 @@
 
 .navbar {
 	z-index: 999;
+	transition: background-color 0.1s ease-in;
 
 	// Media Query para dispositivos móviles y tabletas
 	@media (max-width: 992px) {
@@ -20,7 +21,6 @@
 	&.scrolled {
 		@media (max-width: 992px) {
 			background-color: #f8f9faff !important;
-			transition: background-color 0.1s ease-in;
 			border-bottom: 1px solid var(--bs-gray-300) !important;
 		}
 	}

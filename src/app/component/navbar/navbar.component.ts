@@ -1,18 +1,10 @@
-import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, Input } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import {
-	BehaviorSubject,
-	Observable,
-	catchError,
 	filter,
-	map,
-	of,
-	startWith,
 } from 'rxjs';
-import { CustomHttpResponse, Profile } from 'src/app/interface/appstates';
 import { UsuarioService } from 'src/app/service/usuario.service';
-import { State } from 'src/app/interface/state';
-import { DataState } from 'src/app/enum/datastate.enum';
+import { Usuario } from '../../interface/usuario';
 declare var bootstrap: any;
 
 @Component({
@@ -20,10 +12,8 @@ declare var bootstrap: any;
 	templateUrl: './navbar.component.html',
 	styleUrls: ['./navbar.component.scss'],
 })
-export class NavbarComponent implements OnInit {
-	profileState$: Observable<State<CustomHttpResponse<Profile>>>;
-	private dataSubject: BehaviorSubject<CustomHttpResponse<Profile>> =
-		new BehaviorSubject<CustomHttpResponse<Profile>>(null);
+export class NavbarComponent {
+	@Input() usuario: Usuario;
 
 	currentRoute: string = '';
 	isExpanded = false;
@@ -50,21 +40,10 @@ export class NavbarComponent implements OnInit {
 			});
 	}
 
-	ngOnInit(): void {
-		this.profileState$ = this.usuarioService.profile$().pipe(
-			map((response) => {
-				this.dataSubject.next(response);
-				return { dataState: DataState.LOADED, appData: response };
-			}),
-			startWith({ dataState: DataState.LOADING }),
-			catchError((error: string) => {
-				return of({
-					dataState: DataState.ERROR,
-					appData: this.dataSubject.value,
-					error,
-				});
-			})
-		);
+	logOut(): void {
+		this.closeMenu();
+		this.usuarioService.logOut();
+		this.router.navigate(['/login']);
 	}
 
 	@HostListener('window:scroll', [])
