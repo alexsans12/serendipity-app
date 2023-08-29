@@ -41,7 +41,10 @@
 										"
 										class="shadow"
 									/>
-									<i (click)="fileInput.click()" class="fa-solid fa-camera right-position"></i>
+									<i
+										(click)="fileInput.click()"
+										class="fa-solid fa-camera right-position"
+									></i>
 								</span>
 							</div>
 							<h4 class="text-center">
@@ -689,8 +692,12 @@
 												[disabled]="isLoading$ | async"
 												class="btn btn-primary btn-sm"
 											>
-												{{state?.appData?.data
-													?.usuario?.utilizaMfa ? 'Desactivar' : 'Activar'}}
+												{{
+													state?.appData?.data
+														?.usuario?.utilizaMfa
+														? "Desactivar"
+														: "Activar"
+												}}
 												<span
 													*ngIf="isLoading$ | async"
 													class="spinner-border spinner-border-sm"
@@ -721,6 +728,9 @@
 													type="checkbox"
 													class="custom-control-input"
 													id="activityLog"
+													(change)="toggleLogs()"
+													[checked]="(showLogs$ | async)"
+													[disabled]="isLoading$ | async"
 												/>
 												<span
 													class="custom-control-label"
@@ -733,40 +743,64 @@
 						</div>
 					</div>
 				</div>
-				<div class="row">
+				<div *ngIf="showLogs$ | async" class="row">
 					<div class="col-xl-12 mt-4">
 						<div class="card" style="border-radius: 8px">
 							<div class="card-body">
-								<h5 class="card-title">Account Activities</h5>
+								<h5 class="card-title">
+									Actividades de la cuenta
+								</h5>
 								<h6 class="card-subtitle mb-2 text-muted">
-									Latest activities on your account.
+									Últimas actividades en su cuenta.
 								</h6>
 								<div class="table-responsive">
 									<table class="table table-hover">
 										<thead>
 											<tr>
-												<th scope="col">Device</th>
-												<th scope="col">IP Address</th>
-												<th scope="col">Date</th>
-												<th scope="col">Type</th>
-												<th scope="col">Description</th>
-												<th scope="col">Action</th>
+												<th scope="col">Dispositivo</th>
+												<th scope="col">
+													Dirección IP
+												</th>
+												<th scope="col">Fecha</th>
+												<th scope="col">Tipo</th>
+												<th scope="col">Descripción</th>
+												<th scope="col">Acción</th>
 											</tr>
 										</thead>
 										<tbody>
-											<tr>
-												<td>Chrome</td>
-												<td>192.168.1.209</td>
-												<td>01-15-2023 5:25:20</td>
+											<tr
+												*ngFor="
+													let evento of state?.appData
+														?.data?.eventos
+												"
+											>
+												<td>
+													{{ evento.dispositivo }}
+												</td>
+												<td>{{ evento.ipAddress }}</td>
+												<td>
+													{{ evento.fechaCreacion | date:'MMMM d, y, h:mm a' }}
+												</td>
 												<td>
 													<span
-														class="badge pill bg-success"
+														class="badge pill"
+														[ngClass]="[
+															evento.tipo === EventoType.LOGIN_ATTEMPT ? 'bg-warning' : '',
+															evento.tipo === EventoType.LOGIN_ATTEMPT_FAILURE ? 'bg-danger' : '',
+															evento.tipo === EventoType.LOGIN_ATTEPMT_SUCCESS ? 'bg-success' : '',
+															evento.tipo === EventoType.PROFILE_UPDATE ? 'bg-primary' : '',
+															evento.tipo === EventoType.PROFILE_PICTURE_UPDATE ? 'bg-primary' : '',
+															evento.tipo === EventoType.ROLE_UPDATE ? 'bg-info' : '',
+															evento.tipo === EventoType.ACCOUNT_SETTINGS_UPDATE ? 'bg-warning' : '',
+															evento.tipo === EventoType.PASSWORD_UPDATE ? 'bg-warning' : '',
+															evento.tipo === EventoType.MFA_UPDATE ? 'bg-info' : '',
+														]"
 													>
-														LOGIN_ATTEMPT_SUCCESS
+														{{ evento.tipo }}
 													</span>
 												</td>
 												<td>
-													You logged in successfully
+													{{ evento.descripcion }}
 												</td>
 												<td>
 													<button
@@ -777,7 +811,7 @@
 															font-weight: 450;
 														"
 													>
-														Report
+														Reportar
 													</button>
 												</td>
 											</tr>
