@@ -12,6 +12,7 @@ import { DataState } from 'src/app/enum/datastate.enum';
 import { CustomHttpResponse, Profile } from 'src/app/interface/appstates';
 import { State } from 'src/app/interface/state';
 import { NgForm } from '@angular/forms';
+import { EventoType } from '../../enum/evento-type.enum';
 
 @Component({
 	selector: 'app-profile',
@@ -24,7 +25,10 @@ export class ProfileComponent implements OnInit {
 		new BehaviorSubject<CustomHttpResponse<Profile>>(null);
 	private isLoadingSubject = new BehaviorSubject<boolean>(false);
 	isLoading$ = this.isLoadingSubject.asObservable();
+	private showLogsSubject = new BehaviorSubject<boolean>(false);
+	showLogs$ = this.showLogsSubject.asObservable();
 	readonly DataState = DataState;
+	readonly EventoType = EventoType;
 
 	constructor(private usuarioService: UsuarioService) {}
 
@@ -84,6 +88,7 @@ export class ProfileComponent implements OnInit {
 				.updatePassword$(passwordForm.value)
 				.pipe(
 					map((response) => {
+						this.dataSubject.next({ ...response, data: response.data });
 						passwordForm.reset();
 						this.isLoadingSubject.next(false);
 						return {
@@ -234,6 +239,10 @@ export class ProfileComponent implements OnInit {
 					})
 				);
 		}
+	}
+
+	toggleLogs(): void {
+		this.showLogsSubject.next(!this.showLogsSubject.value);
 	}
 
 	private getFormData(image: File): FormData {

@@ -10,9 +10,9 @@
 	class="navbar navbar-expand-lg bg-body-tertiary position-absolute start-0 end-0 border-bottom"
 >
 	<!-- Container wrapper -->
-	<div class="container container-fluid">
+	<div class="container-fluid">
 		<!-- Left elements: Brand -->
-		<a class="navbar-brand" href="#">
+		<a [routerLink]="['/']" class="navbar-brand" href="#">
 			<i class="text-danger fa-solid fa-dove me-3"></i>
 			<span class="fw-semibold text-lowercase">Serendipity</span>
 		</a>
@@ -22,8 +22,8 @@
 			class="navbar-toggler"
 			type="button"
 			data-bs-toggle="collapse"
-			data-bs-target="#navbarSupportedContent"
-			aria-controls="navbarSupportedContent"
+			data-bs-target="#navbar"
+			aria-controls="navbar"
 			[attr.aria-expanded]="isExpanded"
 			(click)="isExpanded = !isExpanded"
 			aria-label="Toggle navigation"
@@ -32,22 +32,22 @@
 		</button>
 
 		<!-- Collapsible wrapper -->
-		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+		<div class="collapse navbar-collapse" id="navbar">
 			<!-- Center links -->
 			<ul class="navbar-nav ms-auto me-2 mb-2 mb-lg-0">
 				<li class="nav-item mt-2 mb-2">
-					<a class="nav-link" href="#">Inicio</a>
+					<a (click)="closeMenu()" class="nav-link" [routerLink]="['/']">Inicio</a>
 				</li>
 				<li class="nav-item mt-2 mb-2">
-					<a class="nav-link" href="#">Tienda</a>
+					<a (click)="closeMenu()" class="nav-link" href="#">Tienda</a>
 				</li>
 				<li class="nav-item mt-2 mb-2">
-					<a class="nav-link" href="#">Sobre nosotros</a>
+					<a (click)="closeMenu()" class="nav-link" href="#">Sobre nosotros</a>
 				</li>
 			</ul>
 
 			<!-- Cart Icon -->
-			<a class="text-reset me-3 fs-5" href="#">
+			<a (click)="closeMenu()" class="text-reset me-3 fs-5" href="#">
 				<i class="text-danger fas fa-shopping-cart"></i>
 			</a>
 
@@ -76,17 +76,17 @@
 					aria-labelledby="navbarDropdownMenuAvatar"
 				>
 					<li>
-						<a class="dropdown-item" [routerLink]="['/dashboard']"
+						<a (click)="closeMenu()" class="dropdown-item" [routerLink]="['/dashboard']"
 							>Dashboard</a
 						>
 					</li>
 					<li>
-						<a class="dropdown-item" [routerLink]="['/profile']"
+						<a (click)="closeMenu()" class="dropdown-item" [routerLink]="['/profile']"
 							>Mi perfil</a
 						>
 					</li>
-					<li><a class="dropdown-item" href="#">Mis compras</a></li>
-					<li><a class="dropdown-item" href="#">Cerrar sesión</a></li>
+					<li><a (click)="closeMenu()" class="dropdown-item" href="#">Mis compras</a></li>
+					<li><a (click)="closeMenu()" class="dropdown-item" href="#">Cerrar sesión</a></li>
 				</ul>
 			</div>
 		</div>
