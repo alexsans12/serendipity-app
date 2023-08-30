@@ -21,6 +21,7 @@ import { HeroComponent } from './component/hero/hero.component';
 import { DashboardComponent } from './component/dashboard/dashboard.component';
 import { StatsComponent } from './component/stats/stats.component';
 import { TokenInterceptor } from './interceptor/token.interceptor';
+import { CacheInterceptor } from './interceptor/cache.interceptor';
 
 @NgModule({
 	declarations: [
@@ -52,7 +53,10 @@ import { TokenInterceptor } from './interceptor/token.interceptor';
 			registrationStrategy: 'registerWhenStable:30000',
 		}),
 	],
-	providers: [ { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true } ],
+	providers: [
+		{ provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
+		{ provide: HTTP_INTERCEPTORS, useClass: CacheInterceptor, multi: true },
+	],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}
