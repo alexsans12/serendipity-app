@@ -29,6 +29,15 @@ export class UsuarioService {
 				.pipe(tap(console.log), catchError(this.handleError))
 		);
 
+	requestPasswordReset$ = (email: string) =>
+		<Observable<CustomHttpResponse<Profile>>>(
+			this.http
+				.get<CustomHttpResponse<Profile>>(
+					`${this.server}/usuario/reset-password/${email}`
+				)
+				.pipe(tap(console.log), catchError(this.handleError))
+		);
+
 	register$ = (usuario: Usuario) =>
 		<Observable<CustomHttpResponse<Profile>>>(
 			this.http
@@ -44,6 +53,15 @@ export class UsuarioService {
 			this.http
 				.get<CustomHttpResponse<Profile>>(
 					`${this.server}/usuario/verify/code/${email}/${code}`
+				)
+				.pipe(tap(console.log), catchError(this.handleError))
+		);
+
+	verify$ = (key: string, type: string) =>
+		<Observable<CustomHttpResponse<Profile>>>(
+			this.http
+				.get<CustomHttpResponse<Profile>>(
+					`${this.server}/usuario/verify/${type}/${key}`
 				)
 				.pipe(tap(console.log), catchError(this.handleError))
 		);
