@@ -29,3 +29,10 @@ export interface Profile {
 	access_token?: string;
 	refresh_token?: string;
 }
+
+export interface RegisterState {
+	dataState: DataState;
+	registerSuccess?: boolean;
+	error?: string;
+	message?: string;
+}
