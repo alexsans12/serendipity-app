@@ -14,7 +14,7 @@ import { key } from '../enum/key.enum';
 	providedIn: 'root',
 })
 export class UsuarioService {
-	private readonly server: string = 'http://192.168.0.13:9091/api/v1';
+	private readonly server: string = 'http://192.168.0.5:9091/api/v1';
 	private jwtHelper = new JwtHelperService();
 
 	constructor(private http: HttpClient) {}
@@ -25,6 +25,16 @@ export class UsuarioService {
 				.post<CustomHttpResponse<Profile>>(
 					`${this.server}/usuario/login`,
 					{ email, password }
+				)
+				.pipe(tap(console.log), catchError(this.handleError))
+		);
+
+	register$ = (usuario: Usuario) =>
+		<Observable<CustomHttpResponse<Profile>>>(
+			this.http
+				.post<CustomHttpResponse<Profile>>(
+					`${this.server}/usuario/register`,
+					usuario
 				)
 				.pipe(tap(console.log), catchError(this.handleError))
 		);
