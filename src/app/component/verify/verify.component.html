@@ -1,1 +1,230 @@
-<p>verify works!</p>
+<section *ngIf="verifyState$ | async as state" [ngSwitch]="state.dataState">
+	<ng-container *ngSwitchCase="DataState.LOADING">
+		<div class="container">
+			<div class="row justify-content-center my-5">
+				<div class="col-md-6" style="margin-top: 50px">
+					<div class="card">
+						<div class="card-body">
+							<div class="text-center">
+								<h2 class="card-title mt-4 mb-4">
+									{{ state.title }}
+								</h2>
+								<div
+									style="font-size: 30px"
+									class="spinner-border text-secondary"
+									role="status"
+								>
+									<span class="visually-hidden"
+										>Cargando...</span
+									>
+								</div>
+								<p class="mt-2" style="font-size: 20px">
+									{{ state.message }}
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ng-container>
+
+	<ng-container *ngSwitchCase="DataState.LOADED">
+		<div *ngIf="state.type === 'account'" class="container">
+			<div class="row justify-content-center my-5">
+				<div class="col-md-6" style="margin-top: 50px">
+					<div class="card">
+						<div class="card-body">
+							<div class="text-center">
+								<h2 class="card-title mt-4 mb-4">
+									{{ state.title }}
+								</h2>
+								<i
+									class="fa-solid fa-circle-check text-success"
+									style="font-size: 5rem"
+								></i>
+								<p class="mt-2" style="font-size: 20px">
+									{{ state.message }}
+								</p>
+							</div>
+							<div class="row mb-4">
+								<div class="col d-flex justify-content-center">
+									<a [routerLink]="['/login']"
+										>Iniciar Sesión</a
+									>
+								</div>
+								<div class="col">
+									<a
+										[routerLink]="['/register']"
+										style="
+											color: #0d6efd;
+											text-decoration: underline;
+											cursor: pointer;
+										"
+										>Crea otra cuenta</a
+									>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div *ngIf="state.type === 'password'" class="container">
+			<div class="row justify-content-center my-5">
+				<div class="col-md-6" style="margin-top: 50px">
+					<div class="card">
+						<div class="card-body">
+							<div class="text-center">
+								<h2 class="card-title mt-4 mb-5">
+									Ingrese una nueva contraseña
+								</h2>
+							</div>
+							<div
+								*ngIf="state.error"
+								class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show"
+								role="alert"
+							>
+								{{ state.error }}
+								<button
+									type="button"
+									class="btn-close btn-close-white"
+									data-bs-dismiss="alert"
+									aria-label="Close"
+								></button>
+							</div>
+							<form
+								#resetPasswordForm="ngForm"
+								(ngSubmit)="renewPassword(resetPasswordForm)"
+							>
+								<div class="form-outline mb-4">
+									<label class="form-label" for="password"
+										>Nueva contraseña</label
+									>
+									<input
+										type="password"
+										ngModel
+										name="password"
+										id="password"
+										[disabled]="isLoading$ | async"
+										class="form-control"
+										required
+										minlength="2"
+									/>
+								</div>
+								<div class="form-outline mb-4">
+									<label for="confirmPassword" class="form-label"
+										>Confirmar la contraseña</label
+									>
+									<input
+										type="password"
+										ngModel
+										name="confirmPassword"
+										id="confirmPassword"
+										[disabled]="isLoading$ | async"
+										class="form-control"
+										required
+										minlength="2"
+									/>
+								</div>
+								<div class="d-flex justify-content-center mb-4">
+									<button
+										[disabled]="
+											(isLoading$ | async) ||
+											resetPasswordForm.invalid ||
+											resetPasswordForm.pristine
+										"
+										type="submit"
+										class="btn btn-primary"
+									>
+										<span
+											*ngIf="isLoading$ | async"
+											class="spinner-border spinner-border-sm"
+											role="status"
+											aria-hidden="true"
+											style="margin-right: 5px"
+										></span>
+										<span *ngIf="isLoading$ | async"
+											>Cargando...</span
+										>
+										<span *ngIf="!(isLoading$ | async)"
+											>Actualizar Contraseña</span
+										>
+									</button>
+								</div>
+							</form>
+							<div class="row mb-4">
+								<div class="col d-flex justify-content-center">
+									<a
+										[ngStyle]="{
+											'pointer-events':
+												state.dataState ===
+													DataState.LOADING ||
+												(isLoading$ | async)
+													? 'none'
+													: ''
+										}"
+										[routerLink]="['/login']"
+										>Iniciar sesión</a
+									>
+								</div>
+								<div class="col">
+									<a
+										[ngStyle]="{
+											'pointer-events':
+												state.dataState ===
+													DataState.LOADING ||
+												(isLoading$ | async)
+													? 'none'
+													: ''
+										}"
+										[routerLink]="['/reset-password']"
+										>Olvidé mi contraseña</a
+									>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ng-container>
+
+	<ng-container *ngSwitchCase="DataState.ERROR">
+		<div class="container">
+			<div class="row justify-content-center my-5">
+				<div class="col-md-6" style="margin-top: 50px">
+					<div class="card">
+						<div class="card-body">
+							<div class="text-center">
+								<h2 class="card-title mt-4 mb-4">
+									{{ state.title }}
+								</h2>
+								<i
+									class="fa-solid fa-circle-exclamation text-danger"
+									style="font-size: 5rem"
+								></i>
+								<p class="mt-2" style="font-size: 20px">
+									{{ state.message }}
+								</p>
+							</div>
+							<div class="row mb-4">
+								<div class="col d-flex justify-content-center">
+									<a [routerLink]="['/login']"
+										>Iniciar Sesión</a
+									>
+								</div>
+								<div class="col">
+									<a routerLink="['/register']"
+										>Crea otra cuenta</a
+									>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ng-container>
+</section>
