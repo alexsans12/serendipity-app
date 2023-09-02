@@ -29,8 +29,7 @@ export class CacheInterceptor implements HttpInterceptor {
 
 		if (
 			request.method !== 'GET' ||
-			request.url.includes('logout') ||
-			request.url.includes('download')
+			request.url.includes('logout')
 		) {
 			this.httpCache.evictAll();
 			//this.httpCache.evict(request.url);

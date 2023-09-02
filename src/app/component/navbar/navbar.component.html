@@ -48,7 +48,10 @@
 					>
 				</li>
 				<li class="nav-item mt-2 mb-2">
-					<a (click)="closeMenu()" class="nav-link" [routerLink]="['/profile']"
+					<a
+						(click)="closeMenu()"
+						class="nav-link"
+						[routerLink]="['/profile']"
 						>Sobre nosotros</a
 					>
 				</li>
@@ -64,10 +67,11 @@
 							aria-expanded="false"
 						>
 							<img
-								[src]="usuario.urlFoto"
-								[alt]="usuario.nombre"
-								class="rounded-circle"
+								[src]="usuario?.urlFoto"
+								[alt]="usuario?.nombre"
+								class="rounded-circle img-circle"
 								height="25"
+								width="25"
 								loading="lazy"
 							/>
 						</a>
@@ -123,11 +127,7 @@
 				</li>
 				<li class="nav-item mt-2 mb-2">
 					<!-- Cart Icon -->
-					<a
-						(click)="closeMenu()"
-						class="nav-link fs-5"
-						href="#"
-					>
+					<a (click)="closeMenu()" class="nav-link fs-5" href="#">
 						<i class="text-danger fas fa-shopping-cart"></i>
 					</a>
 				</li>
