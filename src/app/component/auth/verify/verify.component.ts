@@ -10,7 +10,7 @@ import {
 } from 'rxjs';
 import { AccountType, VerifyState } from 'src/app/interface/appstates';
 import { Usuario } from 'src/app/interface/usuario';
-import { DataState } from '../../enum/datastate.enum';
+import { DataState } from '../../../enum/datastate.enum';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { UsuarioService } from 'src/app/service/usuario.service';
 import { NgForm } from '@angular/forms';

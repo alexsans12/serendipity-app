@@ -9,8 +9,8 @@ const authRoutes: Routes = [
 	{ path: 'login', component: LoginComponent },
 	{ path: 'register', component: RegisterComponent },
 	{ path: 'reset-password', component: ResetPasswordComponent },
-	{ path: 'user/verify/account/:key', component: VerifyComponent },
-	{ path: 'user/verify/password/:key', component: VerifyComponent },
+	{ path: 'verify/account/:key', component: VerifyComponent },
+	{ path: 'verify/password/:key', component: VerifyComponent },
 ];
 
 @NgModule({
