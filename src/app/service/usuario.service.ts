@@ -4,7 +4,11 @@ import {
 	HttpHeaders,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CustomHttpResponse, Profile } from '../interface/appstates';
+import {
+	AccountType,
+	CustomHttpResponse,
+	Profile,
+} from '../interface/appstates';
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Usuario } from '../interface/usuario';
@@ -14,7 +18,7 @@ import { key } from '../enum/key.enum';
 	providedIn: 'root',
 })
 export class UsuarioService {
-	private readonly server: string = 'http://192.168.0.4:9091/api/v1';
+	private readonly server: string = 'http://192.168.0.5:9091/api/v1';
 	private jwtHelper = new JwtHelperService();
 
 	constructor(private http: HttpClient) {}
@@ -25,6 +29,15 @@ export class UsuarioService {
 				.post<CustomHttpResponse<Profile>>(
 					`${this.server}/usuario/login`,
 					{ email, password }
+				)
+				.pipe(tap(console.log), catchError(this.handleError))
+		);
+
+	requestPasswordReset$ = (email: string) =>
+		<Observable<CustomHttpResponse<Profile>>>(
+			this.http
+				.get<CustomHttpResponse<Profile>>(
+					`${this.server}/usuario/reset-password/${email}`
 				)
 				.pipe(tap(console.log), catchError(this.handleError))
 		);
@@ -44,6 +57,29 @@ export class UsuarioService {
 			this.http
 				.get<CustomHttpResponse<Profile>>(
 					`${this.server}/usuario/verify/code/${email}/${code}`
+				)
+				.pipe(tap(console.log), catchError(this.handleError))
+		);
+
+	verify$ = (key: string, type: AccountType) =>
+		<Observable<CustomHttpResponse<Profile>>>(
+			this.http
+				.get<CustomHttpResponse<Profile>>(
+					`${this.server}/usuario/verify/${type}/${key}`
+				)
+				.pipe(tap(console.log), catchError(this.handleError))
+		);
+
+	renewPassword$ = (form: {
+		idUsuario: number;
+		password: string;
+		confirmPassword: string;
+	}) =>
+		<Observable<CustomHttpResponse<Profile>>>(
+			this.http
+				.put<CustomHttpResponse<Profile>>(
+					`${this.server}/usuario/new/password`,
+					form
 				)
 				.pipe(tap(console.log), catchError(this.handleError))
 		);

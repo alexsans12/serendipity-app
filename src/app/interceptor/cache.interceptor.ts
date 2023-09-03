@@ -22,7 +22,8 @@ export class CacheInterceptor implements HttpInterceptor {
 			request.url.includes('login') ||
 			request.url.includes('register') ||
 			request.url.includes('reset-password') ||
-			request.url.includes('refresh')
+			request.url.includes('refresh') ||
+			request.url.includes('new/password')
 		) {
 			return next.handle(request);
 		}

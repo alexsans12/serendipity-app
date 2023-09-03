@@ -36,3 +36,14 @@ export interface RegisterState {
 	error?: string;
 	message?: string;
 }
+
+export type AccountType = 'account' | 'password';
+
+export interface VerifyState {
+	dataState: DataState;
+	registerSuccess?: boolean;
+	error?: string;
+	message?: string;
+	title?: string;
+	type?: AccountType;
+}
