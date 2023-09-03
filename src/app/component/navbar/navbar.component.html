@@ -1,4 +1,3 @@
-<!-- Navbar -->
 <nav
 	[ngClass]="{
 		'home-navbar': currentRoute === '/',
@@ -93,7 +92,8 @@
 									class="dropdown-item"
 									[routerLink]="['/profile']"
 								>
-									{{ usuario.nombre }} {{ usuario.apellido }}
+									{{ usuario.nombre }}
+									{{ usuario.apellido }}
 								</a>
 							</li>
 							<li>

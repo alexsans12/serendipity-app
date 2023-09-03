@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { UsuarioService } from '../../service/usuario.service';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { UsuarioService } from '../../../service/usuario.service';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { BehaviorSubject, Observable, catchError, map, of, startWith } from 'rxjs';
-import { LoginState } from '../../interface/appstates';
+import { LoginState } from '../../../interface/appstates';
 import { DataState } from 'src/app/enum/datastate.enum';
 import { key } from 'src/app/enum/key.enum';
 
@@ -11,6 +11,7 @@ import { key } from 'src/app/enum/key.enum';
 	selector: 'app-login',
 	templateUrl: './login.component.html',
 	styleUrls: ['./login.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent implements OnInit {
 	loginState$: Observable<LoginState> = of({ dataState: DataState.LOADED });

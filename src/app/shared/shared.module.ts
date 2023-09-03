@@ -9,14 +9,15 @@ import { ExtractArrayValue } from '../pipes/extractvalue.pipe';
 		ExtractArrayValue
 	],
 	imports: [
+		RouterModule,
 		CommonModule,
 		FormsModule,
-		RouterModule,
 	],
 	exports: [
+		RouterModule,
 		CommonModule,
 		FormsModule,
-		RouterModule
+		ExtractArrayValue
 	]
 })
 export class SharedModule {}

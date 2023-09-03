@@ -1,14 +1,15 @@
-import { DataState } from './../../enum/datastate.enum';
-import { Component } from '@angular/core';
+import { DataState } from '../../../enum/datastate.enum';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Observable, catchError, map, of, startWith } from 'rxjs';
 import { RegisterState } from 'src/app/interface/appstates';
-import { UsuarioService } from '../../service/usuario.service';
+import { UsuarioService } from '../../../service/usuario.service';
 import { NgForm } from '@angular/forms';
 
 @Component({
 	selector: 'app-register',
 	templateUrl: './register.component.html',
 	styleUrls: ['./register.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RegisterComponent {
 	registerState$: Observable<RegisterState> = of({
