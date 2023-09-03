@@ -1,6 +1,6 @@
-<ng-container>
+<ng-container *ngIf="(homeState$ | async) as state">
 	<ng-container>
-		<app-navbar></app-navbar>
+		<app-navbar [usuario]="state?.appData?.data?.usuario"></app-navbar>
 		<app-hero></app-hero>
 		<section class="container my-5">
 			<div class="row">
@@ -50,5 +50,6 @@
 				</div>
 			</div>
 		</section>
+		<app-footer></app-footer>
 	</ng-container>
 </ng-container>

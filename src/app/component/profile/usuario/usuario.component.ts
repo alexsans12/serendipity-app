@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UsuarioService } from '../../service/usuario.service';
+import { UsuarioService } from '../../../service/usuario.service';
 import {
 	BehaviorSubject,
 	Observable,
@@ -12,14 +12,14 @@ import { DataState } from 'src/app/enum/datastate.enum';
 import { CustomHttpResponse, Profile } from 'src/app/interface/appstates';
 import { State } from 'src/app/interface/state';
 import { NgForm } from '@angular/forms';
-import { EventoType } from '../../enum/evento-type.enum';
+import { EventoType } from '../../../enum/evento-type.enum';
 
 @Component({
-	selector: 'app-profile',
-	templateUrl: './profile.component.html',
-	styleUrls: ['./profile.component.scss'],
+	selector: 'app-usuario',
+	templateUrl: './usuario.component.html',
+	styleUrls: ['./usuario.component.scss'],
 })
-export class ProfileComponent implements OnInit {
+export class UsuarioComponent implements OnInit {
 	profileState$: Observable<State<CustomHttpResponse<Profile>>>;
 	private dataSubject: BehaviorSubject<CustomHttpResponse<Profile>> =
 		new BehaviorSubject<CustomHttpResponse<Profile>>(null);

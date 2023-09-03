@@ -730,8 +730,12 @@
 													class="custom-control-input"
 													id="activityLog"
 													(change)="toggleLogs()"
-													[checked]="(showLogs$ | async)"
-													[disabled]="isLoading$ | async"
+													[checked]="
+														showLogs$ | async
+													"
+													[disabled]="
+														isLoading$ | async
+													"
 												/>
 												<span
 													class="custom-control-label"
@@ -780,21 +784,52 @@
 												</td>
 												<td>{{ evento.ipAddress }}</td>
 												<td>
-													{{ evento.fechaCreacion | date:'MMMM d, y, h:mm a' }}
+													{{
+														evento.fechaCreacion
+															| date
+																: "MMMM d, y, h:mm a"
+													}}
 												</td>
 												<td>
 													<span
 														class="badge pill"
 														[ngClass]="[
-															evento.tipo === EventoType.LOGIN_ATTEMPT ? 'bg-warning' : '',
-															evento.tipo === EventoType.LOGIN_ATTEMPT_FAILURE ? 'bg-danger' : '',
-															evento.tipo === EventoType.LOGIN_ATTEPMT_SUCCESS ? 'bg-success' : '',
-															evento.tipo === EventoType.PROFILE_UPDATE ? 'bg-primary' : '',
-															evento.tipo === EventoType.PROFILE_PICTURE_UPDATE ? 'bg-primary' : '',
-															evento.tipo === EventoType.ROLE_UPDATE ? 'bg-info' : '',
-															evento.tipo === EventoType.ACCOUNT_SETTINGS_UPDATE ? 'bg-warning' : '',
-															evento.tipo === EventoType.PASSWORD_UPDATE ? 'bg-warning' : '',
-															evento.tipo === EventoType.MFA_UPDATE ? 'bg-info' : '',
+															evento.tipo ===
+															EventoType.LOGIN_ATTEMPT
+																? 'bg-warning'
+																: '',
+															evento.tipo ===
+															EventoType.LOGIN_ATTEMPT_FAILURE
+																? 'bg-danger'
+																: '',
+															evento.tipo ===
+															EventoType.LOGIN_ATTEPMT_SUCCESS
+																? 'bg-success'
+																: '',
+															evento.tipo ===
+															EventoType.PROFILE_UPDATE
+																? 'bg-primary'
+																: '',
+															evento.tipo ===
+															EventoType.PROFILE_PICTURE_UPDATE
+																? 'bg-primary'
+																: '',
+															evento.tipo ===
+															EventoType.ROLE_UPDATE
+																? 'bg-info'
+																: '',
+															evento.tipo ===
+															EventoType.ACCOUNT_SETTINGS_UPDATE
+																? 'bg-warning'
+																: '',
+															evento.tipo ===
+															EventoType.PASSWORD_UPDATE
+																? 'bg-warning'
+																: '',
+															evento.tipo ===
+															EventoType.MFA_UPDATE
+																? 'bg-info'
+																: ''
 														]"
 													>
 														{{ evento.tipo }}
@@ -982,6 +1017,7 @@
 				</div>
 			</div>
 		</div>
+		<app-footer></app-footer>
 	</ng-container>
 </ng-container>
 
