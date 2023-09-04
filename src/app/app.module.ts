@@ -3,14 +3,13 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { FormsModule } from '@angular/forms';
 import { CoreModule } from './core/core.module';
 import { AuthModule } from './component/auth/auth.module';
 import { HomeModule } from './component/home/home.module';
 import { DashboardModule } from './component/dashboard/dashboard.module';
 import { UsersModule } from './component/users/users.module';
+import { NotificationModule } from './notification.module';
 
 @NgModule({
 	declarations: [
@@ -18,14 +17,13 @@ import { UsersModule } from './component/users/users.module';
 	],
 	imports: [
 		BrowserModule,
-		FormsModule,
 		CoreModule,
-		HttpClientModule,
 		AuthModule,
 		DashboardModule,
 		UsersModule,
 		HomeModule,
 		AppRoutingModule,
+		NotificationModule,
 		ServiceWorkerModule.register('ngsw-worker.js', {
 			enabled: !isDevMode(),
 			// Register the ServiceWorker as soon as the application is stable

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class HttpCacheService {
 	private httpResponseCache: { [key: string]: HttpResponse<any> } = {};
 

@@ -13,6 +13,7 @@ import { CustomHttpResponse, Profile } from 'src/app/interface/appstates';
 import { State } from 'src/app/interface/state';
 import { NgForm } from '@angular/forms';
 import { EventoType } from '../../../enum/evento-type.enum';
+import { NotificationService } from 'src/app/service/notificacion.service';
 
 @Component({
 	selector: 'app-usuario',
@@ -30,7 +31,7 @@ export class UsuarioComponent implements OnInit {
 	readonly DataState = DataState;
 	readonly EventoType = EventoType;
 
-	constructor(private usuarioService: UsuarioService) {}
+	constructor(private usuarioService: UsuarioService, private notificationService: NotificationService) {}
 
 	ngOnInit(): void {
 		this.profileState$ = this.usuarioService.profile$().pipe(
@@ -55,6 +56,7 @@ export class UsuarioComponent implements OnInit {
 			.updateProfile$(profileForm.value)
 			.pipe(
 				map((response) => {
+					this.notificationService.onDefault(response.message);
 					this.dataSubject.next({ ...response, data: response.data });
 					this.isLoadingSubject.next(false);
 					return {
@@ -67,6 +69,7 @@ export class UsuarioComponent implements OnInit {
 					appData: this.dataSubject.value,
 				}),
 				catchError((error: string) => {
+					this.notificationService.onError(error);
 					this.isLoadingSubject.next(false);
 					return of({
 						dataState: DataState.LOADED,
@@ -88,6 +91,7 @@ export class UsuarioComponent implements OnInit {
 				.updatePassword$(passwordForm.value)
 				.pipe(
 					map((response) => {
+						this.notificationService.onDefault(response.message);
 						this.dataSubject.next({ ...response, data: response.data });
 						passwordForm.reset();
 						this.isLoadingSubject.next(false);
@@ -101,6 +105,7 @@ export class UsuarioComponent implements OnInit {
 						appData: this.dataSubject.value,
 					}),
 					catchError((error: string) => {
+						this.notificationService.onError(error);
 						passwordForm.reset();
 						this.isLoadingSubject.next(false);
 						return of({
@@ -122,6 +127,7 @@ export class UsuarioComponent implements OnInit {
 			.updateRol$(rolForm.value.rol)
 			.pipe(
 				map((response) => {
+					this.notificationService.onDefault(response.message);
 					this.dataSubject.next({ ...response, data: response.data });
 					this.isLoadingSubject.next(false);
 					return {
@@ -134,6 +140,7 @@ export class UsuarioComponent implements OnInit {
 					appData: this.dataSubject.value,
 				}),
 				catchError((error: string) => {
+					this.notificationService.onError(error);
 					this.isLoadingSubject.next(false);
 					return of({
 						dataState: DataState.LOADED,
@@ -150,6 +157,7 @@ export class UsuarioComponent implements OnInit {
 			.updateAccountSettings$(settingsForm.value)
 			.pipe(
 				map((response) => {
+					this.notificationService.onDefault(response.message);
 					this.dataSubject.next({ ...response, data: response.data });
 					this.isLoadingSubject.next(false);
 					return {
@@ -162,6 +170,7 @@ export class UsuarioComponent implements OnInit {
 					appData: this.dataSubject.value,
 				}),
 				catchError((error: string) => {
+					this.notificationService.onError(error);
 					this.isLoadingSubject.next(false);
 					return of({
 						dataState: DataState.LOADED,
@@ -176,6 +185,7 @@ export class UsuarioComponent implements OnInit {
 		this.isLoadingSubject.next(true);
 		this.profileState$ = this.usuarioService.toggleMfa$().pipe(
 			map((response) => {
+				this.notificationService.onDefault(response.message);
 				this.dataSubject.next({ ...response, data: response.data });
 				this.isLoadingSubject.next(false);
 				return {
@@ -188,6 +198,7 @@ export class UsuarioComponent implements OnInit {
 				appData: this.dataSubject.value,
 			}),
 			catchError((error: string) => {
+				this.notificationService.onError(error);
 				this.isLoadingSubject.next(false);
 				return of({
 					dataState: DataState.LOADED,
@@ -207,6 +218,7 @@ export class UsuarioComponent implements OnInit {
 				.updateImage$(this.getFormData(image))
 				.pipe(
 					map((response) => {
+						this.notificationService.onDefault(response.message);
 						this.dataSubject.next({
 							...response,
 							data: {
@@ -230,6 +242,7 @@ export class UsuarioComponent implements OnInit {
 						appData: this.dataSubject.value,
 					}),
 					catchError((error: string) => {
+						this.notificationService.onError(error);
 						this.isLoadingSubject.next(false);
 						return of({
 							dataState: DataState.LOADED,
