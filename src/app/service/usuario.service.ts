@@ -14,9 +14,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { Usuario } from '../interface/usuario';
 import { key } from '../enum/key.enum';
 
-@Injectable({
-	providedIn: 'root',
-})
+@Injectable()
 export class UsuarioService {
 	private readonly server: string = 'http://192.168.0.4:9091/api/v1';
 	private jwtHelper = new JwtHelperService();

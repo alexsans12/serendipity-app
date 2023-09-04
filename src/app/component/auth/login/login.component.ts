@@ -6,6 +6,7 @@ import { BehaviorSubject, Observable, catchError, map, of, startWith } from 'rxj
 import { LoginState } from '../../../interface/appstates';
 import { DataState } from 'src/app/enum/datastate.enum';
 import { key } from 'src/app/enum/key.enum';
+import { NotificationService } from 'src/app/service/notificacion.service';
 
 @Component({
 	selector: 'app-login',
@@ -19,7 +20,7 @@ export class LoginComponent implements OnInit {
 	private emailSubject: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 	readonly DataState = DataState;
 
-	constructor(private router: Router, private usuarioService: UsuarioService) {}
+	constructor(private router: Router, private usuarioService: UsuarioService, private notificationService: NotificationService) {}
 
 	ngOnInit(): void {
 		this.usuarioService.isAuthenticated() ? this.router.navigate(['/']) : this.loginPage();
@@ -29,10 +30,13 @@ export class LoginComponent implements OnInit {
 		this.loginState$ = this.usuarioService.login$(loginForm.value.email, loginForm.value.password)
 		.pipe(map(response => {
 			if (response.data.usuario.utilizaMfa) {
+				this.notificationService.onDefault(response.message);
 				this.phoneSubject.next(response.data.usuario.telefono);
 				this.emailSubject.next(response.data.usuario.email);
 				return { dataState: DataState.LOADED, isUsingMfa: true, loginSuccess: false, phone: response.data.usuario.telefono.substring(response.data.usuario.telefono.length - 4) };
 			} else {
+
+				this.notificationService.onDefault(response.message);
 				localStorage.setItem(key.TOKEN, response.data.access_token);
 				localStorage.setItem(key.REFRESH_TOKEN, response.data.refresh_token);
 				this.router.navigate(['/']);
@@ -41,6 +45,7 @@ export class LoginComponent implements OnInit {
 		}),
 			startWith({ dataState: DataState.LOADING, isUsingMfa: false }),
 			catchError((error: string) => {
+				this.notificationService.onError(error);
 				return of({ dataState: DataState.ERROR, isUsingMfa: false, loginSuccess: false, error });
 			})
 		);
