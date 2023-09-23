@@ -1,17 +1,28 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthenticationGuard } from 'src/app/guard/authentication.guard';
 import { ProductListComponent } from './product-list/product-list.component';
+import { ProductDetailsComponent } from './product-details/product-details.component';
 
 const shopRoutes: Routes = [
 	{
 		path: '',
 		children: [
 			{
-				path: '',
-				component: ProductListComponent,
-				canActivate: [AuthenticationGuard],
+				path: 'shop',
+				component: ProductListComponent
 			},
+			{
+				path: 'shop/category/:nombre',
+				component: ProductListComponent
+			},
+			{
+				path: 'shop/product/:sky',
+				component: ProductDetailsComponent
+			},
+			{
+				path: 'shop/category',
+				redirectTo: 'shop',
+			}
 		]
 	},
 ];

@@ -1,5 +1,6 @@
 import { DataState } from "../enum/datastate.enum";
 import { Eventos } from "./eventos";
+import { Producto } from "./producto";
 import { Rol } from "./rol";
 import { Usuario } from "./usuario";
 
@@ -46,4 +47,15 @@ export interface VerifyState {
 	message?: string;
 	title?: string;
 	type?: AccountType;
+}
+
+export interface Page {
+	content: Producto[];
+	totalPages: number;
+	totalElements: number;
+	numberOfElements: number;
+	size: number;
+	number: number;
+	first: boolean;
+	last: boolean;
 }

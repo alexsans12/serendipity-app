@@ -10,6 +10,7 @@ import { HomeModule } from './component/home/home.module';
 import { DashboardModule } from './component/dashboard/dashboard.module';
 import { UsersModule } from './component/users/users.module';
 import { NotificationModule } from './notification.module';
+import { ShopModule } from './component/shop/shop.module';
 
 @NgModule({
 	declarations: [
@@ -19,9 +20,10 @@ import { NotificationModule } from './notification.module';
 		BrowserModule,
 		CoreModule,
 		AuthModule,
+		HomeModule,
 		DashboardModule,
 		UsersModule,
-		HomeModule,
+		ShopModule,
 		AppRoutingModule,
 		NotificationModule,
 		ServiceWorkerModule.register('ngsw-worker.js', {

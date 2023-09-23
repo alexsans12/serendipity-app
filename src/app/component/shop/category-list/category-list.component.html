@@ -1,1 +1,83 @@
-<p>category-list works!</p>
+<ng-container *ngIf="categoriaListState$ | async as state">
+	<ng-container>
+		<div class="accordion" id="accordionFlushExample">
+			<div class="accordion-item border-0">
+				<h2 class="accordion-header">
+					<button
+						class="accordion-button"
+						type="button"
+						data-bs-toggle="collapse"
+						data-bs-target="#collapseOne"
+						aria-expanded="true"
+						aria-controls="collapseOne"
+					>
+						<i class="fas fa-list pe-2"></i>
+						Categorias
+					</button>
+				</h2>
+				<div
+					id="collapseOne"
+					class="accordion-collapse collapse show"
+					data-bs-parent="#accordionFlushExample"
+				>
+					<div class="accordion-body p-0">
+						<ul
+							class="nav flex-column my-3 pb-3 border-bottom"
+							*ngFor="
+								let categoria of state?.appData?.data
+									?.categorias
+							"
+						>
+							<li
+								class="nav-item"
+								*ngIf="
+									categoria.categoriasHijas.length == 0;
+									else group
+								"
+							>
+								<a
+									class="nav-link text-reset"
+									aria-current="page"
+									[routerLink]="[
+										'/shop/category/' + categoria.nombre.toLowerCase()
+									]"
+									>{{ categoria.nombre }}</a
+								>
+							</li>
+							<ng-template #group>
+								<li class="nav-item dropdown">
+									<a
+										class="nav-link text-reset d-flex justify-content-between align-items-center"
+										[routerLink]="[
+											'/shop/category/' + categoria.nombre.toLowerCase()
+										]"
+										role="button"
+										aria-expanded="false"
+										>{{ categoria.nombre }}
+										<i class="fa-solid fa-chevron-down"></i
+									></a>
+									<ul class="dropdown-menu">
+										<li
+											*ngFor="
+												let child of categoria.categoriasHijas
+											"
+										>
+											<a
+												class="dropdown-item"
+												[routerLink]="[
+													'/shop/category/' +
+														child.nombre.toLowerCase()
+												]"
+												>{{ child.nombre }}</a
+											>
+										</li>
+									</ul>
+								</li>
+							</ng-template>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ng-container>
+</ng-container>

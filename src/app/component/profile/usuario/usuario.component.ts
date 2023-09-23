@@ -32,7 +32,7 @@ export class UsuarioComponent implements OnInit {
 	readonly DataState = DataState;
 	readonly EventoType = EventoType;
 
-	constructor(private router: Router,private usuarioService: UsuarioService, private notificationService: NotificationService) {}
+	constructor(private router: Router, private usuarioService: UsuarioService, private notificationService: NotificationService) {}
 
 	ngOnInit(): void {
 		if (!this.usuarioService.isAuthenticated()) {

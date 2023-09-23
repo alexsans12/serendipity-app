@@ -1,21 +1,30 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { CustomHttpResponse, Page } from '../interface/appstates';
 import { Observable, catchError, tap, throwError } from 'rxjs';
-import { CustomHttpResponse } from '../interface/appstates';
 
 @Injectable({
 	providedIn: 'root',
 })
-export class MarcaService {
-	private readonly server: string = 'http://192.168.0.3:9091/api/v1';
+export class CategoriaService {
+	private readonly server: string = 'http://192.168.0.2:9091/api/v1';
 
 	constructor(private http: HttpClient) {}
 
-	marcas$ = (page: number = 0, size: number = 20) =>
+	categorias$ = () =>
+		<Observable<CustomHttpResponse<Page>>>(
+			this.http
+				.get<CustomHttpResponse<any>>(
+					`${this.server}/categoria/list`
+				)
+				.pipe(tap(console.log), catchError(this.handleError))
+		);
+
+	allCategorias$ = (page: number = 0, size: number = 20) =>
 		<Observable<CustomHttpResponse<any>>>(
 			this.http
 				.get<CustomHttpResponse<any>>(
-					`${this.server}/marca/list?page=${page}?size=${size}`
+					`${this.server}/categoria/list-all?page=${page}&size=${size}`
 				)
 				.pipe(tap(console.log), catchError(this.handleError))
 		);
