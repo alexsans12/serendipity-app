@@ -3,6 +3,7 @@
 	<section
 		*ngIf="registerState$ | async as state"
 		[ngSwitch]="state.dataState"
+		class="register"
 	>
 		<div *ngIf="!state.registerSuccess" class="container">
 			<div class="row justify-content-center my-5">

@@ -14,6 +14,7 @@ import { State } from 'src/app/interface/state';
 import { NgForm } from '@angular/forms';
 import { EventoType } from '../../../enum/evento-type.enum';
 import { NotificationService } from 'src/app/service/notificacion.service';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-usuario',
@@ -31,9 +32,12 @@ export class UsuarioComponent implements OnInit {
 	readonly DataState = DataState;
 	readonly EventoType = EventoType;
 
-	constructor(private usuarioService: UsuarioService, private notificationService: NotificationService) {}
+	constructor(private router: Router, private usuarioService: UsuarioService, private notificationService: NotificationService) {}
 
 	ngOnInit(): void {
+		if (!this.usuarioService.isAuthenticated()) {
+			this.router.navigate(['/']);
+		}
 		this.profileState$ = this.usuarioService.profile$().pipe(
 			map((response) => {
 				this.dataSubject.next(response);

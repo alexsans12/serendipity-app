@@ -16,7 +16,7 @@ import { key } from '../enum/key.enum';
 
 @Injectable()
 export class UsuarioService {
-	private readonly server: string = 'http://192.168.0.4:9091/api/v1';
+	private readonly server: string = 'http://192.168.0.2:9091/api/v1';
 	private jwtHelper = new JwtHelperService();
 
 	constructor(private http: HttpClient) {}

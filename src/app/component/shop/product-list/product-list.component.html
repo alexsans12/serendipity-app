@@ -1,0 +1,137 @@
+<ng-container *ngIf="productListState$ | async as state">
+	<ng-container *ngIf="usuarioState$ | async as userState">
+		<app-navbar [usuario]="userState?.appData?.data?.usuario"></app-navbar>
+		<div class="container shop">
+			<div class="row mb-3">
+				<!-- Columna izquierda -->
+				<div class="col-md-3">
+					<div class="mb-4">
+						<nav aria-label="breadcrumb">
+							<ol class="breadcrumb">
+								<li class="breadcrumb-item" aria-current="page">
+									<a
+										class="text-reset"
+										[routerLink]="['/shop']"
+										>Tienda</a
+									>
+								</li>
+								<li
+									*ngIf="categoriaUrl !== undefined"
+									class="breadcrumb-item"
+									aria-current="page"
+								>
+									Categoria
+								</li>
+								<li
+									*ngIf="categoriaUrl !== undefined"
+									class="breadcrumb-item active"
+									aria-current="page"
+								>
+									<a
+										class="text-decoration-none"
+										[routerLink]="[
+											'/shop/category/' + categoriaUrl
+										]"
+										>{{ categoriaUrl }}</a
+									>
+								</li>
+							</ol>
+						</nav>
+					</div>
+				</div>
+
+				<!-- Columna derecha -->
+				<div class="col-md-9">
+					<form #searchForm="ngForm"
+					(ngSubmit)="searchProducto(searchForm)">
+						<div class="input-group mb-3">
+							<input
+								type="text"
+								class="form-control"
+								placeholder="Buscar..."
+								aria-label="Buscar..."
+								aria-describedby="search-button"
+								ngModel
+								name="search"
+							/>
+							<button
+								class="btn btn-outline-primary px-5"
+								type="submit"
+								id="search-button"
+							>
+								<i class="fa-solid fa-magnifying-glass"></i>
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+
+			<div class="row">
+				<!-- Columna izquierda -->
+				<div class="col-md-3 mb-3">
+					<app-category-list></app-category-list>
+				</div>
+
+				<!-- Columna derecha -->
+				<div class="col-md-9">
+					<div class="container">
+						<div class="row">
+							<div
+								class="col-md-6 col-lg-4"
+								*ngFor="
+									let producto of state?.appData?.data
+										?.productos.content
+								"
+							>
+								<app-product-card
+									[producto]="producto"
+								></app-product-card>
+							</div>
+						</div>
+					</div>
+					<nav
+						*ngIf="
+							state?.appData?.data?.productos.content.length > 0
+						"
+						aria-label="Page navigation example"
+					>
+						<ul class="pagination justify-content-center">
+							<li [ngClass]="0 == (currentPage$ | async) ? 'disabled' : ''" class="page-item">
+								<a (click)="goToNextOrPreviousPage('backward')" class="page-link"
+									><i class="fa-solid fa-arrow-left"></i
+								></a>
+							</li>
+							<li
+								*ngFor="
+									let pageNumber of [].constructor(
+										state?.appData?.data?.productos
+											.totalPages
+									);
+									let i = index
+								"
+								class="page-item"
+							>
+								<a
+									class="page-link"
+									(click)="goToPage(i)"
+									[ngClass]="
+										i == (currentPage$ | async)
+											? 'active'
+											: ''
+									"
+									>{{ i + 1 }}</a
+								>
+							</li>
+							<li [ngClass]="(state?.appData?.data?.productos.totalPages - 1) == (currentPage$ | async) ? 'disabled' : ''" class="page-item">
+								<a (click)="goToNextOrPreviousPage('forward')" class="page-link"
+									><i class="fa-solid fa-arrow-right"></i
+								></a>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div>
+		<app-footer></app-footer>
+	</ng-container>
+</ng-container>

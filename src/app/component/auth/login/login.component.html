@@ -4,6 +4,7 @@
 		<section
 			*ngIf="loginState$ | async as state"
 			[ngSwitch]="state.dataState"
+			class="login"
 		>
 			<div
 				*ngIf="!state.loginSuccess && !state.isUsingMfa"
