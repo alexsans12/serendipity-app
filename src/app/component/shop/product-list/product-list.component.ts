@@ -13,7 +13,7 @@ import {
 import { DataState } from 'src/app/enum/datastate.enum';
 import { UsuarioService } from 'src/app/service/usuario.service';
 import { Usuario } from 'src/app/interface/usuario';
-import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
+import { ActivatedRoute, UrlSegment } from '@angular/router';
 import { NgForm } from '@angular/forms';
 
 @Component({
@@ -22,7 +22,7 @@ import { NgForm } from '@angular/forms';
 	styleUrls: ['./product-list.component.scss'],
 })
 export class ProductListComponent implements OnInit {
-	productListState$: Observable<State<CustomHttpResponse<Page>>>;
+	productListState$: Observable<State<CustomHttpResponse<Page & Usuario>>>;
 	usuarioState$: Observable<State<CustomHttpResponse<Profile>>>;
 	private dataSubject = new BehaviorSubject<
 		CustomHttpResponse<Page & Usuario>
@@ -37,7 +37,6 @@ export class ProductListComponent implements OnInit {
 	categoriaUrl: string;
 
 	constructor(
-		private router: Router,
 		private route: ActivatedRoute,
 		private cdRef: ChangeDetectorRef,
 		private usuarioService: UsuarioService,

@@ -31,7 +31,7 @@
 							"src/manifest.webmanifest"
 						],
 						"styles": [
-							"node_modules/bootstrap/scss/bootstrap.scss",
+							"node_modules/bootswatch/dist/lux/bootstrap.min.css",
 							"src/styles.scss"
 						],
 						"scripts": [

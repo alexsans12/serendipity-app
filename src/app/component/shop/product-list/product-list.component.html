@@ -2,15 +2,15 @@
 	<ng-container *ngIf="usuarioState$ | async as userState">
 		<app-navbar [usuario]="userState?.appData?.data?.usuario"></app-navbar>
 		<div class="container shop">
-			<div class="row">
+			<div class="row mb-3">
 				<!-- Columna izquierda -->
-				<div class="col-md-3 mb-3">
+				<div class="col-md-3">
 					<div class="mb-4">
 						<nav aria-label="breadcrumb">
 							<ol class="breadcrumb">
 								<li class="breadcrumb-item" aria-current="page">
 									<a
-										class="text-reset text-decoration-none"
+										class="text-reset"
 										[routerLink]="['/shop']"
 										>Tienda</a
 									>
@@ -96,8 +96,8 @@
 						aria-label="Page navigation example"
 					>
 						<ul class="pagination justify-content-center">
-							<li class="page-item">
-								<a class="page-link"
+							<li [ngClass]="0 == (currentPage$ | async) ? 'disabled' : ''" class="page-item">
+								<a (click)="goToNextOrPreviousPage('backward')" class="page-link"
 									><i class="fa-solid fa-arrow-left"></i
 								></a>
 							</li>
@@ -122,8 +122,8 @@
 									>{{ i + 1 }}</a
 								>
 							</li>
-							<li class="page-item">
-								<a class="page-link" href="#"
+							<li [ngClass]="(state?.appData?.data?.productos.totalPages - 1) == (currentPage$ | async) ? 'disabled' : ''" class="page-item">
+								<a (click)="goToNextOrPreviousPage('forward')" class="page-link"
 									><i class="fa-solid fa-arrow-right"></i
 								></a>
 							</li>

@@ -15,7 +15,7 @@ export class ProductoService {
 	productos$ = (page: number = 0, size: number = 20) =>
 		<Observable<CustomHttpResponse<Page & Usuario>>>(
 			this.http
-				.get<CustomHttpResponse<any>>(
+				.get<CustomHttpResponse<Page & Usuario>>(
 					`${this.server}/producto/list?page=${page}&size=${size}`
 				)
 				.pipe(tap(console.log), catchError(this.handleError))
@@ -28,21 +28,26 @@ export class ProductoService {
 	) =>
 		<Observable<CustomHttpResponse<Page & Usuario>>>(
 			this.http
-				.get<CustomHttpResponse<any>>(
+				.get<CustomHttpResponse<Page & Usuario>>(
 					`${this.server}/producto/categoria?nombre=${nombre}&page=${page}&size=${size}`
 				)
 				.pipe(tap(console.log), catchError(this.handleError))
 		);
 
-	searchProducto$ = (
-		nombre: string,
-		page: number = 0,
-		size: number = 20
-	) =>
+	searchProducto$ = (nombre: string, page: number = 0, size: number = 20) =>
 		<Observable<CustomHttpResponse<Page & Usuario>>>(
 			this.http
 				.get<CustomHttpResponse<any>>(
 					`${this.server}/producto/search?nombre=${nombre}&page=${page}&size=${size}`
+				)
+				.pipe(tap(console.log), catchError(this.handleError))
+		);
+
+	productoBySKU$ = (sku: string) =>
+		<Observable<CustomHttpResponse<Page & Usuario>>>(
+			this.http
+				.get<CustomHttpResponse<any>>(
+					`${this.server}/producto/sku/${sku}`
 				)
 				.pipe(tap(console.log), catchError(this.handleError))
 		);
