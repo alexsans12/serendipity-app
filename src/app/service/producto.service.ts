@@ -8,7 +8,7 @@ import { Usuario } from '../interface/usuario';
 	providedIn: 'root',
 })
 export class ProductoService {
-	private readonly server: string = 'http://192.168.0.2:9091/api/v1';
+	private readonly server: string = 'http://192.168.0.8:9091/api/v1';
 
 	constructor(private http: HttpClient) {}
 
@@ -43,7 +43,7 @@ export class ProductoService {
 				.pipe(tap(console.log), catchError(this.handleError))
 		);
 
-	productoBySKU$ = (sku: string) =>
+	productoByCode$ = (sku: string) =>
 		<Observable<CustomHttpResponse<Page & Usuario>>>(
 			this.http
 				.get<CustomHttpResponse<any>>(

@@ -14,16 +14,16 @@ import { ShopModule } from './component/shop/shop.module';
 
 @NgModule({
 	declarations: [
-		AppComponent,
+		AppComponent
 	],
 	imports: [
 		BrowserModule,
 		CoreModule,
 		AuthModule,
 		HomeModule,
+		ShopModule,
 		DashboardModule,
 		UsersModule,
-		ShopModule,
 		AppRoutingModule,
 		NotificationModule,
 		ServiceWorkerModule.register('ngsw-worker.js', {

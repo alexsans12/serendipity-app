@@ -17,13 +17,13 @@
 }
 .thumbnail_images ul li {
 	margin: 5px;
-	padding: 10px;
-	border: 2px solid #eee;
+	padding: 0;
+	border: 2px solid #dfdfdf;
 	cursor: pointer;
 	transition: all 0.5s;
 }
 .thumbnail_images ul li:hover {
-	border: 2px solid #000;
+	border: 2px solid #343a40;
 }
 .main_image {
 	display: flex;

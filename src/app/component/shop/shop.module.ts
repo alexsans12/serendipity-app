@@ -9,9 +9,10 @@ import { CategoryListComponent } from './category-list/category-list.component';
 import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
 import { WishListComponent } from './wish-list/wish-list.component';
 import { ProductCardComponent } from './product-card/product-card.component';
+import { NotFoundComponent } from '../not-found/not-found.component';
 
 @NgModule({
-	declarations: [ProductListComponent, ProductDetailsComponent, CategoryListComponent, ShoppingCartComponent, WishListComponent, ProductCardComponent],
+	declarations: [ProductListComponent, ProductDetailsComponent, CategoryListComponent, ShoppingCartComponent, WishListComponent, ProductCardComponent, NotFoundComponent],
 	imports: [SharedModule, ShopRoutingModule, NavbarModule, FooterModule],
 })
 export class ShopModule {}

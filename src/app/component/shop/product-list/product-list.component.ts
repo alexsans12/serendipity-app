@@ -1,6 +1,11 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ProductoService } from '../../../service/producto.service';
-import { CustomHttpResponse, Page, Profile } from 'src/app/interface/appstates';
+import {
+	Cart,
+	CustomHttpResponse,
+	Page,
+	Profile,
+} from 'src/app/interface/appstates';
 import { State } from 'src/app/interface/state';
 import {
 	BehaviorSubject,
@@ -15,6 +20,7 @@ import { UsuarioService } from 'src/app/service/usuario.service';
 import { Usuario } from 'src/app/interface/usuario';
 import { ActivatedRoute, UrlSegment } from '@angular/router';
 import { NgForm } from '@angular/forms';
+import { CarritoService } from 'src/app/service/carrito.service';
 
 @Component({
 	selector: 'app-product-list',
@@ -24,6 +30,7 @@ import { NgForm } from '@angular/forms';
 export class ProductListComponent implements OnInit {
 	productListState$: Observable<State<CustomHttpResponse<Page & Usuario>>>;
 	usuarioState$: Observable<State<CustomHttpResponse<Profile>>>;
+	cartState$: Observable<State<CustomHttpResponse<Cart>>>;
 	private dataSubject = new BehaviorSubject<
 		CustomHttpResponse<Page & Usuario>
 	>(null);
@@ -35,12 +42,14 @@ export class ProductListComponent implements OnInit {
 	showLogs$ = this.showLogsSubject.asObservable();
 	readonly DataState = DataState;
 	categoriaUrl: string;
+	isFill: boolean = false;
 
 	constructor(
 		private route: ActivatedRoute,
 		private cdRef: ChangeDetectorRef,
 		private usuarioService: UsuarioService,
-		private productoService: ProductoService
+		private productoService: ProductoService,
+		private carritoService: CarritoService
 	) {}
 
 	ngOnInit(): void {
@@ -49,20 +58,37 @@ export class ProductListComponent implements OnInit {
 			this.handleUrlChange(urlSegments);
 		});
 
-		this.usuarioState$ = this.usuarioService.profile$().pipe(
-			map((response) => {
-				this.dataSubject.next({
-					...response,
-					data: {
-						...response.data,
-						usuario: {
-							...response.data.usuario,
-							urlFoto: `${
-								response.data.usuario.urlFoto
-							}?time=${new Date().getTime()}`,
+		if (this.usuarioService.isAuthenticated()) {
+			this.usuarioState$ = this.usuarioService.profile$().pipe(
+				map((response) => {
+					this.dataSubject.next({
+						...response,
+						data: {
+							...response.data,
+							usuario: {
+								...response.data.usuario,
+								urlFoto: `${
+									response.data.usuario.urlFoto
+								}?time=${new Date().getTime()}`,
+							},
 						},
-					},
-				});
+					});
+					return { dataState: DataState.LOADED, appData: response };
+				}),
+				startWith({ dataState: DataState.LOADING }),
+				catchError((error: string) => {
+					return of({
+						dataState: DataState.ERROR,
+						appData: this.dataSubject.value,
+						error,
+					});
+				})
+			);
+		}
+
+		this.cartState$ = this.carritoService.cart$().pipe(
+			map((response) => {
+				this.dataSubject.next(response);
 				return { dataState: DataState.LOADED, appData: response };
 			}),
 			startWith({ dataState: DataState.LOADING }),
@@ -184,6 +210,7 @@ export class ProductListComponent implements OnInit {
 
 	searchProducto(searchForm: NgForm) {
 		const nombre = searchForm.controls['search'].value;
+
 		this.productListState$ = this.productoService
 			.searchProducto$(nombre)
 			.pipe(
@@ -206,5 +233,40 @@ export class ProductListComponent implements OnInit {
 					});
 				})
 			);
+	}
+
+	isBlank(searchForm: NgForm) {
+		const nombre = searchForm.controls['search'].value;
+
+		if (nombre === '' || nombre === null || nombre === undefined) {
+			this.isFill = false;
+			this.productListState$ = this.productoService.productos$().pipe(
+				map((response) => {
+					this.dataSubject.next(response);
+					return {
+						dataState: DataState.LOADED,
+						appData: response,
+					};
+				}),
+				startWith({
+					dataState: DataState.LOADING,
+					apData: this.dataSubject.value,
+				}),
+				catchError((error: string) => {
+					return of({
+						dataState: DataState.ERROR,
+						appData: this.dataSubject.value,
+						error,
+					});
+				})
+			);
+		} else {
+			this.isFill = true;
+		}
+	}
+
+	clearInput(searchForm: NgForm) {
+		searchForm.reset();
+		this.isBlank(searchForm);
 	}
 }
