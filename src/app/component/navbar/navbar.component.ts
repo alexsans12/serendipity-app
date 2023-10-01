@@ -1,10 +1,15 @@
-import { Component, ElementRef, HostListener, Input } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import {
-	filter,
-} from 'rxjs';
+	Component,
+	ElementRef,
+	HostListener,
+	Input,
+	OnInit,
+} from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
 import { UsuarioService } from 'src/app/service/usuario.service';
 import { Usuario } from '../../interface/usuario';
+import { Carrito } from 'src/app/interface/carrito';
 declare var bootstrap: any;
 
 @Component({
@@ -12,8 +17,9 @@ declare var bootstrap: any;
 	templateUrl: './navbar.component.html',
 	styleUrls: ['./navbar.component.scss'],
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
 	@Input() usuario: Usuario;
+	@Input() carrito: Carrito;
 
 	currentRoute: string = '';
 	isExpanded = false;
@@ -38,6 +44,17 @@ export class NavbarComponent {
 
 				this.currentRoute = active.snapshot.url.join('/') || '/';
 			});
+	}
+	ngOnInit(): void {
+		if (
+			localStorage.getItem('carrito') &&
+			localStorage.getItem('carrito').includes('carritoProductos') &&
+			!localStorage.getItem('[KEY] TOKEN') &&
+			!localStorage.getItem('[KEY] REFRESH_TOKEN')
+		) {
+			let carrito = JSON.parse(localStorage.getItem('carrito'));
+			this.carrito = carrito.carrito;
+		}
 	}
 
 	logOut(): void {

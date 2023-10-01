@@ -42,8 +42,7 @@ export class CacheInterceptor implements HttpInterceptor {
 		);
 
 		if (cachedResponse) {
-			console.log('found response in Cache', cachedResponse);
-			this.httpCache.logCache();
+			//this.httpCache.logCache();
 			return of(cachedResponse);
 		}
 
@@ -60,13 +59,8 @@ export class CacheInterceptor implements HttpInterceptor {
 					response instanceof HttpResponse &&
 					request.method !== 'DELETE'
 				) {
-					console.log(
-						'adding response to cache',
-						request.url,
-						response
-					);
 					this.httpCache.put(request.url, response);
-					this.httpCache.logCache();
+					//this.httpCache.logCache();
 				}
 			})
 		);

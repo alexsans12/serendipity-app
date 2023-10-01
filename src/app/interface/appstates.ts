@@ -1,4 +1,5 @@
 import { DataState } from "../enum/datastate.enum";
+import { Carrito } from "./carrito";
 import { Eventos } from "./eventos";
 import { Producto } from "./producto";
 import { Rol } from "./rol";
@@ -58,4 +59,10 @@ export interface Page {
 	number: number;
 	first: boolean;
 	last: boolean;
+}
+
+export interface Cart {
+	content: Carrito;
+	error?: string;
+	message?: string;
 }

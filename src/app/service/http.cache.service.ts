@@ -6,7 +6,6 @@ export class HttpCacheService {
 	private httpResponseCache: { [key: string]: HttpResponse<any> } = {};
 
 	put = (key: string, httpResponse: HttpResponse<any>): void => {
-		console.log('caching response', key, httpResponse);
 		this.httpResponseCache[key] = httpResponse;
 	}
 
@@ -15,7 +14,6 @@ export class HttpCacheService {
 	evict = (key: string): boolean => delete this.httpResponseCache[key];
 
 	evictAll = (): void => {
-		console.log('evicting all cached responses');
 		this.httpResponseCache = {};
 	};
 

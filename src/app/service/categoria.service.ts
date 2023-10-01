@@ -7,7 +7,7 @@ import { Observable, catchError, tap, throwError } from 'rxjs';
 	providedIn: 'root',
 })
 export class CategoriaService {
-	private readonly server: string = 'http://192.168.0.2:9091/api/v1';
+	private readonly server: string = 'http://192.168.0.8:9091/api/v1';
 
 	constructor(private http: HttpClient) {}
 
@@ -15,7 +15,7 @@ export class CategoriaService {
 		<Observable<CustomHttpResponse<Page>>>(
 			this.http
 				.get<CustomHttpResponse<any>>(
-					`${this.server}/categoria/list`
+					`${this.server}/category/list`
 				)
 				.pipe(tap(console.log), catchError(this.handleError))
 		);
@@ -24,7 +24,7 @@ export class CategoriaService {
 		<Observable<CustomHttpResponse<any>>>(
 			this.http
 				.get<CustomHttpResponse<any>>(
-					`${this.server}/categoria/list-all?page=${page}&size=${size}`
+					`${this.server}/category/list-all?page=${page}&size=${size}`
 				)
 				.pipe(tap(console.log), catchError(this.handleError))
 		);

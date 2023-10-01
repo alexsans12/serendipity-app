@@ -9,12 +9,13 @@ import {
 	startWith,
 } from 'rxjs';
 import { DataState } from 'src/app/enum/datastate.enum';
-import { CustomHttpResponse, Profile } from 'src/app/interface/appstates';
+import { Cart, CustomHttpResponse, Profile } from 'src/app/interface/appstates';
 import { State } from 'src/app/interface/state';
 import { NgForm } from '@angular/forms';
 import { EventoType } from '../../../enum/evento-type.enum';
 import { NotificationService } from 'src/app/service/notificacion.service';
 import { Router } from '@angular/router';
+import { CarritoService } from 'src/app/service/carrito.service';
 
 @Component({
 	selector: 'app-usuario',
@@ -23,6 +24,7 @@ import { Router } from '@angular/router';
 })
 export class UsuarioComponent implements OnInit {
 	profileState$: Observable<State<CustomHttpResponse<Profile>>>;
+	cartState$: Observable<State<CustomHttpResponse<Cart>>>;
 	private dataSubject: BehaviorSubject<CustomHttpResponse<Profile>> =
 		new BehaviorSubject<CustomHttpResponse<Profile>>(null);
 	private isLoadingSubject = new BehaviorSubject<boolean>(false);
@@ -32,13 +34,33 @@ export class UsuarioComponent implements OnInit {
 	readonly DataState = DataState;
 	readonly EventoType = EventoType;
 
-	constructor(private router: Router, private usuarioService: UsuarioService, private notificationService: NotificationService) {}
+	constructor(
+		private router: Router,
+		private usuarioService: UsuarioService,
+		private carritoService: CarritoService,
+		private notificationService: NotificationService
+	) {}
 
 	ngOnInit(): void {
 		if (!this.usuarioService.isAuthenticated()) {
 			this.router.navigate(['/']);
 		}
 		this.profileState$ = this.usuarioService.profile$().pipe(
+			map((response) => {
+				this.dataSubject.next(response);
+				return { dataState: DataState.LOADED, appData: response };
+			}),
+			startWith({ dataState: DataState.LOADING }),
+			catchError((error: string) => {
+				return of({
+					dataState: DataState.ERROR,
+					appData: this.dataSubject.value,
+					error,
+				});
+			})
+		);
+
+		this.cartState$ = this.carritoService.cart$().pipe(
 			map((response) => {
 				this.dataSubject.next(response);
 				return { dataState: DataState.LOADED, appData: response };
@@ -96,7 +118,10 @@ export class UsuarioComponent implements OnInit {
 				.pipe(
 					map((response) => {
 						this.notificationService.onDefault(response.message);
-						this.dataSubject.next({ ...response, data: response.data });
+						this.dataSubject.next({
+							...response,
+							data: response.data,
+						});
 						passwordForm.reset();
 						this.isLoadingSubject.next(false);
 						return {

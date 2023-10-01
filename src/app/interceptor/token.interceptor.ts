@@ -25,7 +25,7 @@ export class TokenInterceptor implements HttpInterceptor {
 	): Observable<HttpEvent<unknown>> | Observable<HttpResponse<unknown>> {
 		if(request.url.includes('verify') || request.url.includes('login') ||
 		request.url.includes('register') || request.url.includes('reset-password') ||
-		request.url.includes('refresh')) {
+		request.url.includes('refresh') || request.url.includes('sku')) {
 			return next.handle(request);
 		}
 

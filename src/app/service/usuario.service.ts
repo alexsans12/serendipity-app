@@ -9,14 +9,14 @@ import {
 	CustomHttpResponse,
 	Profile,
 } from '../interface/appstates';
-import { Observable, catchError, tap, throwError } from 'rxjs';
+import { Observable, catchError, of, tap, throwError } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Usuario } from '../interface/usuario';
 import { key } from '../enum/key.enum';
 
 @Injectable()
 export class UsuarioService {
-	private readonly server: string = 'http://192.168.0.2:9091/api/v1';
+	private readonly server: string = 'http://192.168.0.8:9091/api/v1';
 	private jwtHelper = new JwtHelperService();
 
 	constructor(private http: HttpClient) {}
@@ -190,10 +190,8 @@ export class UsuarioService {
 			? true
 			: false;
 
-	private handleError(error: HttpErrorResponse): Observable<never> {
+	private handleError(error: HttpErrorResponse): Observable<null | never> {
 		let errorMessage: string;
-
-		console.log(error);
 
 		if (error.error instanceof ErrorEvent) {
 			errorMessage = `A client error occurred: ${error.error.message}`;

@@ -1,8 +1,19 @@
 <ng-container *ngIf="productState$ | async as state">
-	<ng-container *ngIf="usuarioState$ | async as userState">
-		<app-navbar [usuario]="userState?.appData?.data?.usuario"></app-navbar>
+	<ng-container *ngIf="cartState$ | async as cart">
+		<ng-container *ngIf="usuarioState$ | async as user; else withoutUser">
+			<app-navbar
+				[usuario]="user?.appData?.data?.usuario"
+				[carrito]="cart?.appData?.data?.carrito"
+			></app-navbar>
+		</ng-container>
+		<ng-template #withoutUser>
+			<app-navbar [carrito]="cart?.appData?.data?.carrito"></app-navbar>
+		</ng-template>
 		<section class="product-detail">
-			<button class="btn btn-secondary back-button px-3 py-2" (click)="goBack()">
+			<button
+				class="btn btn-secondary back-button px-3 py-2"
+				(click)="goBack()"
+			>
 				<i class="fa fa-arrow-left"></i>
 			</button>
 			<div class="container mt-3 mb-5">
@@ -118,7 +129,14 @@
 									<button class="btn btn-outline-dark">
 										Comprar ahora
 									</button>
-									<button class="btn btn-dark">
+									<button
+										(click)="
+											addToCart(
+												state?.appData?.data?.producto
+											)
+										"
+										class="btn btn-dark"
+									>
 										Añadir al carrito
 									</button>
 								</div>
