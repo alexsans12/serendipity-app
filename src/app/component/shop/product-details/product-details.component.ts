@@ -15,6 +15,7 @@ import {
 	CustomHttpResponse,
 	Page,
 	Profile,
+	Wish,
 } from 'src/app/interface/appstates';
 import { State } from 'src/app/interface/state';
 import { ProductoService } from 'src/app/service/producto.service';
@@ -22,6 +23,7 @@ import { UsuarioService } from 'src/app/service/usuario.service';
 import { CarritoService } from 'src/app/service/carrito.service';
 import { NotificationService } from 'src/app/service/notificacion.service';
 import { Producto } from 'src/app/interface/producto';
+import { DeseadosService } from 'src/app/service/deseados.service';
 
 @Component({
 	selector: 'app-product-details',
@@ -32,6 +34,7 @@ export class ProductDetailsComponent implements OnInit {
 	productState$: Observable<State<CustomHttpResponse<Page>>>;
 	usuarioState$: Observable<State<CustomHttpResponse<Profile>>>;
 	cartState$: Observable<State<CustomHttpResponse<Cart>>>;
+	wishState$: Observable<State<CustomHttpResponse<Wish>>>;
 	private dataSubject = new BehaviorSubject<CustomHttpResponse<any>>(null);
 	private isLoadingSubject = new BehaviorSubject<boolean>(false);
 	isLoading$ = this.isLoadingSubject.asObservable();
@@ -39,6 +42,7 @@ export class ProductDetailsComponent implements OnInit {
 	showLogs$ = this.showLogsSubject.asObservable();
 	readonly DataState = DataState;
 	mainImageUrl: string;
+	isInWishlist$: Observable<boolean>;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -46,6 +50,7 @@ export class ProductDetailsComponent implements OnInit {
 		private notificationService: NotificationService,
 		private usuarioService: UsuarioService,
 		private productoService: ProductoService,
+		private deseadosService: DeseadosService,
 		private carritoService: CarritoService
 	) {}
 
@@ -118,6 +123,37 @@ export class ProductDetailsComponent implements OnInit {
 				});
 			})
 		);
+
+		this.wishState$ = this.deseadosService.wishList$().pipe(
+			map((response) => {
+				this.dataSubject.next(response);
+				return { dataState: DataState.LOADED, appData: response };
+			}),
+			startWith({ dataState: DataState.LOADING }),
+			catchError((error: string) => {
+				return of({
+					dataState: DataState.ERROR,
+					appData: this.dataSubject.value,
+					error,
+				});
+			})
+		);
+
+		this.isInWishlist$ = this.deseadosService
+			.isInWishlist$(currentUrlSegment.path)
+			.pipe(
+				map((response) => {
+					console.log(response.message);
+					return (
+						response.message ==
+						'Producto encontrado en la lista de deseos'
+					);
+				}),
+				startWith(false),
+				catchError((error: string) => {
+					return of(false);
+				})
+			);
 	}
 
 	changeImage(imageSrc: string): void {
@@ -162,5 +198,74 @@ export class ProductDetailsComponent implements OnInit {
 				});
 			})
 		);
+	}
+
+	addToWishlist(idProducto: number) {
+		const currentUrlSegment = this.route.snapshot.url[2];
+
+		this.wishState$ = this.deseadosService.addToWishList$(idProducto).pipe(
+			map((response) => {
+				this.notificationService.onDefault(response.message);
+				this.dataSubject.next(response);
+				this.isInWishlist$ = this.deseadosService
+					.isInWishlist$(currentUrlSegment.path)
+					.pipe(
+						map((response) => {
+							return (
+								response.message ==
+								'Producto encontrado en la lista de deseos'
+							);
+						}),
+						catchError((error: string) => {
+							return of(false);
+						})
+					);
+				return { dataState: DataState.LOADED, appData: response };
+			}),
+			startWith({ dataState: DataState.LOADING }),
+			catchError((error: string) => {
+				return of({
+					dataState: DataState.ERROR,
+					appData: this.dataSubject.value,
+					error,
+				});
+			})
+		);
+	}
+
+	removeFromWishlist(idProducto: number) {
+		const currentUrlSegment = this.route.snapshot.url[2];
+
+		this.wishState$ = this.deseadosService
+			.removeFromWishList$(idProducto)
+			.pipe(
+				map((response) => {
+					this.notificationService.onDefault(response.message);
+					this.dataSubject.next(response);
+					this.isInWishlist$ = this.deseadosService
+						.isInWishlist$(currentUrlSegment.path)
+						.pipe(
+							map((response) => {
+								return (
+									response.message ==
+									'Producto encontrado en la lista de deseos'
+								);
+							}),
+							startWith(false),
+							catchError((error: string) => {
+								return of(false);
+							})
+						);
+					return { dataState: DataState.LOADED, appData: response };
+				}),
+				startWith({ dataState: DataState.LOADING }),
+				catchError((error: string) => {
+					return of({
+						dataState: DataState.ERROR,
+						appData: this.dataSubject.value,
+						error,
+					});
+				})
+			);
 	}
 }

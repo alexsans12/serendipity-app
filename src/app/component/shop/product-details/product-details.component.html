@@ -1,151 +1,193 @@
 <ng-container *ngIf="productState$ | async as state">
 	<ng-container *ngIf="cartState$ | async as cart">
-		<ng-container *ngIf="usuarioState$ | async as user; else withoutUser">
-			<app-navbar
-				[usuario]="user?.appData?.data?.usuario"
-				[carrito]="cart?.appData?.data?.carrito"
-			></app-navbar>
-		</ng-container>
-		<ng-template #withoutUser>
-			<app-navbar [carrito]="cart?.appData?.data?.carrito"></app-navbar>
-		</ng-template>
-		<section class="product-detail">
-			<button
-				class="btn btn-secondary back-button px-3 py-2"
-				(click)="goBack()"
+		<ng-container *ngIf="wishState$ | async as wish">
+			<ng-container
+				*ngIf="usuarioState$ | async as user; else withoutUser"
 			>
-				<i class="fa fa-arrow-left"></i>
-			</button>
-			<div class="container mt-3 mb-5">
-				<div class="card">
-					<div class="row g-0">
-						<div class="col-md-6 border-end pe-4">
-							<div
-								class="d-flex flex-column justify-content-center"
-							>
-								<div class="main_image">
-									<img
-										id="main_product_image"
-										#mainProductImage
-										[src]="[mainImageUrl]"
-									/>
-								</div>
-								<div class="thumbnail_images">
-									<ul id="thumbnail">
-										<li
-											*ngFor="
-												let imagen of state?.appData
-													?.data?.producto.imagenes
-											"
-										>
-											<img
-												(click)="
-													changeImage(imagen.url)
+				<app-navbar
+					[usuario]="user?.appData?.data?.usuario"
+					[carrito]="cart?.appData?.data?.carrito"
+				></app-navbar>
+			</ng-container>
+			<ng-template #withoutUser>
+				<app-navbar
+					[carrito]="cart?.appData?.data?.carrito"
+				></app-navbar>
+			</ng-template>
+			<section class="product-detail">
+				<button
+					class="btn btn-secondary back-button px-3 py-2"
+					(click)="goBack()"
+				>
+					<i class="fa fa-arrow-left"></i>
+				</button>
+				<div class="container mt-3 mb-5">
+					<div class="card">
+						<div class="row g-0">
+							<div class="col-md-6 border-end pe-4">
+								<div
+									class="d-flex flex-column justify-content-center"
+								>
+									<div class="main_image">
+										<img
+											id="main_product_image"
+											#mainProductImage
+											[src]="[mainImageUrl]"
+										/>
+									</div>
+									<div class="thumbnail_images">
+										<ul id="thumbnail">
+											<li
+												*ngFor="
+													let imagen of state?.appData
+														?.data?.producto
+														.imagenes
 												"
-												[src]="imagen.url"
-												width="70"
-											/>
-										</li>
-									</ul>
+											>
+												<img
+													(click)="
+														changeImage(imagen.url)
+													"
+													[src]="imagen.url"
+													width="70"
+												/>
+											</li>
+										</ul>
+									</div>
 								</div>
 							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="p-3 right-side">
-								<div
-									class="d-flex justify-content-between align-items-center"
-								>
-									<h3>
-										{{
-											state?.appData?.data?.producto
-												.nombre
-										}}
-									</h3>
-									<span class="heart"
-										><i class="fa-solid fa-heart"></i
-									></span>
-								</div>
-								<div class="mt-2 pr-3 content">
-									<p>
-										{{
-											state?.appData?.data?.producto
-												.descripcion
-										}}
-									</p>
-								</div>
-								<div>
-									<p
-										*ngIf="
-											state?.appData?.data?.producto
-												.descuento > 0
-										"
-										class="small text-danger"
+							<div class="col-md-6">
+								<div class="p-3 right-side">
+									<div
+										class="d-flex justify-content-between align-items-center"
 									>
-										<s>{{
-											state?.appData?.data?.producto
-												.precio | currency : "Q"
-										}}</s>
-									</p>
-									<h3>
-										{{
-											state?.appData?.data?.producto
-												.precio -
+										<h3>
+											{{
 												state?.appData?.data?.producto
-													.precio *
-													state?.appData?.data
-														?.producto.descuento
-												| currency : "Q"
-										}}
-									</h3>
-								</div>
-								<div
-									class="ratings d-flex flex-row align-items-center"
-								>
-									<div class="d-flex flex-row">
-										<i class="fa fa-star"></i>
-										<i class="fa fa-star"></i>
-										<i class="fa fa-star"></i>
-										<i class="fa fa-star"></i>
-										<i class="fa fa-star"></i>
+													.nombre
+											}}
+										</h3>
+										<ng-container *ngIf="(isInWishlist$ | async); else noWish">
+											<a
+											class="add-wish"
+											(click)="
+											removeFromWishlist(
+												state?.appData?.data
+												?.producto.idProducto
+												)
+												"
+												>
+												<span class="heart active"
+												><i
+												class="fa-solid fa-heart"
+												></i
+												></span>
+											</a>
+										</ng-container>
+										<ng-template #noWish>
+											<a
+											class="add-wish"
+											(click)="
+											addToWishlist(
+												state?.appData?.data
+												?.producto.idProducto
+												)
+												"
+												>
+												<span class="heart"
+												><i
+												class="fa-solid fa-heart"
+												></i
+												></span>
+											</a>
+										</ng-template>
 									</div>
-									<span>441 reviews</span>
-								</div>
-								<div class="mt-5">
-									<span class="fw-bold">Categoria</span>
-									<div class="text-muted">
-										<a
-											[routerLink]="[
-												'/shop/category/' +
-													state?.appData?.data?.producto.nombreCategoria.toLowerCase()
-											]"
-											>{{
+									<div class="mt-2 pr-3 content">
+										<p>
+											{{
 												state?.appData?.data?.producto
-													.nombreCategoria
-											}}</a
+													.descripcion
+											}}
+										</p>
+									</div>
+									<div>
+										<p
+											*ngIf="
+												state?.appData?.data?.producto
+													.descuento > 0
+											"
+											class="small text-danger"
 										>
-									</div>
-								</div>
-								<div class="buttons d-flex flex-row mt-5 gap-3">
-									<button class="btn btn-outline-dark">
-										Comprar ahora
-									</button>
-									<button
-										(click)="
-											addToCart(
+											<s>{{
 												state?.appData?.data?.producto
-											)
-										"
-										class="btn btn-dark"
+													.precio | currency : "Q"
+											}}</s>
+										</p>
+										<h3>
+											{{
+												state?.appData?.data?.producto
+													.precio -
+													state?.appData?.data
+														?.producto.precio *
+														state?.appData?.data
+															?.producto.descuento
+													| currency : "Q"
+											}}
+										</h3>
+									</div>
+									<div
+										class="ratings d-flex flex-row align-items-center"
 									>
-										Añadir al carrito
-									</button>
+										<div class="d-flex flex-row">
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+										</div>
+										<span>441 reviews</span>
+									</div>
+									<div class="mt-5">
+										<span class="fw-bold">Categoria</span>
+										<div class="text-muted">
+											<a
+												[routerLink]="[
+													'/shop/category/' +
+														state?.appData?.data?.producto.nombreCategoria.toLowerCase()
+												]"
+												>{{
+													state?.appData?.data
+														?.producto
+														.nombreCategoria
+												}}</a
+											>
+										</div>
+									</div>
+									<div
+										class="buttons d-flex flex-row mt-5 gap-3"
+									>
+										<button class="btn btn-outline-dark">
+											Comprar ahora
+										</button>
+										<button
+											(click)="
+												addToCart(
+													state?.appData?.data
+														?.producto
+												)
+											"
+											class="btn btn-dark"
+										>
+											Añadir al carrito
+										</button>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		</section>
-		<app-footer></app-footer>
+			</section>
+			<app-footer></app-footer>
+		</ng-container>
 	</ng-container>
 </ng-container>
