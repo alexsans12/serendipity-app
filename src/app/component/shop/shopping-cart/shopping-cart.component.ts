@@ -15,7 +15,6 @@ import {
 	Profile,
 } from 'src/app/interface/appstates';
 import { State } from 'src/app/interface/state';
-import { Usuario } from 'src/app/interface/usuario';
 import { UsuarioService } from 'src/app/service/usuario.service';
 import { CarritoService } from '../../../service/carrito.service';
 import { NotificationService } from 'src/app/service/notificacion.service';
