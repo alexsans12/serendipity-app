@@ -9,13 +9,25 @@ import {
 	startWith,
 } from 'rxjs';
 import { DataState } from 'src/app/enum/datastate.enum';
-import { Cart, CustomHttpResponse, Profile } from 'src/app/interface/appstates';
+import {
+	Address,
+	Cart,
+	CustomHttpResponse,
+	Department,
+	Municipality,
+	Profile,
+} from 'src/app/interface/appstates';
 import { State } from 'src/app/interface/state';
 import { NgForm } from '@angular/forms';
 import { EventoType } from '../../../enum/evento-type.enum';
 import { NotificationService } from 'src/app/service/notificacion.service';
 import { Router } from '@angular/router';
 import { CarritoService } from 'src/app/service/carrito.service';
+import { Municipio } from 'src/app/interface/municipio';
+import { DepartamentoService } from 'src/app/service/departamento.service';
+import { MunicipioService } from 'src/app/service/municipio.service';
+import { DireccionService } from 'src/app/service/direccion.service';
+import { Direccion } from 'src/app/interface/direccion';
 
 @Component({
 	selector: 'app-usuario',
@@ -25,6 +37,9 @@ import { CarritoService } from 'src/app/service/carrito.service';
 export class UsuarioComponent implements OnInit {
 	profileState$: Observable<State<CustomHttpResponse<Profile>>>;
 	cartState$: Observable<State<CustomHttpResponse<Cart>>>;
+	direccionState$: Observable<State<CustomHttpResponse<Address>>>;
+	departamentoState$: Observable<State<CustomHttpResponse<Department>>>;
+	municipioState$: Observable<State<CustomHttpResponse<Municipality>>>;
 	private dataSubject: BehaviorSubject<CustomHttpResponse<Profile>> =
 		new BehaviorSubject<CustomHttpResponse<Profile>>(null);
 	private isLoadingSubject = new BehaviorSubject<boolean>(false);
@@ -34,10 +49,28 @@ export class UsuarioComponent implements OnInit {
 	readonly DataState = DataState;
 	readonly EventoType = EventoType;
 
+	selectedDepartment: number = 0;
+	selectedMunicipality: number = 0;
+	isEditing: boolean = false;
+	municipios: Municipio[] = [];
+	addressModel = {
+		idDireccion: '',
+		nombre: '',
+		apellido: '',
+		telefono: '',
+		idDepartamento: '',
+		idMunicipio: '',
+		direccion: '',
+		indicaciones: '',
+	};
+
 	constructor(
 		private router: Router,
 		private usuarioService: UsuarioService,
 		private carritoService: CarritoService,
+		private direccionService: DireccionService,
+		private departamentoService: DepartamentoService,
+		private municipioService: MunicipioService,
 		private notificationService: NotificationService
 	) {}
 
@@ -74,6 +107,40 @@ export class UsuarioComponent implements OnInit {
 				});
 			})
 		);
+
+		this.direccionState$ = this.direccionService
+			.direccionesByUsuario$()
+			.pipe(
+				map((response) => {
+					this.dataSubject.next(response);
+					return { dataState: DataState.LOADED, appData: response };
+				}),
+				startWith({ dataState: DataState.LOADING }),
+				catchError((error: string) => {
+					return of({
+						dataState: DataState.ERROR,
+						appData: this.dataSubject.value,
+						error,
+					});
+				})
+			);
+
+		this.departamentoState$ = this.departamentoService
+			.departamentos$()
+			.pipe(
+				map((response) => {
+					this.dataSubject.next(response);
+					return { dataState: DataState.LOADED, appData: response };
+				}),
+				startWith({ dataState: DataState.LOADING }),
+				catchError((error: string) => {
+					return of({
+						dataState: DataState.ERROR,
+						appData: this.dataSubject.value,
+						error,
+					});
+				})
+			);
 	}
 
 	updateProfile(profileForm: NgForm): void {
@@ -291,5 +358,152 @@ export class UsuarioComponent implements OnInit {
 		const formData = new FormData();
 		formData.append('image', image);
 		return formData;
+	}
+
+	onDepartmentChange(idDepartamento: number): void {
+		this.selectedMunicipality = 0;
+
+		this.municipioService
+			.municipiosByIdDepartamento$(idDepartamento)
+			.subscribe({
+				next: (response) => {
+					console.log('Municipios', response);
+					this.municipios = response.data.municipios;
+				},
+				error: (error) => {
+					console.error('Error loading municipalities', error);
+				},
+				complete: () => {
+					console.log('Loading of municipalities complete');
+				},
+			});
+	}
+
+	newAddress(): void {
+		this.addressModel = {
+			idDireccion: '',
+			nombre: '',
+			apellido: '',
+			telefono: '',
+			idDepartamento: '',
+			idMunicipio: '',
+			direccion: '',
+			indicaciones: '',
+		};
+		this.isEditing = false;
+		this.selectedDepartment = 0;
+		this.selectedMunicipality = 0;
+	}
+
+	addAddress(addressForm: NgForm): void {
+		this.isLoadingSubject.next(true);
+		this.direccionState$ = this.direccionService
+			.addDireccion$(addressForm.value)
+			.pipe(
+				map((response) => {
+					console.log(response);
+					this.notificationService.onDefault(response.message);
+					this.dataSubject.next({ ...response, data: response.data });
+					this.isLoadingSubject.next(false);
+					return {
+						dataState: DataState.LOADED,
+						appData: this.dataSubject.value,
+					};
+				}),
+				startWith({
+					dataState: DataState.LOADED,
+					appData: this.dataSubject.value,
+				}),
+				catchError((error: string) => {
+					this.notificationService.onError(error);
+					this.isLoadingSubject.next(false);
+					return of({
+						dataState: DataState.LOADED,
+						appData: this.dataSubject.value,
+						error,
+					});
+				})
+			);
+	}
+
+	editAddress(direccion: any): void {
+		this.addressModel = { ...direccion };
+		this.selectedDepartment =
+			direccion.municipio.departamento.idDepartamento;
+		this.onDepartmentChange(this.selectedDepartment);
+		this.selectedMunicipality = direccion.municipio.idMunicipio;
+		this.isEditing = true;
+	}
+
+	saveAddress(addressForm: NgForm): void {
+		console.log(addressForm.value)
+		this.isLoadingSubject.next(true);
+		this.direccionState$ = this.direccionService
+			.updateDireccion$(addressForm.value)
+			.pipe(
+				map((response) => {
+					console.log(response);
+					this.notificationService.onDefault(response.message);
+					this.dataSubject.next({ ...response, data: response.data });
+					this.isLoadingSubject.next(false);
+					return {
+						dataState: DataState.LOADED,
+						appData: this.dataSubject.value,
+					};
+				}),
+				startWith({
+					dataState: DataState.LOADED,
+					appData: this.dataSubject.value,
+				}),
+				catchError((error: string) => {
+					this.notificationService.onError(error);
+					this.isLoadingSubject.next(false);
+					return of({
+						dataState: DataState.LOADED,
+						appData: this.dataSubject.value,
+						error,
+					});
+				})
+			);
+	}
+
+	deleteAddress(idDireccion: number): void {
+		const direccion: Direccion = {
+			idDireccion,
+			nombre: '',
+			apellido: '',
+			telefono: 0,
+			idDepartamento: 0,
+			idMunicipio: 0,
+		};
+
+		this.isLoadingSubject.next(true);
+		this.direccionState$ = this.direccionService
+			.deleteDireccion$(direccion)
+			.pipe(
+				map((response) => {
+					console.log(response);
+					this.notificationService.onDefault(response.message);
+					this.dataSubject.next({ ...response, data: response.data });
+					this.isLoadingSubject.next(false);
+					return {
+						dataState: DataState.LOADED,
+						appData: this.dataSubject.value,
+					};
+				}),
+				startWith({
+					dataState: DataState.LOADED,
+					appData: this.dataSubject.value,
+				}),
+				catchError((error: string) => {
+					this.notificationService.onError(error);
+					this.isLoadingSubject.next(false);
+					return of({
+						dataState: DataState.LOADED,
+						appData: this.dataSubject.value,
+						error,
+					});
+				})
+			);
 	}
 }
