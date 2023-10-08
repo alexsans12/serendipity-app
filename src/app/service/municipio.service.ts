@@ -1,31 +1,27 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CustomHttpResponse, Page } from '../interface/appstates';
 import { Observable, catchError, tap, throwError } from 'rxjs';
+import { CustomHttpResponse, Municipality } from '../interface/appstates';
 
 @Injectable({
 	providedIn: 'root',
 })
-export class CategoriaService {
+export class MunicipioService {
 	private readonly server: string = 'http://192.168.0.8:9091/api/v1';
 
 	constructor(private http: HttpClient) {}
 
-	categorias$ = () =>
-		<Observable<CustomHttpResponse<Page>>>(
+	municipios$ = () =>
+		<Observable<CustomHttpResponse<Municipality>>>(
 			this.http
-				.get<CustomHttpResponse<any>>(
-					`${this.server}/category/list`
-				)
+				.get<CustomHttpResponse<any>>(`${this.server}/municipio/list`)
 				.pipe(tap(console.log), catchError(this.handleError))
 		);
 
-	allCategorias$ = (page: number = 0, size: number = 20) =>
-		<Observable<CustomHttpResponse<any>>>(
+	municipiosByIdDepartamento$ = (idDepartamento: number) =>
+		<Observable<CustomHttpResponse<Municipality>>>(
 			this.http
-				.get<CustomHttpResponse<any>>(
-					`${this.server}/category/list-all?page=${page}&size=${size}`
-				)
+				.get<CustomHttpResponse<any>>(`${this.server}/municipio/departamento/${idDepartamento}`)
 				.pipe(tap(console.log), catchError(this.handleError))
 		);
 

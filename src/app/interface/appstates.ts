@@ -5,6 +5,9 @@ import { Eventos } from "./eventos";
 import { Producto } from "./producto";
 import { Rol } from "./rol";
 import { Usuario } from "./usuario";
+import { Departamento } from './departamento';
+import { Municipio } from "./municipio";
+import { Direccion } from "./direccion";
 
 export interface LoginState {
 	dataState: DataState;
@@ -70,6 +73,24 @@ export interface Cart {
 
 export interface Wish {
 	content: Deseados;
+	error?: string;
+	message?: string;
+}
+
+export interface Department {
+	content: Departamento;
+	error?: string;
+	message?: string;
+}
+
+export interface Municipality {
+	content: Municipio;
+	error?: string;
+	message?: string;
+}
+
+export interface Address {
+	content: Direccion;
 	error?: string;
 	message?: string;
 }
