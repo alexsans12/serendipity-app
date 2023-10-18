@@ -37,7 +37,6 @@ export class VerifyComponent implements OnInit {
 	ngOnInit(): void {
 		this.verifyState$ = this.activatedRouter.paramMap.pipe(
 			switchMap((params: ParamMap) => {
-				console.log(this.activatedRouter);
 				const type: AccountType = this.getAccountType(
 					window.location.href
 				);
@@ -45,7 +44,6 @@ export class VerifyComponent implements OnInit {
 					.verify$(params.get(this.ACCOUNT_TYPE), type)
 					.pipe(
 						map((response) => {
-							console.log(response);
 							type === 'password'
 								? this.usuarioSubject.next(
 										response.data.usuario

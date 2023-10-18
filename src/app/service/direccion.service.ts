@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
-import { Observable, catchError, tap, throwError } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 import { Address, CustomHttpResponse } from '../interface/appstates';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Direccion } from '../interface/direccion';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class DireccionService {
-	private readonly server: string = 'http://192.168.0.9:9091/api/v1';
+	private readonly server: string = environment.serendipity_api_url;
 
 	constructor(private http: HttpClient) {}
 
@@ -16,7 +17,7 @@ export class DireccionService {
 		<Observable<CustomHttpResponse<Address>>>(
 			this.http
 				.get<CustomHttpResponse<any>>(`${this.server}/direccion/get`)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	direccionById$ = (idDireccion: number) =>
@@ -25,7 +26,7 @@ export class DireccionService {
 				.get<CustomHttpResponse<any>>(
 					`${this.server}/direccion/get/${idDireccion}`
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	addDireccion$ = (direccion: Direccion) =>
@@ -35,7 +36,7 @@ export class DireccionService {
 					`${this.server}/direccion/create`,
 					direccion
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	updateDireccion$ = (direccion: Direccion) =>
@@ -45,7 +46,7 @@ export class DireccionService {
 					`${this.server}/direccion/update`,
 					direccion
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	deleteDireccion$ = (direccion: Direccion) =>
@@ -55,7 +56,7 @@ export class DireccionService {
 					`${this.server}/direccion/delete`,
 					direccion
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	private handleError(error: HttpErrorResponse): Observable<never> {

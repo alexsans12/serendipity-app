@@ -24,21 +24,18 @@ import { NotificationService } from 'src/app/service/notificacion.service';
 import {
 	loadStripe,
 	Order,
-	Stripe,
 	StripeElements,
-	StripeElementsOptions,
 } from '@stripe/stripe-js';
 import { UsuarioService } from 'src/app/service/usuario.service';
 import { Router } from '@angular/router';
 import { CheckoutService } from 'src/app/service/checkout.service';
 import { PagoService } from 'src/app/service/pago.service';
-import { Pago } from 'src/app/interface/pago';
 import { EstadoPago } from '../../../enum/estado-pago.enum';
 import { TipoPago } from 'src/app/enum/tipo-pago.enum';
 import { PedidoService } from 'src/app/service/pedido.service';
-import { Pedido } from 'src/app/interface/pedido';
 import { EstadoPedido } from 'src/app/enum/estado-pedido.enum';
 import { Direccion } from 'src/app/interface/direccion';
+import { environment } from 'src/environments/environment';
 
 @Component({
 	selector: 'app-payment-method',
@@ -76,7 +73,7 @@ export class PaymentMethodComponent implements OnInit {
 
 	paymentInfo: PaymentInfo;
 
-	client_secret: string = 'pk_test_';
+	private client_secret: string | null;
 
 	constructor(
 		private router: Router,
@@ -87,7 +84,9 @@ export class PaymentMethodComponent implements OnInit {
 		private pagoService: PagoService,
 		private pedidoService: PedidoService,
 		private notificationService: NotificationService
-	) {}
+	) {
+		this.client_secret = environment.stripe_client_key;
+	}
 
 	async ngOnInit(): Promise<void> {
 		if (!this.usuarioService.isAuthenticated()) {
@@ -158,7 +157,6 @@ export class PaymentMethodComponent implements OnInit {
 	}
 
 	selectAddress(index: number): void {
-		console.log("Index: ", index)
 		this.selectedIndex = index;
 	}
 

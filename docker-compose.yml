@@ -1,0 +1,15 @@
+services:
+  serendipity-app:
+    container_name: serendipity-app-container
+    build: .
+    image: serendipity-app:v1.0.0
+    ports:
+      - "80:80"
+    expose:
+      - "80"
+    networks:
+      - internalnet
+
+networks:
+  internalnet:
+    driver: bridge

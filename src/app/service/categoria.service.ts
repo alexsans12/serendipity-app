@@ -1,13 +1,14 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CustomHttpResponse, Page } from '../interface/appstates';
-import { Observable, catchError, tap, throwError } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class CategoriaService {
-	private readonly server: string = 'http://192.168.0.9:9091/api/v1';
+	private readonly server: string = environment.serendipity_api_url;
 
 	constructor(private http: HttpClient) {}
 
@@ -17,7 +18,7 @@ export class CategoriaService {
 				.get<CustomHttpResponse<any>>(
 					`${this.server}/category/list`
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	allCategorias$ = (page: number = 0, size: number = 20) =>
@@ -26,7 +27,7 @@ export class CategoriaService {
 				.get<CustomHttpResponse<any>>(
 					`${this.server}/category/list-all?page=${page}&size=${size}`
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	private handleError(error: HttpErrorResponse): Observable<never> {

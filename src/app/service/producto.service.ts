@@ -1,14 +1,15 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, tap, throwError } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 import { CustomHttpResponse, Page } from '../interface/appstates';
 import { Usuario } from '../interface/usuario';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class ProductoService {
-	private readonly server: string = 'http://192.168.0.9:9091/api/v1';
+	private readonly server: string = environment.serendipity_api_url;
 
 	constructor(private http: HttpClient) {}
 
@@ -18,7 +19,7 @@ export class ProductoService {
 				.get<CustomHttpResponse<Page & Usuario>>(
 					`${this.server}/producto/list?page=${page}&size=${size}`
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	productosByCategoria$ = (
@@ -31,7 +32,7 @@ export class ProductoService {
 				.get<CustomHttpResponse<Page & Usuario>>(
 					`${this.server}/producto/categoria?nombre=${nombre}&page=${page}&size=${size}`
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	searchProducto$ = (nombre: string, page: number = 0, size: number = 20) =>
@@ -40,7 +41,7 @@ export class ProductoService {
 				.get<CustomHttpResponse<any>>(
 					`${this.server}/producto/search?nombre=${nombre}&page=${page}&size=${size}`
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	productoByCode$ = (sku: string) =>
@@ -49,13 +50,11 @@ export class ProductoService {
 				.get<CustomHttpResponse<any>>(
 					`${this.server}/producto/sku/${sku}`
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	private handleError(error: HttpErrorResponse): Observable<never> {
 		let errorMessage: string;
-
-		console.log(error);
 
 		if (error.error instanceof ErrorEvent) {
 			errorMessage = `Se produjo un error del cliente: ${error.error.message}`;

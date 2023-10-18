@@ -1,14 +1,15 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CustomHttpResponse, Pay } from '../interface/appstates';
-import { Observable, catchError, tap, throwError } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 import { Pago } from '../interface/pago';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class PagoService {
-	private readonly server: string = 'http://192.168.0.9:9091/api/v1';
+	private readonly server: string = environment.serendipity_api_url;
 
 	constructor(private http: HttpClient) {}
 
@@ -18,7 +19,7 @@ export class PagoService {
 				.get<CustomHttpResponse<any>>(
 					`${this.server}/pago/get/${idPago}`
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	createPago$ = (idMetodoPago: number, monto: number, estado: string) =>
@@ -32,7 +33,7 @@ export class PagoService {
 						estado,
 					}
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	updatePago$ = (pago: Pago) =>
@@ -42,7 +43,7 @@ export class PagoService {
 					`${this.server}/pago/update`,
 					pago
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	deletePago$ = (pago: Pago) =>
@@ -52,7 +53,7 @@ export class PagoService {
 					`${this.server}/pago/delete`,
 					pago
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	private handleError(error: HttpErrorResponse): Observable<never> {

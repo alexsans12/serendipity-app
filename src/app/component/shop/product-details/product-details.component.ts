@@ -144,7 +144,6 @@ export class ProductDetailsComponent implements OnInit {
 			.isInWishlist$(currentUrlSegment.path)
 			.pipe(
 				map((response) => {
-					console.log(response.message);
 					return (
 						response.message ==
 						'Producto encontrado en la lista de deseos'
