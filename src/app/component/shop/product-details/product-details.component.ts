@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
 	BehaviorSubject,
 	Observable,
@@ -45,6 +45,7 @@ export class ProductDetailsComponent implements OnInit {
 	isInWishlist$: Observable<boolean>;
 
 	constructor(
+		private router: Router,
 		private route: ActivatedRoute,
 		private location: Location,
 		private notificationService: NotificationService,
@@ -201,6 +202,10 @@ export class ProductDetailsComponent implements OnInit {
 	}
 
 	addToWishlist(idProducto: number) {
+		if (!this.usuarioService.isAuthenticated()) {
+			this.router.navigate(['/login']);
+		}
+
 		const currentUrlSegment = this.route.snapshot.url[2];
 
 		this.wishState$ = this.deseadosService.addToWishList$(idProducto).pipe(

@@ -7,7 +7,7 @@ import { Observable, catchError, tap, throwError } from 'rxjs';
 	providedIn: 'root',
 })
 export class CategoriaService {
-	private readonly server: string = 'http://192.168.0.8:9091/api/v1';
+	private readonly server: string = 'http://192.168.0.9:9091/api/v1';
 
 	constructor(private http: HttpClient) {}
 

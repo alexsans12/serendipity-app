@@ -1,61 +1,62 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { CustomHttpResponse, Pay } from '../interface/appstates';
 import { Observable, catchError, tap, throwError } from 'rxjs';
-import { CustomHttpResponse, Page } from '../interface/appstates';
-import { Usuario } from '../interface/usuario';
+import { Pago } from '../interface/pago';
 
 @Injectable({
 	providedIn: 'root',
 })
-export class ProductoService {
+export class PagoService {
 	private readonly server: string = 'http://192.168.0.9:9091/api/v1';
 
 	constructor(private http: HttpClient) {}
 
-	productos$ = (page: number = 0, size: number = 20) =>
-		<Observable<CustomHttpResponse<Page & Usuario>>>(
-			this.http
-				.get<CustomHttpResponse<Page & Usuario>>(
-					`${this.server}/producto/list?page=${page}&size=${size}`
-				)
-				.pipe(tap(console.log), catchError(this.handleError))
-		);
-
-	productosByCategoria$ = (
-		nombre: string,
-		page: number = 0,
-		size: number = 20
-	) =>
-		<Observable<CustomHttpResponse<Page & Usuario>>>(
-			this.http
-				.get<CustomHttpResponse<Page & Usuario>>(
-					`${this.server}/producto/categoria?nombre=${nombre}&page=${page}&size=${size}`
-				)
-				.pipe(tap(console.log), catchError(this.handleError))
-		);
-
-	searchProducto$ = (nombre: string, page: number = 0, size: number = 20) =>
-		<Observable<CustomHttpResponse<Page & Usuario>>>(
+	pagoById$ = (idPago: number) =>
+		<Observable<CustomHttpResponse<Pay>>>(
 			this.http
 				.get<CustomHttpResponse<any>>(
-					`${this.server}/producto/search?nombre=${nombre}&page=${page}&size=${size}`
+					`${this.server}/pago/get/${idPago}`
 				)
 				.pipe(tap(console.log), catchError(this.handleError))
 		);
 
-	productoByCode$ = (sku: string) =>
-		<Observable<CustomHttpResponse<Page & Usuario>>>(
+	createPago$ = (idMetodoPago: number, monto: number, estado: string) =>
+		<Observable<CustomHttpResponse<Pay>>>(
 			this.http
-				.get<CustomHttpResponse<any>>(
-					`${this.server}/producto/sku/${sku}`
+				.post<CustomHttpResponse<any>>(
+					`${this.server}/pago/create`,
+					{
+						idMetodoPago,
+						monto,
+						estado,
+					}
+				)
+				.pipe(tap(console.log), catchError(this.handleError))
+		);
+
+	updatePago$ = (pago: Pago) =>
+		<Observable<CustomHttpResponse<Pay>>>(
+			this.http
+				.put<CustomHttpResponse<any>>(
+					`${this.server}/pago/update`,
+					pago
+				)
+				.pipe(tap(console.log), catchError(this.handleError))
+		);
+
+	deletePago$ = (pago: Pago) =>
+		<Observable<CustomHttpResponse<Pay>>>(
+			this.http
+				.post<CustomHttpResponse<any>>(
+					`${this.server}/pago/delete`,
+					pago
 				)
 				.pipe(tap(console.log), catchError(this.handleError))
 		);
 
 	private handleError(error: HttpErrorResponse): Observable<never> {
 		let errorMessage: string;
-
-		console.log(error);
 
 		if (error.error instanceof ErrorEvent) {
 			errorMessage = `Se produjo un error del cliente: ${error.error.message}`;

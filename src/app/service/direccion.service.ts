@@ -8,7 +8,7 @@ import { Direccion } from '../interface/direccion';
 	providedIn: 'root',
 })
 export class DireccionService {
-	private readonly server: string = 'http://192.168.0.8:9091/api/v1';
+	private readonly server: string = 'http://192.168.0.9:9091/api/v1';
 
 	constructor(private http: HttpClient) {}
 

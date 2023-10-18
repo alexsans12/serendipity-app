@@ -10,9 +10,13 @@ import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
 import { WishListComponent } from './wish-list/wish-list.component';
 import { ProductCardComponent } from './product-card/product-card.component';
 import { NotFoundComponent } from '../not-found/not-found.component';
+import { PaymentMethodComponent } from './payment-method/payment-method.component';
+import { ShippingComponent } from './shipping/shipping.component';
+import { OrdersComponent } from './orders/orders.component';
+import { OrderDetailsComponent } from './order-details/order-details.component';
 
 @NgModule({
-	declarations: [ProductListComponent, ProductDetailsComponent, CategoryListComponent, ShoppingCartComponent, WishListComponent, ProductCardComponent, NotFoundComponent],
+	declarations: [ProductListComponent, ProductDetailsComponent, CategoryListComponent, ShoppingCartComponent, WishListComponent, ProductCardComponent, NotFoundComponent, PaymentMethodComponent, ShippingComponent, OrdersComponent, OrderDetailsComponent],
 	imports: [SharedModule, ShopRoutingModule, NavbarModule, FooterModule],
 })
 export class ShopModule {}

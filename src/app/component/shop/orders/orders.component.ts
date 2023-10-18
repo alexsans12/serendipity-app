@@ -15,36 +15,39 @@ import {
 	Profile,
 } from 'src/app/interface/appstates';
 import { State } from 'src/app/interface/state';
+import { CarritoService } from 'src/app/service/carrito.service';
 import { UsuarioService } from 'src/app/service/usuario.service';
-import { CarritoService } from '../../../service/carrito.service';
-import { NotificationService } from 'src/app/service/notificacion.service';
-import { Producto } from 'src/app/interface/producto';
-import { Carrito } from 'src/app/interface/carrito';
+import { PedidoService } from '../../../service/pedido.service';
 import { Router } from '@angular/router';
 
 @Component({
-	selector: 'app-shopping-cart',
-	templateUrl: './shopping-cart.component.html',
-	styleUrls: ['./shopping-cart.component.scss'],
+	selector: 'app-orders',
+	templateUrl: './orders.component.html',
+	styleUrls: ['./orders.component.scss'],
 })
-export class ShoppingCartComponent implements OnInit {
+export class OrdersComponent implements OnInit {
 	cartState$: Observable<State<CustomHttpResponse<Cart>>>;
 	usuarioState$: Observable<State<CustomHttpResponse<Profile>>>;
+	ordersState$: Observable<State<CustomHttpResponse<Page>>>;
 	private dataSubject = new BehaviorSubject<CustomHttpResponse<Page>>(null);
 	private isLoadingSubject = new BehaviorSubject<boolean>(false);
 	isLoading$ = this.isLoadingSubject.asObservable();
-	private showLogsSubject = new BehaviorSubject<boolean>(false);
-	showLogs$ = this.showLogsSubject.asObservable();
+	private currentPageSubject = new BehaviorSubject<number>(0);
+	currentPage$ = this.currentPageSubject.asObservable();
 	readonly DataState = DataState;
 
 	constructor(
 		private router: Router,
 		private usuarioService: UsuarioService,
 		private carritoService: CarritoService,
-		private notificationService: NotificationService
+		private pedidoService: PedidoService
 	) {}
 
 	ngOnInit(): void {
+		if (!this.usuarioService.isAuthenticated()) {
+			this.router.navigate(['/login']);
+		}
+
 		if (this.usuarioService.isAuthenticated()) {
 			this.usuarioState$ = this.usuarioService.profile$().pipe(
 				map((response) => {
@@ -98,33 +101,13 @@ export class ShoppingCartComponent implements OnInit {
 				});
 			})
 		);
-	}
 
-	addToCart(producto: Producto) {
-		this.cartState$ = this.carritoService.addToCart$(producto).pipe(
+		this.ordersState$ = this.pedidoService.pedidosByUsuario$().pipe(
 			map((response) => {
-				if (!response.message) {
-					let carrito = JSON.parse(localStorage.getItem('carrito'));
-					this.notificationService.onDefault(
-						'Producto agregado al carrito'
-					);
-					this.dataSubject.next({
-						...response,
-						data: carrito,
-					});
-					return {
-						dataState: DataState.LOADED,
-						appData: { ...response, data: carrito },
-					};
-				}
-				this.notificationService.onDefault(response.message);
 				this.dataSubject.next(response);
 				return { dataState: DataState.LOADED, appData: response };
 			}),
-			startWith({
-				dataState: DataState.LOADING,
-				appData: this.dataSubject.value,
-			}),
+			startWith({ dataState: DataState.LOADING }),
 			catchError((error: string) => {
 				return of({
 					dataState: DataState.ERROR,
@@ -135,34 +118,21 @@ export class ShoppingCartComponent implements OnInit {
 		);
 	}
 
-	removeFromCart(idProducto: number, cantidad?: number) {
-		this.cartState$ = this.carritoService
-			.removeFromCart$(idProducto, cantidad)
+	goToPage(pageNumber?: number) {
+		this.ordersState$ = this.pedidoService
+			.pedidosByUsuario$(pageNumber)
 			.pipe(
 				map((response) => {
-					if (!response.message) {
-						let carrito = JSON.parse(
-							localStorage.getItem('carrito')
-						);
-						this.notificationService.onDefault(
-							'Producto eliminado del carrito'
-						);
-						this.dataSubject.next({
-							...response,
-							data: carrito,
-						});
-						return {
-							dataState: DataState.LOADED,
-							appData: { ...response, data: carrito },
-						};
-					}
-					this.notificationService.onDefault(response.message);
 					this.dataSubject.next(response);
-					return { dataState: DataState.LOADED, appData: response };
+					this.currentPageSubject.next(pageNumber);
+					return {
+						dataState: DataState.LOADED,
+						appData: response,
+					};
 				}),
 				startWith({
 					dataState: DataState.LOADING,
-					appData: { ...this.dataSubject.value },
+					apData: this.dataSubject.value,
 				}),
 				catchError((error: string) => {
 					return of({
@@ -174,11 +144,11 @@ export class ShoppingCartComponent implements OnInit {
 			);
 	}
 
-	checkout(carrito: Carrito): void {
-		if (!this.usuarioService.isAuthenticated()) {
-			this.router.navigate(['/login']);
-		}
-
-		this.router.navigate(['/checkout']);
+	goToNextOrPreviousPage(direction?: string) {
+		this.goToPage(
+			direction === 'forward'
+				? this.currentPageSubject.value + 1
+				: this.currentPageSubject.value - 1
+		);
 	}
 }

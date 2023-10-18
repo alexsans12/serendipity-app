@@ -67,37 +67,44 @@
 													.nombre
 											}}
 										</h3>
-										<ng-container *ngIf="(isInWishlist$ | async); else noWish">
+										<ng-container
+											*ngIf="
+												isInWishlist$ | async;
+												else noWish
+											"
+										>
 											<a
-											class="add-wish"
-											(click)="
-											removeFromWishlist(
-												state?.appData?.data
-												?.producto.idProducto
-												)
+												class="add-wish"
+												(click)="
+													removeFromWishlist(
+														state?.appData?.data
+															?.producto
+															.idProducto
+													)
 												"
-												>
+											>
 												<span class="heart active"
-												><i
-												class="fa-solid fa-heart"
-												></i
+													><i
+														class="fa-solid fa-heart"
+													></i
 												></span>
 											</a>
 										</ng-container>
 										<ng-template #noWish>
 											<a
-											class="add-wish"
-											(click)="
-											addToWishlist(
-												state?.appData?.data
-												?.producto.idProducto
-												)
+												class="add-wish"
+												(click)="
+													addToWishlist(
+														state?.appData?.data
+															?.producto
+															.idProducto
+													)
 												"
-												>
+											>
 												<span class="heart"
-												><i
-												class="fa-solid fa-heart"
-												></i
+													><i
+														class="fa-solid fa-heart"
+													></i
 												></span>
 											</a>
 										</ng-template>
@@ -166,9 +173,6 @@
 									<div
 										class="buttons d-flex flex-row mt-5 gap-3"
 									>
-										<button class="btn btn-outline-dark">
-											Comprar ahora
-										</button>
 										<button
 											(click)="
 												addToCart(

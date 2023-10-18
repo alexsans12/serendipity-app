@@ -1,0 +1,272 @@
+<ng-container *ngIf="cartState$ | async as cart">
+	<ng-container *ngIf="direccionState$ | async as addressState">
+		<nav
+			class="navbar navbar-expand-lg position-absolute start-0 end-0 border-bottom"
+		>
+			<!-- Container wrapper -->
+			<div class="container">
+				<!-- Left elements: Brand -->
+				<a [routerLink]="['/']" class="navbar-brand" href="#">
+					<i class="text-danger fa-solid fa-dove me-3"></i>
+					<span class="fw-semibold text-lowercase">Serendipity</span>
+				</a>
+			</div>
+			<!-- Container wrapper -->
+		</nav>
+		<!-- Navbar -->
+
+		<div class="container payment-method mb-5">
+			<div class="d-flex row g-3 justify-content-center">
+				<div class="col-md-6">
+					<div class="text-nowrap">
+						<h3 class="mb-4 text-wrap">Dirección de entrega</h3>
+						<ul
+							class="list-group list-group-flush overflow-hidden d-grid"
+						>
+							<li
+								class="card list-group-item overflow-hidden form-check ps-4"
+								*ngFor="
+									let direccion of addressState?.appData?.data
+										?.direcciones;
+									let i = index
+								"
+								(click)="selectAddress(i)"
+								[ngClass]="{ selected: selectedIndex === i }"
+							>
+								<div class="d-block">
+									<input
+										class="form-check-input"
+										[checked]="selectedIndex === i"
+										name="direccion"
+										[id]="'direccion-' + direccion.id"
+										type="radio"
+									/>
+								</div>
+								<div class="card border-0">
+									<div class="card-body p-0">
+										<h5 class="card-title">
+											{{
+												direccion.nombre +
+													" " +
+													direccion.apellido
+											}}
+										</h5>
+										<p class="card-text mb-0">
+											{{ direccion.direccion }}
+										</p>
+										<p class="card-text mb-0">
+											{{
+												direccion.municipio.nombre +
+													", " +
+													direccion.municipio
+														.departamento.nombre
+											}}
+										</p>
+										<p
+											*ngIf="
+												direccion.indicaciones.length >
+												0
+											"
+											class="card-text mb-0"
+										>
+											{{ direccion.indicaciones }}
+										</p>
+										<p class="card-text mb-0">
+											+502
+											{{ direccion.telefono }}
+										</p>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div class="mt-3">
+						<span>Método de pago</span>
+						<div class="card">
+							<div class="accordion" id="accordionExample">
+								<div class="card">
+									<div
+										class="card-header p-0"
+										id="headingTwo"
+									>
+										<h2 class="mb-0">
+											<button
+												class="btn btn-light btn-block text-left collapsed p-3 rounded-0 w-100"
+												type="button"
+												data-bs-toggle="collapse"
+												data-bs-target="#collapseTwo"
+												aria-expanded="false"
+												aria-controls="collapseTwo"
+											>
+												<div
+													class="d-flex align-items-center justify-content-between"
+												>
+													<span>Paypal</span>
+													<img
+														src="https://i.imgur.com/7kQEsHU.png"
+														width="30"
+													/>
+												</div>
+											</button>
+										</h2>
+									</div>
+									<div
+										id="collapseTwo"
+										class="collapse"
+										aria-labelledby="headingTwo"
+										data-bs-parent="#accordionExample"
+									>
+										<div class="card-body">
+											<input
+												type="email"
+												class="form-control"
+												placeholder="Paypal email"
+												[(ngModel)]="paypalEmail"
+											/>
+										</div>
+									</div>
+								</div>
+
+								<div class="card">
+									<div class="card-header p-0">
+										<h2 class="mb-0">
+											<button
+												class="btn btn-light btn-block text-left collapsed p-3 rounded-0 w-100"
+												data-bs-toggle="collapse"
+												data-bs-target="#collapseOne"
+												aria-expanded="true"
+												aria-controls="collapseOne"
+												type="button"
+											>
+												<div
+													class="d-flex align-items-center justify-content-between"
+												>
+													<span
+														>Tarjeta de
+														crédito/débito</span
+													>
+													<div class="icons">
+														<img
+															src="https://i.imgur.com/2ISgYja.png"
+															width="30"
+														/>
+														<img
+															src="https://i.imgur.com/W1vtnOV.png"
+															width="30"
+														/>
+														<img
+															src="https://i.imgur.com/35tC99g.png"
+															width="30"
+														/>
+													</div>
+												</div>
+											</button>
+										</h2>
+									</div>
+
+									<div
+										id="collapseOne"
+										class="collapse show"
+										aria-labelledby="headingOne"
+										data-bs-parent="#accordionExample"
+									>
+										<div class="card-body payment-card-body border-top" id="card-element">
+
+										</div>
+										<div id="card-errors" [class]="displayError.textContent ? 'alert alert-danger m-2' : ''"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6 border-start d-flex flex-column">
+					<div class="m-4">
+						<h2 class="card-title mb-4">Tu carrito de compra</h2>
+						<div class="container list-group list-group-flush">
+							<div
+								class="d-flex gy-3 mb-4 align-items-center justify-content-between list-group-item"
+								*ngFor="
+									let carritoProducto of cart?.appData?.data
+										?.carrito.carritoProductos
+								"
+							>
+								<div class="col-lg-5">
+									<div class="d-flex">
+										<div class="">
+											<a
+												[routerLink]="[
+													'/shop/product/' +
+														carritoProducto.producto
+															.sku
+												]"
+												class="nav-link"
+												>{{
+													carritoProducto.producto
+														.nombre
+												}}</a
+											>
+											<p class="text-muted">
+												{{
+													carritoProducto.producto
+														.nombreCategoria
+												}}
+											</p>
+											<div
+												class="d-flex justify-content-between"
+											>
+												<p class="text-dark mb-0">
+													{{
+														carritoProducto.producto
+															.precio -
+															carritoProducto
+																.producto
+																.precio *
+																carritoProducto
+																	.producto
+																	.descuento
+															| currency : "Q"
+													}}
+												</p>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="input-group flex-nowrap">
+									<span class="input-group-text">{{
+										carritoProducto.cantidad
+									}}</span>
+								</div>
+								<div
+									class="col-lg-2 col-sm-6 col-6 text-nowrap"
+								>
+									<label class="text-dark mb-0">
+										Subtotal:
+									</label>
+									<p class="h5 mb-0">
+										{{
+											(carritoProducto.producto.precio -
+												carritoProducto.producto
+													.precio *
+													carritoProducto.producto
+														.descuento) *
+												carritoProducto.cantidad
+												| currency : "Q"
+										}}
+									</p>
+								</div>
+							</div>
+							<div class="row">
+								<h4 class="col-6">Total:</h4>
+								<h4 class="col-6 text-end">
+									{{ (cart?.appData?.data?.carrito.total - cart?.appData?.data?.carrito.descuento )  | currency : "Q" }}
+								</h4>
+							</div>
+						</div>
+					</div>
+					<button type="submit" class="btn btn-primary mt-4 ms-auto" (click)="doOrder()" [disabled]="!isFormValid()">Realizar pedido</button>
+				</div>
+			</div>
+		</div>
+	</ng-container>
+</ng-container>

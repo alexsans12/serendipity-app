@@ -223,11 +223,7 @@
 								Las entregas se realizan en un plazo de 1-2 días maximo
 							</p>
 							<p class="text-muted">
-								Lorem ipsum dolor sit amet, consectetur
-								adipisicing elit, sed do eiusmod tempor
-								incididunt ut labore et dolore magna aliqua. Ut
-								enim ad minim veniam, quis nostrud exercitation
-								ullamco laboris nisi ut aliquip
+								En Serendipity, nos esforzamos por proporcionar un servicio de entrega eficiente y confiable para todos nuestros clientes. Entendemos la importancia de recibir tus productos de manera oportuna y segura. Por ello, nuestro equipo dedicado trabaja incansablemente para asegurar que tu pedido llegue en perfectas condiciones y en el plazo estipulado de 1-2 días.
 							</p>
 						</div>
 					</div>
@@ -268,12 +264,12 @@
 							</div>
 
 							<div class="mt-3">
-								<a
-									href="#"
+								<button
+									(click)="checkout(state?.appData?.data?.carrito)"
 									class="btn btn-success w-100 shadow-0 mb-2"
 								>
 									Iniciar compra
-								</a>
+								</button>
 								<a
 									[routerLink]="['/shop']"
 									class="btn btn-light w-100 border mt-2"

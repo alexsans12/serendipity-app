@@ -1,21 +1,23 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, tap, throwError } from 'rxjs';
-import { CustomHttpResponse, Department } from '../interface/appstates';
+import { Checkout, CustomHttpResponse, Page } from '../interface/appstates';
+import { PaymentInfo } from '../interface/paymentInfo';
 
 @Injectable({
 	providedIn: 'root',
 })
-export class DepartamentoService {
+export class CheckoutService {
 	private readonly server: string = 'http://192.168.0.9:9091/api/v1';
 
 	constructor(private http: HttpClient) {}
 
-	departamentos$ = () =>
-		<Observable<CustomHttpResponse<Department>>>(
+	paymentIntent$ = (paymentInfo: PaymentInfo) =>
+		<Observable<CustomHttpResponse<Checkout>>>(
 			this.http
-				.get<CustomHttpResponse<any>>(
-					`${this.server}/departamento/list`
+				.post<CustomHttpResponse<any>>(
+					`${this.server}/checkout/payment-intent`,
+					paymentInfo
 				)
 				.pipe(tap(console.log), catchError(this.handleError))
 		);

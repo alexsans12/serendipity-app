@@ -9,51 +9,158 @@
 		<app-navbar [carrito]="cart?.appData?.data?.carrito"></app-navbar>
 	</ng-template>
 	<app-hero></app-hero>
-	<section class="container my-5">
-		<div class="row">
-			<!-- First Column -->
-			<div class="col-md-4 col-sm-12 mt-4 mb-4 text-center">
-				<div
-					class="d-flex flex-column align-items-center justify-content-center mb-3"
-				>
-					<div class="mb-3">
-						<i class="text-danger fas fa-spa fa-2x"></i>
+	<section class="my-5">
+		<div class="container">
+			<div class="row mb-5">
+				<!-- First Column -->
+				<div class="col-md-4 col-sm-12 mt-4 mb-4 text-center">
+					<div
+						class="d-flex flex-column align-items-center justify-content-center mb-3"
+					>
+						<div class="mb-3">
+							<i class="text-danger fas fa-spa fa-2x"></i>
+						</div>
+						<div>
+							<h5>Plants Collection</h5>
+							<p>Any plants for your space</p>
+						</div>
 					</div>
-					<div>
-						<h5>Plants Collection</h5>
-						<p>Any plants for your space</p>
+				</div>
+
+				<!-- Second Column -->
+				<div class="col-md-4 col-sm-12 mt-4 mb-4 text-center">
+					<div
+						class="d-flex flex-column align-items-center justify-content-center mb-3"
+					>
+						<div class="mb-3">
+							<i class="text-danger fas fa-box fa-2x"></i>
+						</div>
+						<div>
+							<h5>Free Shipping</h5>
+							<p>Free shipping on order</p>
+						</div>
+					</div>
+				</div>
+
+				<!-- Third Column -->
+				<div class="col-md-4 col-sm-12 mt-4 mb-4 text-center">
+					<div
+						class="d-flex flex-column align-items-center justify-content-center mb-3"
+					>
+						<div class="mb-3">
+							<i class="text-danger fas fa-sync fa-2x"></i>
+						</div>
+						<div>
+							<h5>100% Money Back</h5>
+							<p>If the item didn't suit you</p>
+						</div>
 					</div>
 				</div>
 			</div>
+		</div>
+		<hr />
+		<div class="container">
+			<div class="row my-5 pt-5">
+				<h2 class="text-center">Testimonios</h2>
+				<p class="text-center mb-5">
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+				</p>
 
-			<!-- Second Column -->
-			<div class="col-md-4 col-sm-12 mt-4 mb-4 text-center">
-				<div
-					class="d-flex flex-column align-items-center justify-content-center mb-3"
-				>
-					<div class="mb-3">
-						<i class="text-danger fas fa-box fa-2x"></i>
+				<div class="row">
+					<!-- Testimonial 1 -->
+					<div class="col-md-4">
+						<div class="card mb-4">
+							<img
+								src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&w=1961"
+								class="card-img-top"
+								alt="Sarah Jones"
+							/>
+							<div class="card-body">
+								<p class="card-text">
+									Neque porro quisquam est, qui dolore ipsum
+									quia dolor sit amet, consectetur adipisci
+									velit, sed quia non numquam eius modi
+									tempora incidunt.
+								</p>
+								<h5 class="card-title">Sarah Jones</h5>
+								<p class="card-subtitle text-muted">
+									Interior Designer
+								</p>
+							</div>
+						</div>
 					</div>
-					<div>
-						<h5>Free Shipping</h5>
-						<p>Free shipping on order</p>
+
+					<!-- Testimonial 2 -->
+					<div class="col-md-4">
+						<div class="card mb-4">
+							<img
+								src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&w=2080"
+								class="card-img-top"
+								alt="Jessica Foxx"
+							/>
+							<div class="card-body">
+								<p class="card-text">
+									Neque porro quisquam est, qui dolore ipsum
+									quia dolor sit amet, consectetur adipisci
+									velit, sed quia non numquam eius modi
+									tempora incidunt.
+								</p>
+								<h5 class="card-title">Jessica Foxx</h5>
+								<p class="card-subtitle text-muted">Student</p>
+							</div>
+						</div>
+					</div>
+
+					<!-- Testimonial 3 -->
+					<div class="col-md-4">
+						<div class="card mb-4">
+							<img
+								src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&w=1974"
+								class="card-img-top"
+								alt="Briana Luke"
+							/>
+							<div class="card-body">
+								<p class="card-text">
+									Neque porro quisquam est, qui dolore ipsum
+									quia dolor sit amet, consectetur adipisci
+									velit, sed quia non numquam eius modi
+									tempora incidunt.
+								</p>
+								<h5 class="card-title">Briana Luke</h5>
+								<p class="card-subtitle text-muted">Student</p>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
+		</div>
+		<div
+			class="row my-5 text-center"
+			style="
+				background-image: url('https://websitedemos.net/plant-store-02/wp-content/uploads/sites/410/2020/07/CTA-bg.jpg');
+				background-size: cover;
+				background-position: center 80%;
+				padding: 13rem 0;
+				--bs-gutter-x: 0;
+			"
+		>
+			<div class="container">
+				<!-- Title -->
+				<h2 class="mb-4">
+					¿INTERESADO? ¡COMPRA ESTA COLECCIÓN DE PLANTAS!
+				</h2>
 
-			<!-- Third Column -->
-			<div class="col-md-4 col-sm-12 mt-4 mb-4 text-center">
-				<div
-					class="d-flex flex-column align-items-center justify-content-center mb-3"
+				<!-- Description -->
+				<p class="mb-5">
+					Neque porro quisquam est, qui dolore ipsum quia dolor sit
+					amet, consectetur adipisci velit, sed quia non numquam eius
+					modi tempora incidunt.
+				</p>
+
+				<!-- Button -->
+				<a [routerLink]="['/shop']" class="btn btn-danger mb-5"
+					>IR A LA TIENDA</a
 				>
-					<div class="mb-3">
-						<i class="text-danger fas fa-sync fa-2x"></i>
-					</div>
-					<div>
-						<h5>100% Money Back</h5>
-						<p>If the item didn't suit you</p>
-					</div>
-				</div>
 			</div>
 		</div>
 	</section>

@@ -8,6 +8,9 @@ import { Usuario } from "./usuario";
 import { Departamento } from './departamento';
 import { Municipio } from "./municipio";
 import { Direccion } from "./direccion";
+import { PaymentInfo } from "./paymentInfo";
+import { Pedido } from "./pedido";
+import { Pago } from "./pago";
 
 export interface LoginState {
 	dataState: DataState;
@@ -91,6 +94,24 @@ export interface Municipality {
 
 export interface Address {
 	content: Direccion;
+	error?: string;
+	message?: string;
+}
+
+export interface Checkout {
+	content: PaymentInfo;
+	error?: string;
+	message?: string;
+}
+
+export interface Order {
+	content: Pedido;
+	error?: string;
+	message?: string;
+}
+
+export interface Pay {
+	content: Pago;
 	error?: string;
 	message?: string;
 }
