@@ -1,14 +1,15 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CustomHttpResponse, Order } from '../interface/appstates';
-import { Observable, catchError, tap, throwError } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 import { Pedido } from '../interface/pedido';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class PedidoService {
-	private readonly server: string = 'http://192.168.0.9:9091/api/v1';
+	private readonly server: string = environment.serendipity_api_url;
 
 	constructor(private http: HttpClient) {}
 
@@ -18,7 +19,7 @@ export class PedidoService {
 				.get<CustomHttpResponse<any>>(
 					`${this.server}/pedido/list?page=${page}&size=${size}`
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	pedidosByUsuario$ = (page: number = 0, size: number = 10) =>
@@ -27,7 +28,7 @@ export class PedidoService {
 				.get<CustomHttpResponse<any>>(
 					`${this.server}/pedido/get?page=${page}&size=${size}`
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	pedidoById$ = (id: number) =>
@@ -36,7 +37,7 @@ export class PedidoService {
 				.get<CustomHttpResponse<any>>(
 					`${this.server}/pedido/get/${id}`
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	createPedido$ = (idPago: number, idDireccion: number, estado: string) =>
@@ -46,7 +47,7 @@ export class PedidoService {
 				idDireccion,
 				estado,
 			})
-			.pipe(tap(console.log), catchError(this.handleError));
+			.pipe(catchError(this.handleError));
 
 	updatePedido$ = (pedido: Pedido) =>
 		<Observable<CustomHttpResponse<Order>>>(
@@ -55,7 +56,7 @@ export class PedidoService {
 					`${this.server}/pedido/update`,
 					pedido
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	deletePedido$ = (pedido: Pedido) =>
@@ -65,7 +66,7 @@ export class PedidoService {
 					`${this.server}/pedido/delete`,
 					pedido
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	private handleError(error: HttpErrorResponse): Observable<never> {

@@ -5,6 +5,7 @@ import { CacheInterceptor } from '../interceptor/cache.interceptor';
 import { UsuarioService } from '../service/usuario.service';
 import { HttpCacheService } from '../service/http.cache.service';
 import { NotificationService } from '../service/notificacion.service';
+import { ProductoService } from '../service/producto.service';
 
 @NgModule({
 	imports: [
@@ -12,6 +13,7 @@ import { NotificationService } from '../service/notificacion.service';
 	],
 	providers: [
 		UsuarioService,
+		ProductoService,
 		HttpCacheService,
 		NotificationService,
 		{ provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },

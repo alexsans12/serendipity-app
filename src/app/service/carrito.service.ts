@@ -1,15 +1,16 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, of, tap, throwError } from 'rxjs';
+import { Observable, catchError, of, throwError } from 'rxjs';
 import { Cart, CustomHttpResponse } from '../interface/appstates';
 import { CarritoProducto } from '../interface/carritoProducto';
 import { Producto } from '../interface/producto';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class CarritoService {
-	private readonly server: string = 'http://192.168.0.9:9091/api/v1';
+	private readonly server: string = environment.serendipity_api_url;
 
 	constructor(private http: HttpClient) {}
 
@@ -21,7 +22,7 @@ export class CarritoService {
 		return <Observable<CustomHttpResponse<Cart>>>(
 			this.http
 				.get<CustomHttpResponse<any>>(`${this.server}/cart/get`)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 	};
 
@@ -29,7 +30,7 @@ export class CarritoService {
 		return <Observable<CustomHttpResponse<Cart>>>(
 			this.http
 				.post<CustomHttpResponse<any>>(`${this.server}/cart/create`, carritoProductos)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 	};
 
@@ -74,7 +75,7 @@ export class CarritoService {
 				idProducto: producto.idProducto,
 				cantidad,
 			})
-			.pipe(tap(console.log), catchError(this.handleError));
+			.pipe(catchError(this.handleError));
 	};
 
 	removeFromCart$ = (idProducto: number, cantidad: number = 1) => {
@@ -115,13 +116,11 @@ export class CarritoService {
 				idProducto,
 				cantidad,
 			})
-			.pipe(tap(console.log), catchError(this.handleError));
+			.pipe(catchError(this.handleError));
 	};
 
 	private handleError(error: HttpErrorResponse): Observable<never> {
 		let errorMessage: string;
-
-		console.log(error);
 
 		if (error.error instanceof ErrorEvent) {
 			errorMessage = `Se produjo un error del cliente: ${error.error.message}`;

@@ -174,7 +174,6 @@ export class UsuarioComponent implements OnInit {
 	}
 
 	updatePassword(passwordForm: NgForm): void {
-		console.log(passwordForm.value);
 		this.isLoadingSubject.next(true);
 		if (
 			passwordForm.value.newPassword ===
@@ -367,14 +366,13 @@ export class UsuarioComponent implements OnInit {
 			.municipiosByIdDepartamento$(idDepartamento)
 			.subscribe({
 				next: (response) => {
-					console.log('Municipios', response);
 					this.municipios = response.data.municipios;
 				},
 				error: (error) => {
-					console.error('Error loading municipalities', error);
+					this.notificationService.onError(error);
 				},
 				complete: () => {
-					console.log('Loading of municipalities complete');
+					this.notificationService.onDefault("Municipios cargados");
 				},
 			});
 	}
@@ -401,7 +399,6 @@ export class UsuarioComponent implements OnInit {
 			.addDireccion$(addressForm.value)
 			.pipe(
 				map((response) => {
-					console.log(response);
 					this.notificationService.onDefault(response.message);
 					this.dataSubject.next({ ...response, data: response.data });
 					this.isLoadingSubject.next(false);
@@ -436,13 +433,11 @@ export class UsuarioComponent implements OnInit {
 	}
 
 	saveAddress(addressForm: NgForm): void {
-		console.log(addressForm.value)
 		this.isLoadingSubject.next(true);
 		this.direccionState$ = this.direccionService
 			.updateDireccion$(addressForm.value)
 			.pipe(
 				map((response) => {
-					console.log(response);
 					this.notificationService.onDefault(response.message);
 					this.dataSubject.next({ ...response, data: response.data });
 					this.isLoadingSubject.next(false);
@@ -482,7 +477,6 @@ export class UsuarioComponent implements OnInit {
 			.deleteDireccion$(direccion)
 			.pipe(
 				map((response) => {
-					console.log(response);
 					this.notificationService.onDefault(response.message);
 					this.dataSubject.next({ ...response, data: response.data });
 					this.isLoadingSubject.next(false);

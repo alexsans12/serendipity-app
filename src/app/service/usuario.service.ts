@@ -1,7 +1,6 @@
 import {
 	HttpClient,
 	HttpErrorResponse,
-	HttpHeaders,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
@@ -9,14 +8,15 @@ import {
 	CustomHttpResponse,
 	Profile,
 } from '../interface/appstates';
-import { Observable, catchError, of, tap, throwError } from 'rxjs';
+import { Observable, catchError, tap, throwError } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Usuario } from '../interface/usuario';
 import { key } from '../enum/key.enum';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class UsuarioService {
-	private readonly server: string = 'http://192.168.0.9:9091/api/v1';
+	private readonly server: string = environment.serendipity_api_url;
 	private jwtHelper = new JwtHelperService();
 
 	constructor(private http: HttpClient) {}
@@ -28,7 +28,7 @@ export class UsuarioService {
 					`${this.server}/usuario/login`,
 					{ email, password }
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	requestPasswordReset$ = (email: string) =>
@@ -37,7 +37,7 @@ export class UsuarioService {
 				.get<CustomHttpResponse<Profile>>(
 					`${this.server}/usuario/reset-password/${email}`
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	register$ = (usuario: Usuario) =>
@@ -47,7 +47,7 @@ export class UsuarioService {
 					`${this.server}/usuario/register`,
 					usuario
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	verifyCode$ = (email: string, code: string) =>
@@ -56,7 +56,7 @@ export class UsuarioService {
 				.get<CustomHttpResponse<Profile>>(
 					`${this.server}/usuario/verify/code/${email}/${code}`
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	verify$ = (key: string, type: AccountType) =>
@@ -65,7 +65,7 @@ export class UsuarioService {
 				.get<CustomHttpResponse<Profile>>(
 					`${this.server}/usuario/verify/${type}/${key}`
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	renewPassword$ = (form: {
@@ -79,7 +79,7 @@ export class UsuarioService {
 					`${this.server}/usuario/new/password`,
 					form
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	profile$ = () =>
@@ -88,7 +88,7 @@ export class UsuarioService {
 				.get<CustomHttpResponse<Profile>>(
 					`${this.server}/usuario/profile`
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	updateProfile$ = (usuario: Usuario) =>
@@ -98,7 +98,7 @@ export class UsuarioService {
 					`${this.server}/usuario/update/profile`,
 					usuario
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	refreshToken$ = () => <Observable<CustomHttpResponse<Profile>>>this.http
@@ -136,7 +136,7 @@ export class UsuarioService {
 					`${this.server}/usuario/update/password`,
 					form
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	updateRol$ = (rol: string) =>
@@ -146,7 +146,7 @@ export class UsuarioService {
 					`${this.server}/usuario/update/rol/${rol}`,
 					{}
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	updateAccountSettings$ = (settings: { enabled: Boolean }) =>
@@ -156,7 +156,7 @@ export class UsuarioService {
 					`${this.server}/usuario/update/settings`,
 					settings
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	toggleMfa$ = () =>
@@ -166,7 +166,7 @@ export class UsuarioService {
 					`${this.server}/usuario/toggle/mfa`,
 					{}
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	updateImage$ = (formData: FormData) =>
@@ -176,7 +176,7 @@ export class UsuarioService {
 					`${this.server}/usuario/update/image`,
 					formData
 				)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	logOut() {

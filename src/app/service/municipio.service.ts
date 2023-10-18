@@ -1,13 +1,14 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, tap, throwError } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 import { CustomHttpResponse, Municipality } from '../interface/appstates';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class MunicipioService {
-	private readonly server: string = 'http://192.168.0.9:9091/api/v1';
+	private readonly server: string = environment.serendipity_api_url;
 
 	constructor(private http: HttpClient) {}
 
@@ -15,14 +16,14 @@ export class MunicipioService {
 		<Observable<CustomHttpResponse<Municipality>>>(
 			this.http
 				.get<CustomHttpResponse<any>>(`${this.server}/municipio/list`)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	municipiosByIdDepartamento$ = (idDepartamento: number) =>
 		<Observable<CustomHttpResponse<Municipality>>>(
 			this.http
 				.get<CustomHttpResponse<any>>(`${this.server}/municipio/departamento/${idDepartamento}`)
-				.pipe(tap(console.log), catchError(this.handleError))
+				.pipe(catchError(this.handleError))
 		);
 
 	private handleError(error: HttpErrorResponse): Observable<never> {

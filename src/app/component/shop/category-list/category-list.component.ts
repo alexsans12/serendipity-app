@@ -34,7 +34,6 @@ export class CategoryListComponent implements OnInit {
 	ngOnInit(): void {
 		this.categoriaListState$ = this.categoriaService.categorias$().pipe(
 			map((response) => {
-				console.log(response);
 				this.dataSubject.next(response);
 				return { dataState: DataState.LOADED, appData: response };
 			}),
