@@ -11,6 +11,8 @@ import { DashboardModule } from './component/dashboard/dashboard.module';
 import { UsersModule } from './component/users/users.module';
 import { NotificationModule } from './notification.module';
 import { ShopModule } from './component/shop/shop.module';
+import { AboutUsComponent } from './component/about/about-us/about-us.component';
+import { AboutModule } from './component/about/about.module';
 
 @NgModule({
 	declarations: [
@@ -21,6 +23,7 @@ import { ShopModule } from './component/shop/shop.module';
 		CoreModule,
 		AuthModule,
 		HomeModule,
+		AboutModule,
 		ShopModule,
 		DashboardModule,
 		UsersModule,

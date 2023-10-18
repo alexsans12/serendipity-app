@@ -1,0 +1,156 @@
+<ng-container *ngIf="cartState$ | async as state">
+	<ng-container *ngIf="ordersState$ | async as orders">
+		<ng-container *ngIf="usuarioState$ | async as user; else withoutUser">
+			<app-navbar
+				[usuario]="user?.appData?.data?.usuario"
+				[carrito]="state?.appData?.data?.carrito"
+			></app-navbar>
+		</ng-container>
+		<ng-template #withoutUser>
+			<app-navbar [carrito]="state?.appData?.data?.carrito"></app-navbar>
+		</ng-template>
+		<section class="orders container mb-5">
+			<div
+				*ngIf="
+					orders?.appData?.data?.pedidos.content.length > 0;
+					else NotFound
+				"
+			>
+				<div
+					class="border-bottom py-3 d-flex align-items-start mb-4"
+					*ngFor="
+						let pedido of orders?.appData?.data?.pedidos.content
+					"
+				>
+					<a
+						[href]="'order/' + pedido.idPedido"
+						class="text-decoration-none text-dark d-flex align-items-center flex-grow-1"
+					>
+						<!-- Imagen del Producto -->
+						<div class="me-3" style="width: 70px; height: 70px">
+							<img
+								*ngIf="
+									pedido.productosPedido[0]?.producto.imagenes
+										.length > 0
+								"
+								[src]="
+									pedido.productosPedido[0]?.producto
+										.imagenes[0].url
+								"
+								class="img-fluid"
+								alt="{{
+									pedido.productosPedido[0]?.producto.nombre
+								}}"
+								style="
+									object-fit: cover;
+									width: 70px;
+									height: 70px;
+								"
+							/>
+						</div>
+
+						<!-- Información del Pedido -->
+						<div class="flex-grow-1">
+							<div class="font-weight-bold">
+								Pedido #{{
+									pedido.fechaCreacion
+										| date : "yy" : "GMT-6" : "es-ES"
+								}}-{{ pedido.idPedido }}
+							</div>
+							<div class="text-muted mb-2">
+								<div>
+									{{
+										pedido.fechaCreacion | date : "longDate"
+									}}
+								</div>
+							</div>
+							<div
+								class="badge rounded-pill align-items-center mb-2"
+								[ngClass]="{
+									'bg-success':
+										pedido.estado === 'Entregado',
+									'bg-warning':
+										pedido.estado === 'Empacado',
+									'bg-info': pedido.estado === 'En proceso',
+									'bg-dark': pedido.estado === 'En camino'
+								}"
+							>
+								<i
+									class="me-2 bi-check-circle-fill"
+									*ngIf="pedido.estado === 'Entregado'"
+								></i>
+								{{ pedido.estado }}
+							</div>
+						</div>
+
+						<!-- Precio y cantidad -->
+						<div class="text-end">
+							<div class="font-weight-bold mb-1">
+								{{ pedido.total | currency : "Q" }}
+							</div>
+							<div>
+								{{ pedido.productosPedido.length }} producto(s)
+							</div>
+						</div>
+					</a>
+				</div>
+			</div>
+			<ng-template #NotFound>
+				<app-not-found></app-not-found>
+			</ng-template>
+			<nav
+				*ngIf="orders?.appData?.data?.pedidos.content.length > 0"
+				aria-label="Page navigation example"
+			>
+				<ul class="pagination justify-content-center">
+					<li
+						[ngClass]="
+							0 == (currentPage$ | async) ? 'disabled' : ''
+						"
+						class="page-item"
+					>
+						<a
+							(click)="goToNextOrPreviousPage('backward')"
+							class="page-link"
+							><i class="fa-solid fa-arrow-left"></i
+						></a>
+					</li>
+					<li
+						*ngFor="
+							let pageNumber of [].constructor(
+								orders?.appData?.data?.pedidos.totalPages
+							);
+							let i = index
+						"
+						class="page-item"
+					>
+						<a
+							class="page-link"
+							(click)="goToPage(i)"
+							[ngClass]="
+								i == (currentPage$ | async) ? 'active' : ''
+							"
+							>{{ i + 1 }}</a
+						>
+					</li>
+					<li
+						[ngClass]="
+							orders?.appData?.data?.pedidos.totalPages - 1 ==
+							(currentPage$ | async)
+								? 'disabled'
+								: ''
+						"
+						class="page-item"
+					>
+						<a
+							(click)="goToNextOrPreviousPage('forward')"
+							class="page-link"
+							><i class="fa-solid fa-arrow-right"></i
+						></a>
+					</li>
+				</ul>
+			</nav>
+		</section>
+		<app-footer></app-footer>
+	</ng-container>
+</ng-container>
