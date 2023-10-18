@@ -1,0 +1,208 @@
+<ng-container *ngIf="cartState$ | async as cart">
+	<ng-container *ngIf="aboutUsState$ | async as state; else withoutUser">
+		<app-navbar
+			[usuario]="state?.appData?.data?.usuario"
+			[carrito]="cart?.appData?.data?.carrito"
+		></app-navbar>
+	</ng-container>
+	<ng-template #withoutUser>
+		<app-navbar [carrito]="cart?.appData?.data?.carrito"></app-navbar>
+	</ng-template>
+	<section class="about-us">
+		<div class="container z-depth-1 my-5 p-5">
+			<!-- Section -->
+			<section>
+				<h6
+					class="font-weight-bold text-center grey-text text-uppercase small mb-4"
+				>
+					Services
+				</h6>
+				<h3 class="font-weight-bold text-center dark-grey-text pb-2">
+					Our Services
+				</h3>
+				<hr class="w-header my-4" />
+				<p class="lead text-center text-muted pt-2 mb-5">
+					Join thousands of satisfied customers using our template
+					globally.
+				</p>
+
+				<div class="row d-flex justify-content-center">
+					<div class="col-md-6 col-xl-4">
+						<h5 class="font-weight-normal">
+							<a class="dark-grey-text" href="#"
+								>Website Design</a
+							>
+						</h5>
+						<p class="small grey-text">Responsive, Minimalism</p>
+					</div>
+
+					<div class="col-md-6">
+						<p class="text-muted mb-5 pb-2">
+							So delightful up dissimilar by unreserved it
+							connection frequently. Do an high room so in paid.
+							Up on cousin ye dinner should in. Sex stood tried
+							walls manor truth shy and three his. Their to years
+							so child truth. Honoured peculiar families sensible
+							up likewise by on in.
+						</p>
+					</div>
+
+					<div class="col-md-6 col-xl-4">
+						<h5 class="font-weight-normal">
+							<a class="dark-grey-text" href="#"
+								>Web Development</a
+							>
+						</h5>
+						<p class="small grey-text">PHP, MySQL, Laravel</p>
+					</div>
+
+					<div class="col-md-6">
+						<p class="text-muted mb-5 pb-2">
+							So delightful up dissimilar by unreserved it
+							connection frequently. Do an high room so in paid.
+							Up on cousin ye dinner should in. Sex stood tried
+							walls manor truth shy and three his. Their to years
+							so child truth. Honoured peculiar families sensible
+							up likewise by on in.
+						</p>
+					</div>
+
+					<div class="col-md-6 col-xl-4">
+						<h5 class="font-weight-normal">
+							<a class="dark-grey-text" href="#">Mobile App</a>
+						</h5>
+						<p class="small grey-text">Andriod, iOS</p>
+					</div>
+
+					<div class="col-md-6">
+						<p class="text-muted mb-5 pb-2">
+							So delightful up dissimilar by unreserved it
+							connection frequently. Do an high room so in paid.
+							Up on cousin ye dinner should in. Sex stood tried
+							walls manor truth shy and three his. Their to years
+							so child truth. Honoured peculiar families sensible
+							up likewise by on in.
+						</p>
+					</div>
+				</div>
+			</section>
+			<!-- Section -->
+		</div>
+		<div class="container py-5 my-5 z-depth-1">
+			<section class="p-md-3 mx-md-5">
+				<h2 class="text-center mx-auto font-weight-bold mb-5 pb-2">
+					Our Team
+				</h2>
+				<div class="row">
+					<div class="col-lg-3 col-md-6 mb-lg-0 mb-4">
+						<div
+							class="avatar white d-flex justify-content-center align-items-center"
+						>
+							<img
+								src="https://mdbootstrap.com/img/Photos/Avatars/img%20(15).jpg"
+								class="img-fluid z-depth-1"
+							/>
+						</div>
+						<div class="text-center mt-4">
+							<h5 class="font-weight-bold pb-1">
+								Veronica Smith
+							</h5>
+							<p class="font-weight-normal">Creative Director</p>
+							<p class="text-muted mb-lg-0">
+								Lorem ipsum dolor sit amet, consectetur
+								adipiscing elit.
+							</p>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-6 mb-lg-0 mb-4">
+						<div
+							class="avatar white d-flex justify-content-center align-items-center"
+						>
+							<img
+								src="https://mdbootstrap.com/img/Photos/Avatars/img%20(29).jpg"
+								class="img-fluid z-depth-1"
+							/>
+						</div>
+						<div class="text-center mt-4">
+							<h5 class="font-weight-bold pb-1">Anna Smith</h5>
+							<p class="font-weight-normal">Backend Developer</p>
+							<p class="text-muted mb-lg-0">
+								Lorem ipsum dolor sit amet, consectetur
+								adipiscing elit, sed do eiusmod tempor
+								incididunt.
+							</p>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-6 mb-md-0 mb-4">
+						<div
+							class="avatar white d-flex justify-content-center align-items-center"
+						>
+							<img
+								src="https://mdbootstrap.com/img/Photos/Avatars/img%20(27).jpg"
+								class="img-fluid z-depth-1"
+							/>
+						</div>
+						<div class="text-center mt-4">
+							<h5 class="font-weight-bold pb-1">Tom Johnson</h5>
+							<p class="font-weight-normal">Web Designer</p>
+							<p class="text-muted mb-0">
+								Lorem ipsum dolor sit amet, consectetur
+								adipiscing elit.
+							</p>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-6 mb-md-0 mb-4">
+						<div
+							class="avatar white d-flex justify-content-center align-items-center"
+						>
+							<img
+								src="https://mdbootstrap.com/img/Photos/Avatars/img%20(22).jpg"
+								class="img-fluid z-depth-1"
+							/>
+						</div>
+						<div class="text-center mt-4">
+							<h5 class="font-weight-bold pb-1">
+								Sally Thompson
+							</h5>
+							<p class="font-weight-normal">Frontend Developer</p>
+							<p class="text-muted mb-0">
+								Lorem ipsum dolor sit amet, consectetur
+								adipiscing elit, sed do eiusmod.
+							</p>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+		<div
+			class="row my-5 text-center"
+			style="
+				background-image: url('https://websitedemos.net/plant-store-02/wp-content/uploads/sites/410/2020/07/CTA-bg.jpg');
+				background-size: cover;
+				background-position: center 80%;
+				padding: 13rem 0;
+				--bs-gutter-x: 0;
+			"
+		>
+			<div class="container">
+				<!-- Title -->
+				<h2 class="mb-4">
+					¿INTERESADO? ¡COMPRA ESTA COLECCIÓN DE PLANTAS!
+				</h2>
+
+				<!-- Description -->
+				<p class="mb-5">
+					Neque porro quisquam est, qui dolore ipsum quia dolor sit
+					amet, consectetur adipisci velit, sed quia non numquam eius
+					modi tempora incidunt.
+				</p>
+
+				<!-- Button -->
+				<a [routerLink]="['/shop']" class="btn btn-danger mb-5"
+					>IR A LA TIENDA</a
+				>
+			</div>
+		</div>
+	</section>
+	<app-footer></app-footer>
+</ng-container>

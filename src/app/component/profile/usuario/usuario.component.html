@@ -1,0 +1,1277 @@
+<ng-container *ngIf="profileState$ | async as state">
+	<ng-container *ngIf="cartState$ | async as cart">
+		<ng-container *ngIf="direccionState$ | async as addressState">
+			<ng-container *ngIf="departamentoState$ | async as depState">
+				<app-navbar
+					[usuario]="state?.appData?.data?.usuario"
+					[carrito]="cart?.appData?.data?.carrito"
+				></app-navbar>
+				<section class="profile">
+					<div class="container">
+						<nav aria-label="breadcrumb" style="margin-top: 8px">
+							<ol class="breadcrumb">
+								<li class="breadcrumb-item">
+									<a [routerLink]="['/']">Inicio</a>
+								</li>
+								<li
+									*ngIf="
+										state?.appData?.data?.usuario?.rol !==
+										'ROL_USUARIO'
+									"
+									class="breadcrumb-item active"
+								>
+									Usuarios
+								</li>
+								<li
+									class="breadcrumb-item active"
+									aria-current="page"
+								>
+									{{ state?.appData?.data?.usuario?.nombre }}
+									{{
+										state?.appData?.data?.usuario?.apellido
+									}}
+								</li>
+							</ol>
+						</nav>
+						<div
+							class="bg-white shadow rounded-lg d-block d-sm-flex"
+							style="border-radius: 8px"
+						>
+							<div class="profile-tab-nav border-right">
+								<div class="p-4">
+									<div class="img-circle text-center mb-3">
+										<span style="position: relative">
+											<img
+												[src]="
+													state?.appData?.data
+														?.usuario?.urlFoto
+												"
+												[alt]="
+													state?.appData?.data
+														?.usuario?.nombre
+												"
+												class="shadow"
+											/>
+											<i
+												(click)="fileInput.click()"
+												class="fa-solid fa-camera right-position"
+											></i>
+										</span>
+									</div>
+									<h4 class="text-center">
+										{{
+											state?.appData?.data?.usuario
+												?.nombre
+										}}
+										{{
+											state?.appData?.data?.usuario
+												?.apellido
+										}}
+									</h4>
+									<p class="text-center m-0">
+										Desde
+										{{
+											state?.appData?.data?.usuario
+												?.fechaCreacion
+												| date : "MMMM d, y"
+										}}
+									</p>
+								</div>
+								<div
+									class="nav flex-column nav-pills"
+									id="v-pills-tab"
+									role="tablist"
+									aria-orientation="vertical"
+								>
+									<a
+										class="nav-link active"
+										id="profile"
+										data-bs-toggle="pill"
+										data-bs-target="#profile-tab"
+										aria-selected="true"
+										aria-controls="profile"
+										role="tab"
+									>
+										<i
+											class="fa-solid fa-circle-user me-2"
+										></i>
+										Perfil
+									</a>
+									<a
+										class="nav-link"
+										id="password"
+										data-bs-toggle="pill"
+										data-bs-target="#password-tab"
+										aria-selected="true"
+										aria-controls="password"
+										role="tab"
+									>
+										<i class="fa-solid fa-key me-2"></i>
+										Contraseña
+									</a>
+									<a
+										class="nav-link"
+										id="address"
+										data-bs-toggle="pill"
+										data-bs-target="#address-tab"
+										aria-selected="true"
+										aria-controls="address"
+										role="tab"
+									>
+										<i
+											class="fa-regular fa-address-book me-2"
+										></i>
+										Direcciones
+									</a>
+									<a
+										*ngIf="
+											state?.appData?.data?.usuario
+												?.rol !== 'ROL_USUARIO'
+										"
+										class="nav-link"
+										id="security"
+										data-bs-toggle="pill"
+										data-bs-target="#security-tab"
+										aria-selected="true"
+										aria-controls="security"
+										role="tab"
+									>
+										<i
+											class="fa-solid fa-shield-halved me-2"
+										></i>
+										Autorización
+									</a>
+									<a
+										*ngIf="
+											state?.appData?.data?.usuario
+												?.rol !== 'ROL_USUARIO'
+										"
+										class="nav-link"
+										id="application"
+										data-bs-toggle="pill"
+										data-bs-target="#application-tab"
+										aria-selected="true"
+										aria-controls="application"
+										role="tab"
+									>
+										<i class="fa-solid fa-gear me-2"></i>
+										Cuenta
+									</a>
+									<a
+										class="nav-link"
+										id="notification"
+										data-bs-toggle="pill"
+										data-bs-target="#notification-tab"
+										aria-selected="true"
+										aria-controls="notification"
+										role="tab"
+									>
+										<i class="fa-solid fa-lock me-2"></i>
+										Autenticación
+									</a>
+								</div>
+							</div>
+							<div
+								class="tab-content p-4 p-md-5"
+								id="v-pills-tabContent"
+								style="border-left: 1px solid #d4d0d0"
+							>
+								<div
+									class="tab-pane fade show active"
+									id="profile-tab"
+									role="tabpanel"
+									aria-labelledby="profile"
+									style="min-height: 510px"
+								>
+									<h3 class="mb-4">
+										Configuración de perfil
+									</h3>
+									<form
+										#profileForm="ngForm"
+										(ngSubmit)="updateProfile(profileForm)"
+									>
+										<input
+											type="hidden"
+											name="idUsuario"
+											[ngModel]="
+												state?.appData?.data?.usuario
+													?.idUsuario
+											"
+										/>
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label>Nombre</label>
+													<input
+														type="text"
+														name="nombre"
+														[ngModel]="
+															state?.appData?.data
+																?.usuario
+																?.nombre
+														"
+														[disabled]="
+															isLoading$ | async
+														"
+														class="form-control"
+													/>
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<label>Apellido</label>
+													<input
+														type="text"
+														name="apellido"
+														[ngModel]="
+															state?.appData?.data
+																?.usuario
+																?.apellido
+														"
+														[disabled]="
+															isLoading$ | async
+														"
+														class="form-control"
+													/>
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<label for="email"
+														>Email</label
+													>
+													<input
+														type="text"
+														name="email"
+														[ngModel]="
+															state?.appData?.data
+																?.usuario?.email
+														"
+														[readOnly]="
+															state?.appData?.data
+																?.usuario
+																?.rol ===
+															'ROL_USUARIO'
+														"
+														[disabled]="
+															isLoading$ | async
+														"
+														class="form-control"
+													/>
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<label>Teléfono</label>
+													<div class="input-group">
+														<span
+															class="input-group-text"
+															>+502</span
+														>
+														<input
+															type="text"
+															name="telefono"
+															[ngModel]="
+																state?.appData
+																	?.data
+																	?.usuario
+																	?.telefono
+															"
+															[disabled]="
+																isLoading$
+																	| async
+															"
+															class="form-control"
+														/>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div>
+											<button
+												[disabled]="isLoading$ | async"
+												type="submit"
+												class="btn btn-primary"
+											>
+												<span
+													*ngIf="isLoading$ | async"
+													class="spinner-border spinner-border-sm"
+													role="status"
+													aria-hidden="true"
+													style="margin-right: 5px"
+												></span>
+												<span *ngIf="isLoading$ | async"
+													>Cargando...</span
+												>
+												<span
+													*ngIf="
+														!(isLoading$ | async)
+													"
+													>Actualizar</span
+												>
+											</button>
+										</div>
+									</form>
+								</div>
+								<div
+									class="tab-pane fade"
+									id="password-tab"
+									role="tabpanel"
+									aria-labelledby="password"
+									style="min-height: 510px"
+								>
+									<h3 class="mb-4">
+										Configuración de Contraseña
+									</h3>
+									<form
+										#passwordForm="ngForm"
+										(ngSubmit)="
+											updatePassword(passwordForm)
+										"
+									>
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label
+														>Contraseña
+														actual</label
+													>
+													<input
+														type="password"
+														name="currentPassword"
+														class="form-control"
+														ngModel
+														required
+													/>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label
+														>Nueva contraseña</label
+													>
+													<input
+														type="password"
+														name="newPassword"
+														class="form-control"
+														ngModel
+														minlength="5"
+														required
+													/>
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<label
+														>Confirmar nueva
+														contraseña</label
+													>
+													<input
+														type="password"
+														name="confirmNewPassword"
+														class="form-control"
+														ngModel
+														minlength="5"
+														required
+													/>
+												</div>
+											</div>
+										</div>
+										<div>
+											<button
+												[disabled]="
+													passwordForm.invalid ||
+													(isLoading$ | async)
+												"
+												type="submit"
+												class="btn btn-primary"
+											>
+												<span
+													*ngIf="isLoading$ | async"
+													class="spinner-border spinner-border-sm"
+													role="status"
+													aria-hidden="true"
+													style="margin-right: 5px"
+												></span>
+												<span *ngIf="isLoading$ | async"
+													>Cargando...</span
+												>
+												<span
+													*ngIf="
+														!(isLoading$ | async)
+													"
+													>Actualizar</span
+												>
+											</button>
+										</div>
+									</form>
+								</div>
+								<div
+									class="tab-pane fade"
+									id="address-tab"
+									role="tabpanel"
+									aria-labelledby="address"
+									style="min-height: 510px"
+								>
+									<h3 class="mb-4 text-wrap">
+										Configuración de direcciones
+									</h3>
+									<ul class="list-group list-group-flush text-nowrap overflow-hidden d-grid">
+										<li
+											class="list-group-item overflow-hidden"
+											*ngFor="
+												let direccion of addressState
+													?.appData?.data?.direcciones
+											"
+										>
+											<div class="card border-0">
+												<div class="card-body p-0">
+													<h5 class="card-title">
+														{{
+															direccion.nombre +
+																" " +
+																direccion.apellido
+														}}
+													</h5>
+													<p class="card-text mb-0">
+														{{
+															direccion.direccion
+														}}
+													</p>
+													<p class="card-text mb-0">
+														{{
+															direccion.municipio
+																.nombre +
+																", " +
+																direccion
+																	.municipio
+																	.departamento
+																	.nombre
+														}}
+													</p>
+													<p
+														*ngIf="
+															direccion
+																.indicaciones
+																.length > 0
+														"
+														class="card-text mb-0"
+													>
+														{{
+															direccion.indicaciones
+														}}
+													</p>
+													<p class="card-text mb-0">
+														+502
+														{{ direccion.telefono }}
+													</p>
+													<div class="d-inline-block">
+														<button
+															class="btn text-primary text-decoration-underline me-2"
+															data-bs-toggle="modal"
+															data-bs-target="#addressModal"
+															(click)="
+																editAddress(
+																	direccion
+																)
+															"
+														>
+															Editar
+														</button>
+														<button
+															(click)="
+																deleteAddress(
+																	direccion.idDireccion
+																)
+															"
+															class="btn text-danger text-decoration-underline"
+														>
+															Eliminar
+														</button>
+													</div>
+												</div>
+											</div>
+										</li>
+										<li class="list-group-item">
+											<button
+												type="button"
+												class="btn btn-primary"
+												data-bs-toggle="modal"
+												data-bs-target="#addressModal"
+												(click)="newAddress()"
+											>
+												<i class="fa-solid fa-plus"></i>
+												Agregar otra dirección
+											</button>
+										</li>
+									</ul>
+								</div>
+								<div
+									*ngIf="
+										state?.appData?.data?.usuario?.rol !==
+										'ROL_USUARIO'
+									"
+									class="tab-pane fade"
+									id="security-tab"
+									role="tabpanel"
+									aria-labelledby="security"
+									style="min-height: 510px"
+								>
+									<h3 class="mb-4">
+										Configuración de Autorización
+									</h3>
+									<form
+										#rolForm="ngForm"
+										(ngSubmit)="updateRol(rolForm)"
+									>
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label
+														style="
+															margin-bottom: 5px;
+														"
+														>Nombre de rol</label
+													>
+													<select
+														name="rol"
+														class="form-control select-cl"
+														required
+														[disabled]="
+															!(
+																state?.appData
+																	?.data
+																	?.usuario
+																	?.rol ===
+																	'ROL_ADMIN' ||
+																state?.appData
+																	?.data
+																	?.usuario
+																	?.rol ===
+																	'ROL_SYSADMIN'
+															) ||
+															(isLoading$ | async)
+														"
+														[ngModel]="
+															state?.appData?.data
+																?.usuario?.rol
+														"
+													>
+														<option
+															*ngFor="
+																let rol of state
+																	?.appData
+																	?.data
+																	?.roles
+															"
+															[selected]="
+																state?.appData
+																	?.data
+																	?.usuario
+																	?.rol ===
+																rol.nombre
+															"
+															[ngValue]="
+																rol.nombre
+															"
+															class="select-cl"
+															[disabled]="
+																!(
+																	state
+																		?.appData
+																		?.data
+																		?.usuario
+																		?.rol ===
+																		'ROL_ADMIN' ||
+																	state
+																		?.appData
+																		?.data
+																		?.usuario
+																		?.rol ===
+																		'ROL_SYSADMIN'
+																) ||
+																(isLoading$
+																	| async)
+															"
+														>
+															{{ rol.nombre }}
+														</option>
+													</select>
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<label
+														style="
+															margin-bottom: 5px;
+														"
+														>Permisos de rol</label
+													>
+													<div class="permissions">
+														<input
+															*ngFor="
+																let permission of state?.appData?.data?.usuario?.permisos.split(
+																	','
+																)
+															"
+															type="text"
+															class="form-control"
+															style="
+																margin-bottom: 5px;
+															"
+															[value]="permission"
+															[disabled]="true"
+														/>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div>
+											<button
+												[disabled]="
+													!(
+														state?.appData?.data
+															?.usuario?.rol ===
+															'ROL_ADMIN' ||
+														state?.appData?.data
+															?.usuario?.rol ===
+															'ROL_SYSADMIN'
+													) || (isLoading$ | async)
+												"
+												type="submit"
+												class="btn btn-primary"
+											>
+												<span
+													*ngIf="isLoading$ | async"
+													class="spinner-border spinner-border-sm"
+													role="status"
+													aria-hidden="true"
+													style="margin-right: 5px"
+												></span>
+												<span *ngIf="isLoading$ | async"
+													>Cargando...</span
+												>
+												<span
+													*ngIf="
+														!(isLoading$ | async)
+													"
+													>Actualizar</span
+												>
+											</button>
+										</div>
+									</form>
+								</div>
+								<div
+									*ngIf="
+										state?.appData?.data?.usuario?.rol !==
+										'ROL_USUARIO'
+									"
+									class="tab-pane fade"
+									id="application-tab"
+									role="tabpanel"
+									aria-labelledby="application"
+									style="min-height: 510px"
+								>
+									<h3 class="mb-4">
+										Configuraciones de la Aplicación
+									</h3>
+									<form
+										#settingsForm="ngForm"
+										(ngSubmit)="
+											updateAccountSettings(settingsForm)
+										"
+									>
+										<input type="hidden" name="userId" />
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<div class="form-check">
+														<input
+															type="checkbox"
+															name="enabled"
+															id="enabled"
+															class="form-check-input"
+															[disabled]="
+																state?.appData
+																	?.data
+																	?.usuario
+																	?.rol ===
+																	'ROL_USUARIO' ||
+																(isLoading$
+																	| async)
+															"
+															[checked]="
+																state?.appData
+																	?.data
+																	?.usuario
+																	?.estado
+															"
+															[ngModel]="
+																state?.appData
+																	?.data
+																	?.usuario
+																	?.estado
+															"
+														/>
+														<label
+															class="form-check-label"
+															for="enabled"
+															>Cuenta
+															Activa</label
+														>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div>
+											<button
+												[disabled]="
+													state?.appData?.data
+														?.usuario?.rol ===
+														'ROL_USUARIO' ||
+													(isLoading$ | async)
+												"
+												type="submit"
+												class="btn btn-primary"
+											>
+												<span
+													*ngIf="isLoading$ | async"
+													class="spinner-border spinner-border-sm"
+													role="status"
+													aria-hidden="true"
+													style="margin-right: 5px"
+												></span>
+												<span *ngIf="isLoading$ | async"
+													>Cargando...</span
+												>
+												<span
+													*ngIf="
+														!(isLoading$ | async)
+													"
+													>Actualizar</span
+												>
+											</button>
+										</div>
+									</form>
+								</div>
+								<div
+									class="tab-pane fade"
+									id="notification-tab"
+									role="tabpanel"
+									aria-labelledby="notification"
+									style="min-height: 510px"
+								>
+									<h3 class="mb-4">
+										Configuración de autenticación
+									</h3>
+									<p>
+										Estas configuraciones ayudan a mantener
+										su cuenta más segura.
+									</p>
+									<div class="list-group mb-5 shadow">
+										<div class="list-group-item">
+											<div class="row align-items-center">
+												<div class="col">
+													<strong class="mb-2"
+														>Autenticación
+														Multifactor</strong
+													>
+													<span
+														*ngIf="
+															state?.appData?.data
+																?.usuario
+																?.utilizaMfa
+														"
+														class="badge bg-success mx-3"
+														>Activado</span
+													>
+													<span
+														*ngIf="
+															!state?.appData
+																?.data?.usuario
+																?.utilizaMfa
+														"
+														class="badge bg-warning mx-3"
+														>Desactivado</span
+													>
+													<p class="text-muted mb-0">
+														Configure la
+														Autenticación
+														Multifactor (MFA) para
+														ayudar a mantener su
+														cuenta más segura
+													</p>
+												</div>
+												<div class="col-auto">
+													<button
+														(click)="toggleMfa()"
+														[disabled]="
+															isLoading$ | async
+														"
+														class="btn btn-primary btn-sm"
+													>
+														{{
+															state?.appData?.data
+																?.usuario
+																?.utilizaMfa
+																? "Desactivar"
+																: "Activar"
+														}}
+														<span
+															*ngIf="
+																isLoading$
+																	| async
+															"
+															class="spinner-border spinner-border-sm"
+															role="status"
+															aria-hidden="true"
+															style="
+																margin-right: 5px;
+															"
+														></span>
+													</button>
+												</div>
+											</div>
+										</div>
+										<div class="list-group-item">
+											<div class="row align-items-center">
+												<div class="col">
+													<strong class="mb-2"
+														>Registros de
+														Actividad</strong
+													>
+													<p class="text-muted mb-0">
+														Muestra las últimas
+														actividades en tu cuenta
+													</p>
+												</div>
+												<div class="col-auto">
+													<div
+														class="custom-control custom-switch"
+													>
+														<input
+															type="checkbox"
+															class="custom-control-input"
+															id="activityLog"
+															(change)="
+																toggleLogs()
+															"
+															[checked]="
+																showLogs$
+																	| async
+															"
+															[disabled]="
+																isLoading$
+																	| async
+															"
+														/>
+														<span
+															class="custom-control-label"
+														></span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div *ngIf="showLogs$ | async" class="row">
+							<div class="col-xl-12 mt-4">
+								<div class="card" style="border-radius: 8px">
+									<div class="card-body">
+										<h5 class="card-title">
+											Actividades de la cuenta
+										</h5>
+										<h6
+											class="card-subtitle mb-2 text-muted"
+										>
+											Últimas actividades en su cuenta.
+										</h6>
+										<div class="table-responsive">
+											<table class="table table-hover">
+												<thead>
+													<tr>
+														<th scope="col">
+															Dispositivo
+														</th>
+														<th scope="col">
+															Dirección IP
+														</th>
+														<th scope="col">
+															Fecha
+														</th>
+														<th scope="col">
+															Tipo
+														</th>
+														<th scope="col">
+															Descripción
+														</th>
+														<th scope="col">
+															Acción
+														</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr
+														*ngFor="
+															let evento of state
+																?.appData?.data
+																?.eventos
+														"
+													>
+														<td>
+															{{
+																evento.dispositivo
+															}}
+														</td>
+														<td>
+															{{
+																evento.ipAddress
+															}}
+														</td>
+														<td>
+															{{
+																evento.fechaCreacion
+																	| date
+																		: "MMMM d, y, h:mm a"
+															}}
+														</td>
+														<td>
+															<span
+																class="badge pill"
+																[ngClass]="[
+																	evento.tipo ===
+																	EventoType.LOGIN_ATTEMPT
+																		? 'bg-warning'
+																		: '',
+																	evento.tipo ===
+																	EventoType.LOGIN_ATTEMPT_FAILURE
+																		? 'bg-danger'
+																		: '',
+																	evento.tipo ===
+																	EventoType.LOGIN_ATTEPMT_SUCCESS
+																		? 'bg-success'
+																		: '',
+																	evento.tipo ===
+																	EventoType.PROFILE_UPDATE
+																		? 'bg-primary'
+																		: '',
+																	evento.tipo ===
+																	EventoType.PROFILE_PICTURE_UPDATE
+																		? 'bg-primary'
+																		: '',
+																	evento.tipo ===
+																	EventoType.ROLE_UPDATE
+																		? 'bg-info'
+																		: '',
+																	evento.tipo ===
+																	EventoType.ACCOUNT_SETTINGS_UPDATE
+																		? 'bg-warning'
+																		: '',
+																	evento.tipo ===
+																	EventoType.PASSWORD_UPDATE
+																		? 'bg-warning'
+																		: '',
+																	evento.tipo ===
+																	EventoType.MFA_UPDATE
+																		? 'bg-info'
+																		: ''
+																]"
+															>
+																{{
+																	evento.tipo
+																}}
+															</span>
+														</td>
+														<td>
+															{{
+																evento.descripcion
+															}}
+														</td>
+														<td>
+															<button
+																type="button"
+																class="btn btn-sm"
+																style="
+																	background-color: #fd5d0d;
+																	font-weight: 450;
+																"
+															>
+																Reportar
+															</button>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<div
+					id="addressModal"
+					tabindex="-1"
+					aria-labelledby="addressModalLabel"
+					aria-hidden="true"
+					class="modal fade"
+				>
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content">
+							<div class="modal-header mb-2">
+								<h1
+									*ngIf="isEditing; else updateAddress"
+									class="modal-title fs-5"
+									id="addressModal"
+								>
+									Editar dirección
+								</h1>
+								<ng-template #updateAddress>
+									<h1
+										class="modal-title fs-5"
+										id="addressModal"
+									>
+										Agregar una dirección
+									</h1>
+								</ng-template>
+								<button
+									type="button"
+									class="btn-close"
+									data-bs-dismiss="modal"
+									aria-label="Close"
+								></button>
+							</div>
+							<div class="modal-body">
+								<form
+									#addressForm="ngForm"
+									(ngSubmit)="isEditing ? saveAddress(addressForm) : addAddress(addressForm)"
+								>
+									<input type="hidden" name="idDireccion" [(ngModel)]="
+                                    addressModel.idDireccion
+                                " />
+									<div class="row">
+										<div class="col-md-6 mb-3">
+											<div class="form-group">
+												<label>Nombre</label>
+												<input
+													type="text"
+													name="nombre"
+													class="form-control"
+													[(ngModel)]="
+														addressModel.nombre
+													"
+													[disabled]="
+														isLoading$ | async
+													"
+												/>
+											</div>
+										</div>
+										<div class="col-md-6 mb-3">
+											<div class="form-group">
+												<label>Apellido</label>
+												<input
+													type="text"
+													name="apellido"
+													class="form-control"
+													[(ngModel)]="
+														addressModel.apellido
+													"
+													[disabled]="
+														isLoading$ | async
+													"
+												/>
+											</div>
+										</div>
+										<div class="col-md-12 mb-3">
+											<div class="form-group">
+												<label>Teléfono</label>
+												<div class="input-group">
+													<span
+														class="input-group-text"
+														>+502</span
+													>
+													<input
+														type="tel"
+														name="telefono"
+														class="form-control"
+														[(ngModel)]="
+															addressModel.telefono
+														"
+														[disabled]="
+															isLoading$ | async
+														"
+													/>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-6 mb-3">
+											<div class="form-group">
+												<label>Departamento</label>
+												<select
+													class="form-select"
+													aria-label="Selecciona un departamento"
+													[(ngModel)]="
+														selectedDepartment
+													"
+													(ngModelChange)="
+														onDepartmentChange(
+															$event
+														)
+													"
+													[disabled]="
+														isLoading$ | async
+													"
+													name="idDepartamento"
+												>
+													<option
+														selected
+														disabled
+														value="0"
+													>
+														Selecciona un
+														departamento
+													</option>
+													<option
+														*ngFor="
+															let departamento of depState
+																?.appData?.data
+																?.departamentos
+														"
+														[value]="
+															departamento.idDepartamento
+														"
+													>
+														{{
+															departamento.nombre
+														}}
+													</option>
+												</select>
+											</div>
+										</div>
+										<div class="col-md-6 mb-3">
+											<div class="form-group">
+												<label>Municipio</label>
+												<select
+													class="form-select"
+													aria-label="Selecciona un municipio"
+													[disabled]="
+														isLoading$ | async
+													"
+													name="idMunicipio"
+													[(ngModel)]="
+														selectedMunicipality
+													"
+													[disabled]="
+														!selectedDepartment
+													"
+												>
+													<option
+														selected
+														disabled
+														value="0"
+													>
+														Selecciona un municipio
+													</option>
+													<option
+														*ngFor="
+															let municipio of municipios
+														"
+														[value]="
+															municipio.idMunicipio
+														"
+													>
+														{{ municipio.nombre }}
+													</option>
+												</select>
+											</div>
+										</div>
+										<div class="col-md-12 mb-3">
+											<div class="form-group">
+												<label>Dirección</label>
+												<input
+													type="text"
+													name="direccion"
+													[(ngModel)]="
+														addressModel.direccion
+													"
+													class="form-control"
+													[disabled]="
+														isLoading$ | async
+													"
+												/>
+											</div>
+										</div>
+										<div class="col-md-12 mb-3">
+											<div class="form-group">
+												<label>Indicaciones</label>
+												<input
+													type="text"
+													name="indicaciones"
+													[(ngModel)]="
+														addressModel.indicaciones
+													"
+													class="form-control"
+													[disabled]="
+														isLoading$ | async
+													"
+												/>
+											</div>
+										</div>
+									</div>
+									<div class="mt-2">
+										<button
+											type="submit"
+											class="btn btn-primary"
+											data-bs-toggle="modal"
+											data-bs-target="#addressModal"
+											[disabled]="isLoading$ | async"
+										>
+											<span
+												class="spinner-border spinner-border-sm"
+												role="status"
+												aria-hidden="true"
+												style="margin-right: 5px"
+												*ngIf="isLoading$ | async"
+											></span>
+											<span *ngIf="isLoading$ | async"
+												>Cargando...</span
+											>
+											<span
+												*ngIf="!(isLoading$ | async)"
+												>{{
+													isEditing
+														? "Guardar"
+														: "Agregar"
+												}}</span
+											>
+										</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<app-footer></app-footer>
+			</ng-container>
+		</ng-container>
+	</ng-container>
+</ng-container>
+
+<!-- profile image change form -->
+<form enctype="multipart/form-data" style="display: none">
+	<input
+		#fileInput
+		(change)="updatePicture($event)"
+		type="file"
+		name="image"
+		id="image"
+		placeholder="file"
+		ngModel
+		accept="image/*"
+	/>
+</form>

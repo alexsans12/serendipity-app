@@ -1,0 +1,42 @@
+.custom-card {
+	height: 100%; // Establece una altura fija para todas las tarjetas
+	display: flex;
+	flex-direction: column;
+	transition: transform 0.3s ease; // Añade una transición de 0.5 segundos al pasar el ratón por encima
+
+	&:hover {
+		cursor: pointer;
+		box-shadow: 1px 1px 5px 1px rgba(39, 39, 39, 0.1);
+		transform: scale(1.03); // Aumenta el tamaño de la tarjeta al pasar el ratón por encima
+	}
+
+	.card-header {
+		overflow: hidden;
+		position: relative;
+	}
+
+	.card-img-top {
+		height: 300px;
+		max-height: 300px; // Ajusta la altura máxima de la imagen
+		object-fit: cover; // Escala y recorta la imagen para que se ajuste
+		transition: transform 0.3s ease; // Añade una transición de 0.5 segundos al pasar el ratón por encima
+
+		&:hover {
+			transform: scale(
+				1.1
+			); // Aumenta el tamaño de la imagen al pasar el ratón por encima
+		}
+	}
+
+	.discount-badge {
+		position: absolute;
+		z-index: 100;
+		top: 10px; /* Adjust the top position as needed */
+		right: 10px; /* Adjust the right position as needed */
+		background-color: #f44336; /* Red background color for discount badge */
+		color: white; /* Text color for discount badge */
+		padding: 5px 10px;
+		border-radius: 5px;
+		font-size: 12px;
+	}
+}

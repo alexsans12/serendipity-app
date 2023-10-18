@@ -1,0 +1,162 @@
+<nav
+	[ngClass]="{
+		'home-navbar': currentRoute === '/',
+		scrolled: isScrolled,
+		'shadow-sm': isScrolled,
+		'expanded-navbar': isExpanded
+	}"
+	class="navbar navbar-expand-lg position-absolute start-0 end-0 border-bottom"
+>
+	<!-- Container wrapper -->
+	<div class="container">
+		<!-- Left elements: Brand -->
+		<a [routerLink]="['/']" class="navbar-brand" href="#">
+			<i class="text-danger fa-solid fa-dove me-3"></i>
+			<span class="fw-semibold text-lowercase">Serendipity</span>
+		</a>
+
+		<!-- Toggle button -->
+		<button
+			class="navbar-toggler"
+			type="button"
+			data-bs-toggle="collapse"
+			data-bs-target="#navbar"
+			aria-controls="navbar"
+			[attr.aria-expanded]="isExpanded"
+			(click)="isExpanded = !isExpanded"
+			aria-label="Toggle navigation"
+		>
+			<i class="fas fa-bars"></i>
+		</button>
+
+		<!-- Collapsible wrapper -->
+		<div class="collapse navbar-collapse" id="navbar">
+			<!-- Center links -->
+			<ul class="navbar-nav ms-auto me-2 mb-2 mb-lg-0 align-items-center">
+				<li class="nav-item mt-2 mb-2">
+					<a
+						(click)="closeMenu()"
+						class="nav-link"
+						[routerLink]="['/']"
+						>Inicio</a
+					>
+				</li>
+				<li class="nav-item mt-2 mb-2">
+					<a
+						(click)="closeMenu()"
+						class="nav-link"
+						[routerLink]="['/shop']"
+						>Tienda</a
+					>
+				</li>
+				<li class="nav-item mt-2 mb-2">
+					<a
+						(click)="closeMenu()"
+						class="nav-link"
+						[routerLink]="['/about-us']"
+						>Sobre nosotros</a
+					>
+				</li>
+				<li class="nav-item mt-2 mb-2">
+					<!-- Right elements: Avatar -->
+					<div *ngIf="usuario; else Login" class="dropdown">
+						<a
+							class="dropdown-toggle align-items-center hidden-arrow position-relative"
+							href="#"
+							id="navbarDropdownMenuAvatar"
+							role="button"
+							data-bs-toggle="dropdown"
+							aria-expanded="false"
+						>
+							<img
+								[src]="usuario?.urlFoto"
+								[alt]="usuario?.nombre"
+								class="rounded-circle img-circle"
+								height="25"
+								width="25"
+								loading="lazy"
+							/>
+						</a>
+						<ul
+							class="dropdown-menu dropdown-menu-end position-absolute"
+							aria-labelledby="navbarDropdownMenuAvatar"
+						>
+							<li *ngIf="usuario?.rol !== 'ROL_USUARIO'">
+								<a
+									(click)="closeMenu()"
+									class="dropdown-item"
+									[routerLink]="['/dashboard']"
+									>Dashboard</a
+								>
+							</li>
+							<li>
+								<a
+									(click)="closeMenu()"
+									class="dropdown-item"
+									[routerLink]="['/profile']"
+								>
+									{{ usuario.nombre }}
+									{{ usuario.apellido }}
+								</a>
+							</li>
+							<li>
+								<a
+									(click)="closeMenu()"
+									class="dropdown-item"
+									[routerLink]="['/wishlist']"
+									>Lista de Deseados</a
+								>
+							</li>
+							<li>
+								<a
+									(click)="closeMenu()"
+									class="dropdown-item"
+									[routerLink]="['/orders']"
+									>Mis compras</a
+								>
+							</li>
+							<li>
+								<a
+									(click)="logOut()"
+									class="dropdown-item"
+									href="#"
+									>Cerrar sesión</a
+								>
+							</li>
+						</ul>
+					</div>
+					<ng-template #Login>
+						<a
+							(click)="closeMenu()"
+							class="nav-link p-2"
+							[routerLink]="['/login']"
+						>
+							<i class="text-danger fas fa-user fs-5 me-1"></i>
+							Mi cuenta
+						</a>
+					</ng-template>
+				</li>
+				<li class="nav-item mt-2 mb-2">
+					<!-- Cart Icon -->
+					<a
+						[routerLink]="['/shop/cart']"
+						routerLinkActive="router-link-active"
+						class="nav-link fs-5 position-relative p-1"
+					>
+						<i class="text-danger fas fa-shopping-cart"></i>
+						<span
+							class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+							*ngIf="carrito && carrito.carritoProductos.length > 0"
+						>
+							{{ carrito.carritoProductos.length }}
+							<span class="visually-hidden">productos en el carrito</span>
+						</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+		<!-- Collapsible wrapper -->
+	</div>
+	<!-- Container wrapper -->
+</nav>
+<!-- Navbar -->
