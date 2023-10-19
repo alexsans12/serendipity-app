@@ -158,7 +158,7 @@ export class UsuarioComponent implements OnInit {
 					};
 				}),
 				startWith({
-					dataState: DataState.LOADED,
+					dataState: DataState.LOADING,
 					appData: this.dataSubject.value,
 				}),
 				catchError((error: string) => {
