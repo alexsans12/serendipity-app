@@ -89,10 +89,6 @@ export class PaymentMethodComponent implements OnInit {
 	}
 
 	async ngOnInit(): Promise<void> {
-		if (!this.usuarioService.isAuthenticated()) {
-			this.router.navigate(['/']);
-		}
-
 		this.cartState$ = this.carritoService.cart$().pipe(
 			map((response) => {
 				if(response.data.carrito === null || response.data.carrito.carritoProductos.length === 0){

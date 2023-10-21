@@ -1,5 +1,5 @@
-<ng-container *ngIf="clienteState$ | async as state">
-	<section>
+<ng-container *ngIf="productoState$ | async as state">
+	<section class="productos-list">
 		<div class="container">
 			<div class="row mt-3 ps-3 pe-3">
 				<div class="progress">
@@ -14,22 +14,23 @@
 					</div>
 				</div>
 				<div class="col">
-					<h4 class="fw-bold text-start">Usuarios</h4>
+					<h4 class="fw-bold text-start">Productos</h4>
 				</div>
 				<div class="col text-end">
-					<a class="btn btn-outline-primary" [routerLink]="['/dashboard/producto/new']">Agregar usuario</a>
+					<a class="btn btn-outline-primary" [routerLink]="['/dashboard/producto/new']">Agregar producto</a>
 				</div>
 				<div class="col-xm-12 table-responsive mt-3">
 					<table class="table table-hover">
 						<thead>
 							<tr>
 								<th class="text-center" scope="col">ID</th>
-								<th scope="col">Foto de Perfil</th>
-								<th scope="col">Nombre</th>
-								<th scope="col">Email</th>
-								<th scope="col">Teléfono</th>
+								<th scope="col">SKU</th>
+								<th scope="col">Producto</th>
+								<th scope="col">Categoría</th>
+								<th scope="col">Precio</th>
+								<th scope="col">Descuento</th>
+								<th scope="col">Stock</th>
 								<th scope="col">Estado</th>
-								<th scope="col">Tipo</th>
 								<th scope="col">Acciones</th>
 							</tr>
 						</thead>
@@ -37,41 +38,40 @@
 							<tr
 								class="cell-1"
 								*ngFor="
-									let usuario of state?.appData?.data
-										?.clientes.content
+									let producto of state?.appData?.data
+										?.productos.content
 								"
 							>
 								<th class="text-center">
-									{{ usuario.idUsuario }}
+									{{ producto.idProducto }}
 								</th>
 								<td>
-									<img
-										[src]="usuario.urlFoto"
-										width="42"
-										height="42"
-										class="rounded-circle"
-										alt="Avatar"
-									/>
+									{{ producto.sku }}
 								</td>
 								<td>
-									{{
-										usuario.nombre + " " + usuario.apellido
-									}}
+									{{ producto.nombre }}
 								</td>
-								<td>{{ usuario.email }}</td>
-								<td>{{ usuario.telefono }}</td>
+								<td>{{ producto.nombreCategoria }}</td>
+								<td>{{ producto.precio }}</td>
+								<td>{{ producto.descuento * 100 + "%" }}</td>
+								<td>{{ producto.cantidad }}</td>
 								<td>
 									<span
 										class="badge"
 										[ngClass]="{
-											'bg-success': usuario.estado === true,
-											'bg-danger': usuario.estado === false
+											'bg-success':
+												producto.estado === true,
+											'bg-danger':
+												producto.estado === false
 										}"
 									>
-										{{ usuario.estado === true ? 'Activo' : 'Inactivo' }}
+										{{
+											producto.estado === true
+												? "Activo"
+												: "Inactivo"
+										}}
 									</span>
 								</td>
-								<td>{{ usuario.rol !== 'ROL_USUARIO' ? 'Admin' : 'Usuario' }}</td>
 								<td>
 									<button type="button" class="btn btn-info">
 										<i class="fa-regular fa-eye"></i>
@@ -83,7 +83,7 @@
 
 					<nav
 						*ngIf="
-							state?.appData?.data?.clientes.content.length > 0
+							state?.appData?.data?.productos.content.length > 0
 						"
 						aria-label="Page navigation example"
 					>
@@ -105,7 +105,7 @@
 							<li
 								*ngFor="
 									let pageNumber of [].constructor(
-										state?.appData?.data?.clientes
+										state?.appData?.data?.productos
 											.totalPages
 									);
 									let i = index
@@ -120,12 +120,13 @@
 											? 'active'
 											: ''
 									"
+									disable
 									>{{ i + 1 }}</a
 								>
 							</li>
 							<li
 								[ngClass]="
-									state?.appData?.data?.clientes.totalPages -
+									state?.appData?.data?.productos.totalPages -
 										1 ==
 									(currentPage$ | async)
 										? 'disabled'

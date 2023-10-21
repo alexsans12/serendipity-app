@@ -1,37 +1,49 @@
+<ng-container *ngIf="(statsState$ | async) as state">
 <section class="stats">
 	<div class="container mt-2">
 		<div class="container bootstrap snippets bootdey">
 			<div class="row">
-				<div class="col-md-4 col-sm-6 col-xs-12">
+				<div class="col-md-3 col-sm-6 col-xs-12">
 					<div class="mini-stat clearfix bg-facebook rounded">
 						<span class="mini-stat-icon">
 							<i class="fa-solid fa-user-group fg-facebook"></i>
 						</span>
 						<div class="mini-stat-info text-end">
-							<span>1</span>
-							Total Customers
+							<span>{{ state?.appData?.data?.stats.totalUsuarios }}</span>
+							Usuarios Totales
 						</div>
 					</div>
 				</div>
-				<div class="col-md-4 col-sm-6 col-xs-12">
+				<div class="col-md-3 col-sm-6 col-xs-12">
 					<div class="mini-stat clearfix bg-googleplus rounded">
 						<span class="mini-stat-icon">
 							<i class="fa-solid fa-receipt fg-googleplus"></i>
 						</span>
 						<div class="mini-stat-info text-end">
-							<span>5</span>
-							Total Invoices
+							<span>{{ state?.appData?.data?.stats.totalPedidos }}</span>
+							Pedidos Totales
 						</div>
 					</div>
 				</div>
-				<div class="col-md-4 col-sm-6 col-xs-12">
+				<div class="col-md-3 col-sm-6 col-xs-12">
 					<div class="mini-stat clearfix bg-twitter rounded">
 						<span class="mini-stat-icon">
-							<i class="fa-solid fa-dollar-sign fg-twitter"></i>
+							<i class="fa-solid fa-q fg-twitter"></i>
 						</span>
 						<div class="mini-stat-info text-end">
-							<span>$580</span>
-							Total Billed
+							<span>{{ state?.appData?.data?.stats.totalBilled | currency: 'Q' }}</span>
+							Total Facturado
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3 col-sm-6 col-xs-12">
+					<div class="mini-stat clearfix bg-bitbucket rounded">
+						<span class="mini-stat-icon">
+							<i class="fa-solid fa-cart-shopping fg-bitbucket"></i>
+						</span>
+						<div class="mini-stat-info text-end">
+							<span>{{ state?.appData?.data?.stats.totalProductos }}</span>
+							Productos Totales
 						</div>
 					</div>
 				</div>
@@ -39,3 +51,4 @@
 		</div>
 	</div>
 </section>
+</ng-container>

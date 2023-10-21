@@ -1,10 +1,10 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, of, throwError } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { Cart, CustomHttpResponse } from '../interface/appstates';
 import { CarritoProducto } from '../interface/carritoProducto';
 import { Producto } from '../interface/producto';
-import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root',
@@ -29,7 +29,10 @@ export class CarritoService {
 	createCart$ = (carritoProductos: CarritoProducto[]) => {
 		return <Observable<CustomHttpResponse<Cart>>>(
 			this.http
-				.post<CustomHttpResponse<any>>(`${this.server}/cart/create`, carritoProductos)
+				.post<CustomHttpResponse<any>>(
+					`${this.server}/cart/create`,
+					carritoProductos
+				)
 				.pipe(catchError(this.handleError))
 		);
 	};
@@ -89,7 +92,7 @@ export class CarritoService {
 							idUsuario: null,
 							carritoProductos: [],
 						},
-				};
+				  };
 
 			// Busca si el producto ya está en el carrito
 			const productoExistente = carritoObj.carrito.carritoProductos.find(
@@ -102,9 +105,10 @@ export class CarritoService {
 
 				// Si la cantidad es 0 o negativa, elimina el producto del carrito
 				if (productoExistente.cantidad <= 0) {
-					carritoObj.carrito.carritoProductos = carritoObj.carrito.carritoProductos.filter(
-						(p) => p.idProducto !== idProducto
-					);
+					carritoObj.carrito.carritoProductos =
+						carritoObj.carrito.carritoProductos.filter(
+							(p) => p.idProducto !== idProducto
+						);
 				}
 			}
 

@@ -75,9 +75,6 @@ export class UsuarioComponent implements OnInit {
 	) {}
 
 	ngOnInit(): void {
-		if (!this.usuarioService.isAuthenticated()) {
-			this.router.navigate(['/']);
-		}
 		this.profileState$ = this.usuarioService.profile$().pipe(
 			map((response) => {
 				this.dataSubject.next(response);

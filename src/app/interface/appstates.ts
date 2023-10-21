@@ -11,6 +11,7 @@ import { Direccion } from "./direccion";
 import { PaymentInfo } from "./paymentInfo";
 import { Pedido } from "./pedido";
 import { Pago } from "./pago";
+import { Stat } from "./stat";
 
 export interface LoginState {
 	dataState: DataState;
@@ -68,6 +69,28 @@ export interface Page {
 	last: boolean;
 }
 
+export interface Clientes {
+	content: Usuario[];
+	totalPages: number;
+	totalElements: number;
+	numberOfElements: number;
+	size: number;
+	number: number;
+	first: boolean;
+	last: boolean;
+}
+
+export interface Pedidos {
+	content: Pedido[];
+	totalPages: number;
+	totalElements: number;
+	numberOfElements: number;
+	size: number;
+	number: number;
+	first: boolean;
+	last: boolean;
+}
+
 export interface Cart {
 	content: Carrito;
 	error?: string;
@@ -106,6 +129,12 @@ export interface Checkout {
 
 export interface Order {
 	content: Pedido;
+	error?: string;
+	message?: string;
+}
+
+export interface Stats {
+	content: Stat;
 	error?: string;
 	message?: string;
 }

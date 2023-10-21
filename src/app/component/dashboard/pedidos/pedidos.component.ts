@@ -1,27 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import {
-	BehaviorSubject,
-	Observable,
-	catchError,
-	map,
-	of,
-	startWith,
-} from 'rxjs';
+import { BehaviorSubject, Observable, catchError, map, of, startWith } from 'rxjs';
 import { DataState } from 'src/app/enum/datastate.enum';
-import { Clientes, CustomHttpResponse } from 'src/app/interface/appstates';
+import { EventoType } from 'src/app/enum/evento-type.enum';
+import { CustomHttpResponse, Pedidos } from 'src/app/interface/appstates';
 import { State } from 'src/app/interface/state';
-import { ClienteService } from 'src/app/service/cliente.service';
+import { PedidoService } from '../../../service/pedido.service';
 import { NotificationService } from 'src/app/service/notificacion.service';
 
 @Component({
-	selector: 'app-users',
-	templateUrl: './users.component.html',
-	styleUrls: ['./users.component.scss'],
+	selector: 'app-pedidos',
+	templateUrl: './pedidos.component.html',
+	styleUrls: ['./pedidos.component.scss'],
 })
-export class UsersComponent implements OnInit {
-	clienteState$: Observable<State<CustomHttpResponse<Clientes>>>;
-	private dataSubject: BehaviorSubject<CustomHttpResponse<Clientes>> =
-		new BehaviorSubject<CustomHttpResponse<Clientes>>(null);
+export class PedidosComponent implements OnInit {
+	pedidoState$: Observable<State<CustomHttpResponse<Pedidos>>>;
+	private dataSubject: BehaviorSubject<CustomHttpResponse<Pedidos>> =
+		new BehaviorSubject<CustomHttpResponse<Pedidos>>(null);
 	private currentPageSubject = new BehaviorSubject<number>(0);
 	currentPage$ = this.currentPageSubject.asObservable();
 	private showLogsSubject = new BehaviorSubject<boolean>(false);
@@ -31,12 +25,12 @@ export class UsersComponent implements OnInit {
 	readonly DataState = DataState;
 
 	constructor(
-		private clienteService: ClienteService,
+		private pedidoService: PedidoService,
 		private notificationService: NotificationService
 	) {}
 
 	ngOnInit(): void {
-		this.clienteState$ = this.clienteService.clientes$().pipe(
+		this.pedidoState$ = this.pedidoService.pedidos$().pipe(
 			map((response) => {
 				this.dataSubject.next(response);
 				this.notificationService.onDefault(response.message);
@@ -54,29 +48,27 @@ export class UsersComponent implements OnInit {
 	}
 
 	goToPage(pageNumber?: number) {
-		this.clienteState$ = this.clienteService
-			.clientes$(pageNumber)
-			.pipe(
-				map((response) => {
-					this.dataSubject.next(response);
-					this.currentPageSubject.next(pageNumber);
-					return {
-						dataState: DataState.LOADED,
-						appData: response,
-					};
-				}),
-				startWith({
-					dataState: DataState.LOADING,
-					apData: this.dataSubject.value,
-				}),
-				catchError((error: string) => {
-					return of({
-						dataState: DataState.ERROR,
-						appData: this.dataSubject.value,
-						error,
-					});
-				})
-			);
+		this.pedidoState$ = this.pedidoService.pedidos$(pageNumber).pipe(
+			map((response) => {
+				this.dataSubject.next(response);
+				this.currentPageSubject.next(pageNumber);
+				return {
+					dataState: DataState.LOADED,
+					appData: response,
+				};
+			}),
+			startWith({
+				dataState: DataState.LOADING,
+				apData: this.dataSubject.value,
+			}),
+			catchError((error: string) => {
+				return of({
+					dataState: DataState.ERROR,
+					appData: this.dataSubject.value,
+					error,
+				});
+			})
+		);
 	}
 
 	goToNextOrPreviousPage(direction?: string) {

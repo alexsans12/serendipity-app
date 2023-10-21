@@ -54,10 +54,6 @@ export class OrderDetailsComponent implements OnInit {
 	) {}
 
 	ngOnInit(): void {
-		if (!this.usuarioService.isAuthenticated()) {
-			this.router.navigate(['/login']);
-		}
-
 		const currentUrlSegment = this.route.snapshot.url[1];
 
 		if (this.usuarioService.isAuthenticated()) {
