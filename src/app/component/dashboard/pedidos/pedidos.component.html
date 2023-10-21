@@ -1,5 +1,5 @@
-<ng-container *ngIf="clienteState$ | async as state">
-	<section>
+<ng-container *ngIf="(pedidoState$ | async) as state">
+	<section class="pedidos-list">
 		<div class="container">
 			<div class="row mt-3 ps-3 pe-3">
 				<div class="progress">
@@ -14,22 +14,17 @@
 					</div>
 				</div>
 				<div class="col">
-					<h4 class="fw-bold text-start">Usuarios</h4>
+					<h4 class="fw-bold text-start">Pedidos</h4>
 				</div>
-				<div class="col text-end">
-					<a class="btn btn-outline-primary" [routerLink]="['/dashboard/producto/new']">Agregar usuario</a>
-				</div>
-				<div class="col-xm-12 table-responsive mt-3">
+				<div class="col-xm-12 table-responsive">
 					<table class="table table-hover">
 						<thead>
 							<tr>
 								<th class="text-center" scope="col">ID</th>
-								<th scope="col">Foto de Perfil</th>
-								<th scope="col">Nombre</th>
-								<th scope="col">Email</th>
-								<th scope="col">Teléfono</th>
+								<th scope="col">Realizado por</th>
 								<th scope="col">Estado</th>
-								<th scope="col">Tipo</th>
+								<th scope="col">Dirección</th>
+								<th scope="col">Método de Pago</th>
 								<th scope="col">Acciones</th>
 							</tr>
 						</thead>
@@ -37,41 +32,46 @@
 							<tr
 								class="cell-1"
 								*ngFor="
-									let usuario of state?.appData?.data
-										?.clientes.content
+									let pedido of state?.appData?.data
+										?.pedidos.content
 								"
 							>
 								<th class="text-center">
-									{{ usuario.idUsuario }}
+									{{ pedido.idPedido }}
 								</th>
 								<td>
-									<img
-										[src]="usuario.urlFoto"
-										width="42"
-										height="42"
-										class="rounded-circle"
-										alt="Avatar"
-									/>
-								</td>
-								<td>
 									{{
-										usuario.nombre + " " + usuario.apellido
+										pedido.direccion.nombre +
+											' ' +
+											pedido.direccion.apellido
 									}}
 								</td>
-								<td>{{ usuario.email }}</td>
-								<td>{{ usuario.telefono }}</td>
 								<td>
 									<span
 										class="badge"
 										[ngClass]="{
-											'bg-success': usuario.estado === true,
-											'bg-danger': usuario.estado === false
+											'bg-warning':
+												pedido.estado ===
+												'Pendiente',
+											'bg-primary':
+												pedido.estado ===
+												'En proceso',
+											'bg-info':
+												pedido.estado ===
+												'En camino',
+											'bg-success':
+												pedido.estado ===
+												'Entregado'
 										}"
 									>
-										{{ usuario.estado === true ? 'Activo' : 'Inactivo' }}
-									</span>
+									{{
+										pedido.estado
+									}}
+
+								</span>
 								</td>
-								<td>{{ usuario.rol !== 'ROL_USUARIO' ? 'Admin' : 'Usuario' }}</td>
+								<td>{{ pedido.direccion.direccion + ', ' + pedido.direccion.municipio.nombre + ', ' + pedido.direccion.municipio.departamento.nombre }}</td>
+								<td>{{ pedido.pago.metodoPago.tipo }}</td>
 								<td>
 									<button type="button" class="btn btn-info">
 										<i class="fa-regular fa-eye"></i>
@@ -83,7 +83,7 @@
 
 					<nav
 						*ngIf="
-							state?.appData?.data?.clientes.content.length > 0
+							state?.appData?.data?.pedidos.content.length > 0
 						"
 						aria-label="Page navigation example"
 					>
@@ -105,7 +105,7 @@
 							<li
 								*ngFor="
 									let pageNumber of [].constructor(
-										state?.appData?.data?.clientes
+										state?.appData?.data?.pedidos
 											.totalPages
 									);
 									let i = index
@@ -125,7 +125,7 @@
 							</li>
 							<li
 								[ngClass]="
-									state?.appData?.data?.clientes.totalPages -
+									state?.appData?.data?.pedidos.totalPages -
 										1 ==
 									(currentPage$ | async)
 										? 'disabled'

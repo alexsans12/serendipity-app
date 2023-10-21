@@ -1,12 +1,9 @@
-import {
-	HttpClient,
-	HttpErrorResponse,
-} from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
 	AccountType,
 	CustomHttpResponse,
-	Profile,
+	Profile
 } from '../interface/appstates';
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';

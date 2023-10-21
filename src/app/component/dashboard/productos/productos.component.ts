@@ -1,27 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import {
-	BehaviorSubject,
-	Observable,
-	catchError,
-	map,
-	of,
-	startWith,
-} from 'rxjs';
+import { BehaviorSubject, Observable, catchError, map, of, startWith } from 'rxjs';
 import { DataState } from 'src/app/enum/datastate.enum';
-import { Clientes, CustomHttpResponse } from 'src/app/interface/appstates';
+import { CustomHttpResponse, Page } from 'src/app/interface/appstates';
 import { State } from 'src/app/interface/state';
-import { ClienteService } from 'src/app/service/cliente.service';
 import { NotificationService } from 'src/app/service/notificacion.service';
+import { ProductoService } from 'src/app/service/producto.service';
 
 @Component({
-	selector: 'app-users',
-	templateUrl: './users.component.html',
-	styleUrls: ['./users.component.scss'],
+	selector: 'app-productos',
+	templateUrl: './productos.component.html',
+	styleUrls: ['./productos.component.scss'],
 })
-export class UsersComponent implements OnInit {
-	clienteState$: Observable<State<CustomHttpResponse<Clientes>>>;
-	private dataSubject: BehaviorSubject<CustomHttpResponse<Clientes>> =
-		new BehaviorSubject<CustomHttpResponse<Clientes>>(null);
+export class ProductosComponent implements OnInit {
+	productoState$: Observable<State<CustomHttpResponse<Page>>>;
+	private dataSubject: BehaviorSubject<CustomHttpResponse<Page>> =
+		new BehaviorSubject<CustomHttpResponse<Page>>(null);
 	private currentPageSubject = new BehaviorSubject<number>(0);
 	currentPage$ = this.currentPageSubject.asObservable();
 	private showLogsSubject = new BehaviorSubject<boolean>(false);
@@ -31,14 +24,15 @@ export class UsersComponent implements OnInit {
 	readonly DataState = DataState;
 
 	constructor(
-		private clienteService: ClienteService,
+		private productoService: ProductoService,
 		private notificationService: NotificationService
 	) {}
 
 	ngOnInit(): void {
-		this.clienteState$ = this.clienteService.clientes$().pipe(
+		this.productoState$ = this.productoService.productos$(0, 5).pipe(
 			map((response) => {
 				this.dataSubject.next(response);
+				console.log(response);
 				this.notificationService.onDefault(response.message);
 				return { dataState: DataState.LOADED, appData: response };
 			}),
@@ -54,29 +48,27 @@ export class UsersComponent implements OnInit {
 	}
 
 	goToPage(pageNumber?: number) {
-		this.clienteState$ = this.clienteService
-			.clientes$(pageNumber)
-			.pipe(
-				map((response) => {
-					this.dataSubject.next(response);
-					this.currentPageSubject.next(pageNumber);
-					return {
-						dataState: DataState.LOADED,
-						appData: response,
-					};
-				}),
-				startWith({
-					dataState: DataState.LOADING,
-					apData: this.dataSubject.value,
-				}),
-				catchError((error: string) => {
-					return of({
-						dataState: DataState.ERROR,
-						appData: this.dataSubject.value,
-						error,
-					});
-				})
-			);
+		this.productoState$ = this.productoService.productos$(pageNumber, 5).pipe(
+			map((response) => {
+				this.dataSubject.next(response);
+				this.currentPageSubject.next(pageNumber);
+				return {
+					dataState: DataState.LOADED,
+					appData: response,
+				};
+			}),
+			startWith({
+				dataState: DataState.LOADING,
+				apData: this.dataSubject.value,
+			}),
+			catchError((error: string) => {
+				return of({
+					dataState: DataState.ERROR,
+					appData: this.dataSubject.value,
+					error,
+				});
+			})
+		);
 	}
 
 	goToNextOrPreviousPage(direction?: string) {

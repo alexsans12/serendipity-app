@@ -44,10 +44,6 @@ export class OrdersComponent implements OnInit {
 	) {}
 
 	ngOnInit(): void {
-		if (!this.usuarioService.isAuthenticated()) {
-			this.router.navigate(['/login']);
-		}
-
 		if (this.usuarioService.isAuthenticated()) {
 			this.usuarioState$ = this.usuarioService.profile$().pipe(
 				map((response) => {

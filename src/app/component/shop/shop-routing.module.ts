@@ -7,6 +7,7 @@ import { WishListComponent } from './wish-list/wish-list.component';
 import { PaymentMethodComponent } from './payment-method/payment-method.component';
 import { OrdersComponent } from './orders/orders.component';
 import { OrderDetailsComponent } from './order-details/order-details.component';
+import { AuthenticationGuard } from 'src/app/guard/authentication.guard';
 
 const shopRoutes: Routes = [
 	{
@@ -30,19 +31,23 @@ const shopRoutes: Routes = [
 			},
 			{
 				path: 'wishlist',
-				component: WishListComponent
+				component: WishListComponent,
+				canActivate: [AuthenticationGuard]
 			},
 			{
 				path: 'checkout',
-				component: PaymentMethodComponent
+				component: PaymentMethodComponent,
+				canActivate: [AuthenticationGuard]
 			},
 			{
 				path: 'orders',
-				component: OrdersComponent
+				component: OrdersComponent,
+				canActivate: [AuthenticationGuard]
 			},
 			{
 				path: 'order/:id',
-				component: OrderDetailsComponent
+				component: OrderDetailsComponent,
+				canActivate: [AuthenticationGuard]
 			},
 			{
 				path: 'shop/category',

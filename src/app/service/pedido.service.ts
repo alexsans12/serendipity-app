@@ -13,7 +13,7 @@ export class PedidoService {
 
 	constructor(private http: HttpClient) {}
 
-	pedidos$ = (page: number = 0, size: number = 10) =>
+	pedidos$ = (page: number = 0, size: number = 5) =>
 		<Observable<CustomHttpResponse<Order>>>(
 			this.http
 				.get<CustomHttpResponse<any>>(
