@@ -1,6 +1,14 @@
-<app-navbar></app-navbar>
-<section class="dashboard">
-	<app-stats></app-stats>
-	<app-users></app-users>
-</section>
-<app-footer></app-footer>
+<ng-container *ngIf="cartState$ | async as cart">
+	<ng-container *ngIf="dashboardState$ | async as state">
+		<app-navbar
+			[usuario]="state?.appData?.data?.usuario"
+			[carrito]="cart?.appData?.data?.carrito"
+		></app-navbar>
+		<section class="dashboard container">
+			<app-stats></app-stats>
+			<app-users></app-users>
+			<app-pedidos></app-pedidos>
+			<app-productos></app-productos>
+		</section>
+	</ng-container>
+</ng-container>
