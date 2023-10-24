@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { CustomHttpResponse, Page } from '../interface/appstates';
 import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { Categoria } from '../interface/categoria';
 
 @Injectable({
 	providedIn: 'root',
@@ -13,7 +14,7 @@ export class CategoriaService {
 	constructor(private http: HttpClient) {}
 
 	categorias$ = () =>
-		<Observable<CustomHttpResponse<Page>>>(
+		<Observable<CustomHttpResponse<Page<Categoria>>>>(
 			this.http
 				.get<CustomHttpResponse<any>>(
 					`${this.server}/category/list`
@@ -22,9 +23,9 @@ export class CategoriaService {
 		);
 
 	allCategorias$ = (page: number = 0, size: number = 20) =>
-		<Observable<CustomHttpResponse<any>>>(
+		<Observable<CustomHttpResponse<Page<Categoria>>>>(
 			this.http
-				.get<CustomHttpResponse<any>>(
+				.get<CustomHttpResponse<Page<Categoria>>>(
 					`${this.server}/category/list-all?page=${page}&size=${size}`
 				)
 				.pipe(catchError(this.handleError))

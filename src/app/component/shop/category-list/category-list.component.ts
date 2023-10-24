@@ -9,6 +9,7 @@ import {
 } from 'rxjs';
 import { DataState } from 'src/app/enum/datastate.enum';
 import { CustomHttpResponse, Page } from 'src/app/interface/appstates';
+import { Categoria } from 'src/app/interface/categoria';
 import { State } from 'src/app/interface/state';
 import { CategoriaService } from 'src/app/service/categoria.service';
 
@@ -18,8 +19,8 @@ import { CategoriaService } from 'src/app/service/categoria.service';
 	styleUrls: ['./category-list.component.scss'],
 })
 export class CategoryListComponent implements OnInit {
-	categoriaListState$: Observable<State<CustomHttpResponse<Page>>>;
-	private dataSubject = new BehaviorSubject<CustomHttpResponse<Page>>(null);
+	categoriaListState$: Observable<State<CustomHttpResponse<Page<Categoria>>>>;
+	private dataSubject = new BehaviorSubject<CustomHttpResponse<Page<Categoria>>>(null);
 	private isLoadingSubject = new BehaviorSubject<boolean>(false);
 	isLoading$ = this.isLoadingSubject.asObservable();
 	private showLogsSubject = new BehaviorSubject<boolean>(false);

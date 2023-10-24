@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable, catchError, map, of, startWith } from 'rxjs';
 import { DataState } from 'src/app/enum/datastate.enum';
 import { Cart, CustomHttpResponse, Page, Profile, Wish } from 'src/app/interface/appstates';
+import { Producto } from 'src/app/interface/producto';
 import { State } from 'src/app/interface/state';
 import { CarritoService } from 'src/app/service/carrito.service';
 import { DeseadosService } from 'src/app/service/deseados.service';
@@ -17,7 +18,7 @@ export class WishListComponent implements OnInit {
 	wishState$: Observable<State<CustomHttpResponse<Wish>>>;
 	usuarioState$: Observable<State<CustomHttpResponse<Profile>>>;
 	cartState$: Observable<State<CustomHttpResponse<Cart>>>;
-	private dataSubject = new BehaviorSubject<CustomHttpResponse<Page>>(null);
+	private dataSubject = new BehaviorSubject<CustomHttpResponse<Page<Producto>>>(null);
 	private isLoadingSubject = new BehaviorSubject<boolean>(false);
 	isLoading$ = this.isLoadingSubject.asObservable();
 	private showLogsSubject = new BehaviorSubject<boolean>(false);

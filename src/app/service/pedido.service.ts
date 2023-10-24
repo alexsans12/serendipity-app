@@ -52,7 +52,7 @@ export class PedidoService {
 	updatePedido$ = (pedido: Pedido) =>
 		<Observable<CustomHttpResponse<Order>>>(
 			this.http
-				.put<CustomHttpResponse<any>>(
+				.put<CustomHttpResponse<Order>>(
 					`${this.server}/pedido/update`,
 					pedido
 				)
@@ -62,7 +62,7 @@ export class PedidoService {
 	deletePedido$ = (pedido: Pedido) =>
 		<Observable<CustomHttpResponse<Order>>>(
 			this.http
-				.post<CustomHttpResponse<any>>(
+				.post<CustomHttpResponse<Order>>(
 					`${this.server}/pedido/delete`,
 					pedido
 				)

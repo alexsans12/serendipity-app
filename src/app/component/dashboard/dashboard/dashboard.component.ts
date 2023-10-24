@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { ViewportScroller } from '@angular/common';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import {
 	BehaviorSubject,
 	Observable,
@@ -18,7 +20,7 @@ import { UsuarioService } from 'src/app/service/usuario.service';
 	templateUrl: './dashboard.component.html',
 	styleUrls: ['./dashboard.component.scss'],
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, AfterViewInit {
 	dashboardState$: Observable<State<CustomHttpResponse<Profile>>>;
 	cartState$: Observable<State<CustomHttpResponse<Cart>>>;
 	private dataSubject: BehaviorSubject<CustomHttpResponse<Profile>> =
@@ -26,9 +28,23 @@ export class DashboardComponent implements OnInit {
 	readonly DataState = DataState;
 
 	constructor(
+		private route: ActivatedRoute,
+		private viewportScroller: ViewportScroller,
 		private usuarioService: UsuarioService,
 		private carritoService: CarritoService
 	) {}
+
+	ngAfterViewInit() {
+		// Espera a que la vista se inicialice antes de desplazarse
+		this.route.fragment.subscribe((fragment) => {
+			if (fragment) {
+				// Opcional: puede agregar un retraso si el contenido se carga de forma asíncrona.
+				setTimeout(() => {
+					this.viewportScroller.scrollToAnchor(fragment);
+				}, 100); // Ajusta el tiempo según sea necesario para tu aplicación
+			}
+		});
+	}
 
 	ngOnInit(): void {
 		this.dashboardState$ = this.usuarioService.profile$().pipe(

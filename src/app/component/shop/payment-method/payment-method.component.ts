@@ -36,6 +36,7 @@ import { PedidoService } from 'src/app/service/pedido.service';
 import { EstadoPedido } from 'src/app/enum/estado-pedido.enum';
 import { Direccion } from 'src/app/interface/direccion';
 import { environment } from 'src/environments/environment';
+import { Producto } from 'src/app/interface/producto';
 
 @Component({
 	selector: 'app-payment-method',
@@ -47,7 +48,7 @@ export class PaymentMethodComponent implements OnInit {
 	direccionState$: Observable<State<CustomHttpResponse<Address>>>;
 	payState$: Observable<State<CustomHttpResponse<Pay>>>;
 	orderState$: Observable<State<CustomHttpResponse<Order>>>;
-	private dataSubject = new BehaviorSubject<CustomHttpResponse<Page>>(null);
+	private dataSubject = new BehaviorSubject<CustomHttpResponse<Page<Producto>>>(null);
 	private isLoadingSubject = new BehaviorSubject<boolean>(false);
 	isLoading$ = this.isLoadingSubject.asObservable();
 	private showLogsSubject = new BehaviorSubject<boolean>(false);

@@ -2,17 +2,6 @@
 	<section class="pedidos-list">
 		<div class="container">
 			<div class="row mt-3 ps-3 pe-3">
-				<div class="progress">
-					<div
-						class="progress-bar bg-success"
-						role="progressbar"
-						aria-valuenow=""
-						aria-valuemin="0"
-						aria-valuemax="100"
-					>
-						5%
-					</div>
-				</div>
 				<div class="col">
 					<h4 class="fw-bold text-start">Pedidos</h4>
 				</div>
@@ -52,7 +41,7 @@
 										[ngClass]="{
 											'bg-warning':
 												pedido.estado ===
-												'Pendiente',
+												'Empacado',
 											'bg-primary':
 												pedido.estado ===
 												'En proceso',
@@ -73,9 +62,9 @@
 								<td>{{ pedido.direccion.direccion + ', ' + pedido.direccion.municipio.nombre + ', ' + pedido.direccion.municipio.departamento.nombre }}</td>
 								<td>{{ pedido.pago.metodoPago.tipo }}</td>
 								<td>
-									<button type="button" class="btn btn-info">
+									<a [routerLink]="['/dashboard/order/'+ pedido.idPedido]" class="btn btn-info">
 										<i class="fa-regular fa-eye"></i>
-									</button>
+									</a>
 								</td>
 							</tr>
 						</tbody>
