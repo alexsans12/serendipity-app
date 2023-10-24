@@ -31,7 +31,7 @@ import { DeseadosService } from 'src/app/service/deseados.service';
 	styleUrls: ['./product-details.component.scss'],
 })
 export class ProductDetailsComponent implements OnInit {
-	productState$: Observable<State<CustomHttpResponse<Page>>>;
+	productState$: Observable<State<CustomHttpResponse<Page<Producto>>>>;
 	usuarioState$: Observable<State<CustomHttpResponse<Profile>>>;
 	cartState$: Observable<State<CustomHttpResponse<Cart>>>;
 	wishState$: Observable<State<CustomHttpResponse<Wish>>>;

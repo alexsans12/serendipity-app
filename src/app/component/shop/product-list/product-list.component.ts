@@ -21,6 +21,7 @@ import { Usuario } from 'src/app/interface/usuario';
 import { ActivatedRoute, UrlSegment } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { CarritoService } from 'src/app/service/carrito.service';
+import { Producto } from 'src/app/interface/producto';
 
 @Component({
 	selector: 'app-product-list',
@@ -28,11 +29,11 @@ import { CarritoService } from 'src/app/service/carrito.service';
 	styleUrls: ['./product-list.component.scss'],
 })
 export class ProductListComponent implements OnInit {
-	productListState$: Observable<State<CustomHttpResponse<Page & Usuario>>>;
+	productListState$: Observable<State<CustomHttpResponse<Page<Producto> & Usuario>>>;
 	usuarioState$: Observable<State<CustomHttpResponse<Profile>>>;
 	cartState$: Observable<State<CustomHttpResponse<Cart>>>;
 	private dataSubject = new BehaviorSubject<
-		CustomHttpResponse<Page & Usuario>
+		CustomHttpResponse<Page<Producto> & Usuario>
 	>(null);
 	private isLoadingSubject = new BehaviorSubject<boolean>(false);
 	isLoading$ = this.isLoadingSubject.asObservable();

@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable, catchError, map, of, startWith } from 'rxjs';
 import { DataState } from 'src/app/enum/datastate.enum';
-import { EventoType } from 'src/app/enum/evento-type.enum';
-import { CustomHttpResponse, Pedidos } from 'src/app/interface/appstates';
+import { CustomHttpResponse, Page } from 'src/app/interface/appstates';
 import { State } from 'src/app/interface/state';
 import { PedidoService } from '../../../service/pedido.service';
 import { NotificationService } from 'src/app/service/notificacion.service';
+import { Pedido } from 'src/app/interface/pedido';
 
 @Component({
 	selector: 'app-pedidos',
@@ -13,9 +13,9 @@ import { NotificationService } from 'src/app/service/notificacion.service';
 	styleUrls: ['./pedidos.component.scss'],
 })
 export class PedidosComponent implements OnInit {
-	pedidoState$: Observable<State<CustomHttpResponse<Pedidos>>>;
-	private dataSubject: BehaviorSubject<CustomHttpResponse<Pedidos>> =
-		new BehaviorSubject<CustomHttpResponse<Pedidos>>(null);
+	pedidoState$: Observable<State<CustomHttpResponse<Page<Pedido>>>>;
+	private dataSubject: BehaviorSubject<CustomHttpResponse<Page<Pedido>>> =
+		new BehaviorSubject<CustomHttpResponse<Page<Pedido>>>(null);
 	private currentPageSubject = new BehaviorSubject<number>(0);
 	currentPage$ = this.currentPageSubject.asObservable();
 	private showLogsSubject = new BehaviorSubject<boolean>(false);

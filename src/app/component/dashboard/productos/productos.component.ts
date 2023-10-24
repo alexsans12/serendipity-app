@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable, catchError, map, of, startWith } from 'rxjs';
 import { DataState } from 'src/app/enum/datastate.enum';
 import { CustomHttpResponse, Page } from 'src/app/interface/appstates';
+import { Producto } from 'src/app/interface/producto';
 import { State } from 'src/app/interface/state';
 import { NotificationService } from 'src/app/service/notificacion.service';
 import { ProductoService } from 'src/app/service/producto.service';
@@ -12,9 +13,9 @@ import { ProductoService } from 'src/app/service/producto.service';
 	styleUrls: ['./productos.component.scss'],
 })
 export class ProductosComponent implements OnInit {
-	productoState$: Observable<State<CustomHttpResponse<Page>>>;
-	private dataSubject: BehaviorSubject<CustomHttpResponse<Page>> =
-		new BehaviorSubject<CustomHttpResponse<Page>>(null);
+	productoState$: Observable<State<CustomHttpResponse<Page<Producto>>>>;
+	private dataSubject: BehaviorSubject<CustomHttpResponse<Page<Producto>>> =
+		new BehaviorSubject<CustomHttpResponse<Page<Producto>>>(null);
 	private currentPageSubject = new BehaviorSubject<number>(0);
 	currentPage$ = this.currentPageSubject.asObservable();
 	private showLogsSubject = new BehaviorSubject<boolean>(false);

@@ -18,7 +18,7 @@ import { State } from 'src/app/interface/state';
 import { CarritoService } from 'src/app/service/carrito.service';
 import { UsuarioService } from 'src/app/service/usuario.service';
 import { PedidoService } from '../../../service/pedido.service';
-import { Router } from '@angular/router';
+import { Pedido } from 'src/app/interface/pedido';
 
 @Component({
 	selector: 'app-orders',
@@ -28,8 +28,8 @@ import { Router } from '@angular/router';
 export class OrdersComponent implements OnInit {
 	cartState$: Observable<State<CustomHttpResponse<Cart>>>;
 	usuarioState$: Observable<State<CustomHttpResponse<Profile>>>;
-	ordersState$: Observable<State<CustomHttpResponse<Page>>>;
-	private dataSubject = new BehaviorSubject<CustomHttpResponse<Page>>(null);
+	ordersState$: Observable<State<CustomHttpResponse<Page<Pedido>>>>;
+	private dataSubject = new BehaviorSubject<CustomHttpResponse<Page<Pedido>>>(null);
 	private isLoadingSubject = new BehaviorSubject<boolean>(false);
 	isLoading$ = this.isLoadingSubject.asObservable();
 	private currentPageSubject = new BehaviorSubject<number>(0);
@@ -37,7 +37,6 @@ export class OrdersComponent implements OnInit {
 	readonly DataState = DataState;
 
 	constructor(
-		private router: Router,
 		private usuarioService: UsuarioService,
 		private carritoService: CarritoService,
 		private pedidoService: PedidoService

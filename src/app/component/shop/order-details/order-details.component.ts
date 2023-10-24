@@ -23,6 +23,7 @@ import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import { NotificationService } from 'src/app/service/notificacion.service';
 import { Location } from '@angular/common';
+import { Pedido } from 'src/app/interface/pedido';
 
 // Registrar los datos de configuración regional
 registerLocaleData(localeEs);
@@ -35,8 +36,8 @@ registerLocaleData(localeEs);
 export class OrderDetailsComponent implements OnInit {
 	cartState$: Observable<State<CustomHttpResponse<Cart>>>;
 	usuarioState$: Observable<State<CustomHttpResponse<Profile>>>;
-	ordersState$: Observable<State<CustomHttpResponse<Page>>>;
-	private dataSubject = new BehaviorSubject<CustomHttpResponse<Page>>(null);
+	ordersState$: Observable<State<CustomHttpResponse<Page<Pedido>>>>;
+	private dataSubject = new BehaviorSubject<CustomHttpResponse<Page<Pedido>>>(null);
 	private isLoadingSubject = new BehaviorSubject<boolean>(false);
 	isLoading$ = this.isLoadingSubject.asObservable();
 	private currentPageSubject = new BehaviorSubject<number>(0);

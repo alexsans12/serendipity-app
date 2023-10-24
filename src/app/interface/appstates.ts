@@ -58,30 +58,8 @@ export interface VerifyState {
 	type?: AccountType;
 }
 
-export interface Page {
-	content: Producto[];
-	totalPages: number;
-	totalElements: number;
-	numberOfElements: number;
-	size: number;
-	number: number;
-	first: boolean;
-	last: boolean;
-}
-
-export interface Clientes {
-	content: Usuario[];
-	totalPages: number;
-	totalElements: number;
-	numberOfElements: number;
-	size: number;
-	number: number;
-	first: boolean;
-	last: boolean;
-}
-
-export interface Pedidos {
-	content: Pedido[];
+export interface Page<T> {
+	content: T[];
 	totalPages: number;
 	totalElements: number;
 	numberOfElements: number;
