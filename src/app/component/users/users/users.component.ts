@@ -8,8 +8,9 @@ import {
 	startWith,
 } from 'rxjs';
 import { DataState } from 'src/app/enum/datastate.enum';
-import { Clientes, CustomHttpResponse } from 'src/app/interface/appstates';
+import { CustomHttpResponse, Page } from 'src/app/interface/appstates';
 import { State } from 'src/app/interface/state';
+import { Usuario } from 'src/app/interface/usuario';
 import { ClienteService } from 'src/app/service/cliente.service';
 import { NotificationService } from 'src/app/service/notificacion.service';
 
@@ -19,9 +20,9 @@ import { NotificationService } from 'src/app/service/notificacion.service';
 	styleUrls: ['./users.component.scss'],
 })
 export class UsersComponent implements OnInit {
-	clienteState$: Observable<State<CustomHttpResponse<Clientes>>>;
-	private dataSubject: BehaviorSubject<CustomHttpResponse<Clientes>> =
-		new BehaviorSubject<CustomHttpResponse<Clientes>>(null);
+	clienteState$: Observable<State<CustomHttpResponse<Page<Usuario>>>>;
+	private dataSubject: BehaviorSubject<CustomHttpResponse<Page<Usuario>>> =
+		new BehaviorSubject<CustomHttpResponse<Page<Usuario>>>(null);
 	private currentPageSubject = new BehaviorSubject<number>(0);
 	currentPage$ = this.currentPageSubject.asObservable();
 	private showLogsSubject = new BehaviorSubject<boolean>(false);

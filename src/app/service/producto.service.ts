@@ -4,6 +4,7 @@ import { Observable, catchError, throwError } from 'rxjs';
 import { CustomHttpResponse, Page } from '../interface/appstates';
 import { Usuario } from '../interface/usuario';
 import { environment } from 'src/environments/environment';
+import { Producto } from '../interface/producto';
 
 @Injectable({
 	providedIn: 'root',
@@ -14,9 +15,9 @@ export class ProductoService {
 	constructor(private http: HttpClient) {}
 
 	productos$ = (page: number = 0, size: number = 20) =>
-		<Observable<CustomHttpResponse<Page & Usuario>>>(
+		<Observable<CustomHttpResponse<Page<Producto> & Usuario>>>(
 			this.http
-				.get<CustomHttpResponse<Page & Usuario>>(
+				.get<CustomHttpResponse<Page<Producto> & Usuario>>(
 					`${this.server}/producto/list?page=${page}&size=${size}`
 				)
 				.pipe(catchError(this.handleError))
@@ -27,16 +28,16 @@ export class ProductoService {
 		page: number = 0,
 		size: number = 20
 	) =>
-		<Observable<CustomHttpResponse<Page & Usuario>>>(
+		<Observable<CustomHttpResponse<Page<Producto> & Usuario>>>(
 			this.http
-				.get<CustomHttpResponse<Page & Usuario>>(
+				.get<CustomHttpResponse<Page<Producto> & Usuario>>(
 					`${this.server}/producto/categoria?nombre=${nombre}&page=${page}&size=${size}`
 				)
 				.pipe(catchError(this.handleError))
 		);
 
 	searchProducto$ = (nombre: string, page: number = 0, size: number = 20) =>
-		<Observable<CustomHttpResponse<Page & Usuario>>>(
+		<Observable<CustomHttpResponse<Page<Producto> & Usuario>>>(
 			this.http
 				.get<CustomHttpResponse<any>>(
 					`${this.server}/producto/search?nombre=${nombre}&page=${page}&size=${size}`
@@ -45,7 +46,7 @@ export class ProductoService {
 		);
 
 	productoByCode$ = (sku: string) =>
-		<Observable<CustomHttpResponse<Page & Usuario>>>(
+		<Observable<CustomHttpResponse<Page<Producto> & Usuario>>>(
 			this.http
 				.get<CustomHttpResponse<any>>(
 					`${this.server}/producto/sku/${sku}`

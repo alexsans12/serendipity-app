@@ -30,7 +30,7 @@ import { Router } from '@angular/router';
 export class ShoppingCartComponent implements OnInit {
 	cartState$: Observable<State<CustomHttpResponse<Cart>>>;
 	usuarioState$: Observable<State<CustomHttpResponse<Profile>>>;
-	private dataSubject = new BehaviorSubject<CustomHttpResponse<Page>>(null);
+	private dataSubject = new BehaviorSubject<CustomHttpResponse<Page<Producto>>>(null);
 	private isLoadingSubject = new BehaviorSubject<boolean>(false);
 	isLoading$ = this.isLoadingSubject.asObservable();
 	private showLogsSubject = new BehaviorSubject<boolean>(false);
